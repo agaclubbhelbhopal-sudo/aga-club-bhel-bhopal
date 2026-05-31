@@ -1,0 +1,191 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: false
+publish_mode: simple
+media_folder: "images"
+public_folder: "images"
+
+site_url: "/"
+display_url: "/"
+logo_url: "/images/aga_club_logo.jpg"
+
+collections:
+  - name: "site_content"
+    label: "Website Content"
+    files:
+      - name: "main_content"
+        label: "All Website Pages"
+        file: "content.json"
+        editor:
+          preview: false
+        fields:
+          - { label: "Registration Number", name: "registrationNumber", widget: "string", required: false }
+          - { label: "Left Logo", name: "logo", widget: "image", required: false }
+          - { label: "Right Logo", name: "logo2", widget: "image", required: false }
+          - label: "Homepage"
+            name: "homepage"
+            widget: "object"
+            fields:
+              - label: "Header"
+                name: "header"
+                widget: "object"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Subtitle", name: "subtitle", widget: "string", required: false }
+                  - { label: "Background Image", name: "backgroundImage", widget: "image", required: false }
+                  - label: "Hero Slideshow"
+                    name: "backgroundSlideshow"
+                    widget: "list"
+                    field: { label: "Image", name: "image", widget: "image" }
+              - label: "Leader Messages"
+                name: "leaders"
+                widget: "list"
+                summary: "{{fields.name}} - {{fields.messageTitle}}"
+                fields:
+                  - { label: "ID", name: "id", widget: "number", value_type: "int", required: false }
+                  - { label: "Name", name: "name", widget: "string" }
+                  - { label: "Photo", name: "photo", widget: "image", required: false }
+                  - { label: "Message Title", name: "messageTitle", widget: "string", required: false }
+                  - { label: "Short Message", name: "message", widget: "text", required: false }
+                  - { label: "Full Message", name: "fullMessage", widget: "text", required: false }
+              - label: "Homepage Gallery"
+                name: "gallery"
+                widget: "list"
+                summary: "{{fields.alt}}"
+                fields:
+                  - { label: "ID", name: "id", widget: "number", value_type: "int", required: false }
+                  - { label: "Image", name: "image", widget: "image" }
+                  - { label: "Alt Text", name: "alt", widget: "string", required: false }
+              - label: "Homepage Background Slideshow"
+                name: "backgroundSlideshow"
+                widget: "list"
+                required: false
+                field: { label: "Image", name: "image", widget: "image" }
+          - label: "Upcoming Events"
+            name: "upcomingEvents"
+            widget: "list"
+            summary: "{{fields.name}} - {{fields.date}}"
+            fields:
+              - { label: "ID", name: "id", widget: "number", value_type: "int", required: false }
+              - { label: "Event Name", name: "name", widget: "string" }
+              - { label: "Date", name: "date", widget: "string", required: false }
+              - { label: "Venue", name: "venue", widget: "string", required: false }
+              - { label: "Description", name: "description", widget: "text", required: false }
+              - { label: "Registration/Form Link", name: "formLink", widget: "string", required: false }
+              - { label: "Main Image", name: "image", widget: "image", required: false }
+          - label: "Past Events"
+            name: "pastEvents"
+            widget: "list"
+            summary: "{{fields.name}} - {{fields.date}}"
+            fields:
+              - { label: "ID", name: "id", widget: "number", value_type: "int", required: false }
+              - { label: "Event Name", name: "name", widget: "string" }
+              - { label: "Date", name: "date", widget: "string", required: false }
+              - { label: "Venue", name: "venue", widget: "string", required: false }
+              - { label: "Description", name: "description", widget: "text", required: false }
+              - { label: "Main Image", name: "image", widget: "image", required: false }
+              - label: "Slideshow Images"
+                name: "slideshowImages"
+                widget: "list"
+                required: false
+                field: { label: "Image", name: "image", widget: "image" }
+          - label: "Committee Members"
+            name: "committeeMembers"
+            widget: "list"
+            summary: "{{fields.name}} - {{fields.position}}"
+            fields:
+              - { label: "ID", name: "id", widget: "number", value_type: "int", required: false }
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Position", name: "position", widget: "string", required: false }
+              - { label: "Photo", name: "image", widget: "image", required: false }
+          - label: "About Page"
+            name: "aboutContent"
+            widget: "object"
+            fields:
+              - { label: "Story", name: "story", widget: "text", required: false }
+              - { label: "Mission", name: "mission", widget: "text", required: false }
+              - { label: "Vision", name: "vision", widget: "text", required: false }
+              - { label: "Join Us", name: "joinUs", widget: "text", required: false }
+              - { label: "Background Image", name: "backgroundImage", widget: "image", required: false }
+              - label: "Background Slideshow"
+                name: "backgroundSlideshow"
+                widget: "list"
+                required: false
+                field: { label: "Image", name: "image", widget: "image" }
+          - label: "Contact Page"
+            name: "contactContent"
+            widget: "object"
+            fields:
+              - { label: "Address", name: "address", widget: "text", required: false }
+              - { label: "Phone", name: "phone", widget: "string", required: false }
+              - { label: "Email", name: "email", widget: "string", required: false }
+              - { label: "Office Hours", name: "hours", widget: "string", required: false }
+              - { label: "Location Details", name: "location", widget: "text", required: false }
+              - { label: "Background Image", name: "backgroundImage", widget: "image", required: false }
+              - label: "Background Slideshow"
+                name: "backgroundSlideshow"
+                widget: "list"
+                required: false
+                field: { label: "Image", name: "image", widget: "image" }
+          - label: "Committee Page Background"
+            name: "committeeContent"
+            widget: "object"
+            fields:
+              - { label: "Background Image", name: "backgroundImage", widget: "image", required: false }
+              - label: "Background Slideshow"
+                name: "backgroundSlideshow"
+                widget: "list"
+                required: false
+                field: { label: "Image", name: "image", widget: "image" }
+          - label: "Events Page"
+            name: "eventsContent"
+            widget: "object"
+            fields:
+              - { label: "Background Image", name: "backgroundImage", widget: "image", required: false }
+              - label: "Background Slideshow"
+                name: "backgroundSlideshow"
+                widget: "list"
+                required: false
+                field: { label: "Image", name: "image", widget: "image" }
+              - { label: "Slideshow Container Size Increase", name: "slideshowContainerSizeIncrease", widget: "string", required: false }
+              - label: "Event Directory Rules"
+                name: "eventDirectories"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "Folder", name: "dir", widget: "string", required: false }
+                  - { label: "Name", name: "name", widget: "string", required: false }
+                  - { label: "File Prefix", name: "prefix", widget: "string", required: false }
+          - label: "Upcoming Page Background"
+            name: "upcomingContent"
+            widget: "object"
+            fields:
+              - { label: "Background Image", name: "backgroundImage", widget: "image", required: false }
+              - label: "Background Slideshow"
+                name: "backgroundSlideshow"
+                widget: "list"
+                required: false
+                field: { label: "Image", name: "image", widget: "image" }
+          - label: "Membership Page"
+            name: "membershipContent"
+            widget: "object"
+            fields:
+              - { label: "Background Image", name: "backgroundImage", widget: "image", required: false }
+              - label: "Background Slideshow"
+                name: "backgroundSlideshow"
+                widget: "list"
+                required: false
+                field: { label: "Image", name: "image", widget: "image" }
+          - label: "Members"
+            name: "members"
+            widget: "list"
+            required: false
+            summary: "{{fields.Name}}"
+            fields:
+              - { label: "Sl. No.", name: "Sl. No.", widget: "number", value_type: "int", required: false }
+              - { label: "Staff No.", name: "Staff No.", widget: "string", required: false }
+              - { label: "Name", name: "Name", widget: "string" }
+              - { label: "Contact No.", name: "Contact No.", widget: "string", required: false }
+              - { label: "Department", name: "Department", widget: "string", required: false }
