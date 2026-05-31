@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Debug</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    <div class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </div>
+                    <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="membership.html" class="nav-link">Membership</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="membership-section">
+            <div class="container">
+                <h2>Membership Debug</h2>
+                <button id="testFetch">Test Fetch from members.json</button>
+                <button id="testContentLoader">Test ContentLoader</button>
+                <button id="forceRefresh">Force Refresh</button>
+                <div id="status"></div>
+                <div id="memberListContainer">Loading member data...</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/contentLoader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testFetchBtn = document.getElementById('testFetch');
+            const testContentLoaderBtn = document.getElementById('testContentLoader');
+            const forceRefreshBtn = document.getElementById('forceRefresh');
+            const statusDiv = document.getElementById('status');
+            const container = document.getElementById('memberListContainer');
+            
+            // Test direct fetch
+            testFetchBtn.addEventListener('click', function() {
+                statusDiv.innerHTML = '<p>Testing direct fetch from members.json...</p>';
+                
+                fetch('members.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(members => {
+                        statusDiv.innerHTML = `<p style="color: green;">✅ Successfully loaded ${members.length} members via direct fetch</p>`;
+                        displayMembers(members);
+                    })
+                    .catch(error => {
+                        statusDiv.innerHTML = `<p style="color: red;">❌ Direct fetch failed: ${error.message}</p>`;
+                        console.error('Direct fetch error:', error);
+                    });
+            });
+            
+            // Test ContentLoader
+            testContentLoaderBtn.addEventListener('click', function() {
+                statusDiv.innerHTML = '<p>Testing ContentLoader...</p>';
+                
+                contentLoader.getMembershipData().then(members => {
+                    statusDiv.innerHTML = `<p style="color: green;">✅ Successfully loaded ${members.length} members via ContentLoader</p>`;
+                    displayMembers(members);
+                }).catch(error => {
+                    statusDiv.innerHTML = `<p style="color: red;">❌ ContentLoader failed: ${error.message}</p>`;
+                    console.error('ContentLoader error:', error);
+                });
+            });
+            
+            // Force refresh
+            forceRefreshBtn.addEventListener('click', function() {
+                statusDiv.innerHTML = '<p>Force refreshing content...</p>';
+                
+                contentLoader.forceRefresh().then(() => {
+                    statusDiv.innerHTML = '<p style="color: green;">✅ Content refreshed successfully!</p>';
+                }).catch(error => {
+                    statusDiv.innerHTML = `<p style="color: red;">❌ Force refresh failed: ${error.message}</p>`;
+                    console.error('Force refresh error:', error);
+                });
+            });
+            
+            // Display members in a table
+            function displayMembers(members) {
+                if (members.length > 0) {
+                    let tableHTML = '<table style="width: 100%; border-collapse: collapse; margin-top: 20px;"><thead><tr style="background-color: #f2f2f2;"><th style="border: 1px solid #ddd; padding: 8px;">SL. NO.</th><th style="border: 1px solid #ddd; padding: 8px;">NAME</th><th style="border: 1px solid #ddd; padding: 8px;">STAFF NO.</th><th style="border: 1px solid #ddd; padding: 8px;">DEPARTMENT</th></tr></thead><tbody>';
+                    members.slice(0, 10).forEach((member, index) => {
+                        tableHTML += `<tr style="background-color: ${index % 2 === 0 ? '#fff' : '#f9f9f9'};"><td style="border: 1px solid #ddd; padding: 8px;">${index + 1}</td><td style="border: 1px solid #ddd; padding: 8px;">${member['Name'] || 'N/A'}</td><td style="border: 1px solid #ddd; padding: 8px;">${member['Staff No.'] || 'N/A'}</td><td style="border: 1px solid #ddd; padding: 8px;">${member['Department'] || 'N/A'}</td></tr>`;
+                    });
+                    tableHTML += '</tbody></table>';
+                    if (members.length > 10) {
+                        tableHTML += `<p style="margin-top: 10px;">Showing first 10 of ${members.length} members...</p>`;
+                    }
+                    container.innerHTML = tableHTML;
+                } else {
+                    container.innerHTML = '<p>No member data available.</p>';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

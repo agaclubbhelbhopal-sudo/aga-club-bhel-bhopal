@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Management Guide - AGA Club Bhel Bhopal</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-panel {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-tab {
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        .admin-tab.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .admin-tab-content {
+            display: none;
+        }
+        
+        .admin-tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: #27ae60;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .event-list, .committee-list {
+            margin-top: 20px;
+        }
+        
+        .event-item, .committee-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-actions, .committee-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .admin-tabs {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    <div class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </div>
+                    <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navigation Menu Bar -->
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <button id="adminLogoutBtn" class="admin-logout-btn">Logout</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="admin-panel">
+        <div class="admin-header">
+            <h1>Content Management Guide</h1>
+            <p>How to Update Your Website Content</p>
+        </div>
+        
+        <div class="admin-tabs">
+            <div class="admin-tab active" data-tab="instructions">Instructions</div>
+            <div class="admin-tab" data-tab="homepage">Homepage</div>
+            <div class="admin-tab" data-tab="upcoming-events">Upcoming Events</div>
+            <div class="admin-tab" data-tab="past-events">Past Events</div>
+            <div class="admin-tab" data-tab="event-directories">Event Directories</div>
+            <div class="admin-tab" data-tab="image-renamer">Image Renamer</div>
+            <div class="admin-tab" data-tab="filename-extractor">Filename Extractor</div>
+            <div class="admin-tab" data-tab="committee">Committee Members</div>
+            <div class="admin-tab" data-tab="membership">Membership</div>
+            <div class="admin-tab" data-tab="about">About Us</div>
+            <div class="admin-tab" data-tab="contact">Contact Us</div>
+        </div>
+        
+        <!-- Instructions Tab -->
+        <div id="instructions" class="admin-tab-content active">
+            <h2>How to Update Website Content</h2>
+            <p>Since this is a static website hosted on Netlify, content updates are managed through GitHub. Follow these steps:</p>
+            
+            <ol>
+                <li><strong>Access Your Repository</strong> - Go to your GitHub repository for the AGA Club website</li>
+                <li><strong>Navigate to content.json</strong> - Find and open the <code>content.json</code> file</li>
+                <li><strong>Edit Content</strong> - Click the pencil icon to edit the file directly in GitHub</li>
+                <li><strong>Make Changes</strong> - Update the relevant sections (see examples in other tabs)</li>
+                <li><strong>Commit Changes</strong> - Add a descriptive commit message and commit directly to the main branch</li>
+                <li><strong>Wait for Deployment</strong> - Netlify will automatically rebuild and deploy your site (1-2 minutes)</li>
+            </ol>
+            
+            <h3>Important Notes</h3>
+            <ul>
+                <li>All content is stored in the <code>content.json</code> file</li>
+                <li>Images should be uploaded to the <code>images/</code> folder</li>
+                <li>Always use valid JSON syntax</li>
+                <li>Multiple admins can collaborate on content updates</li>
+            </ul>
+            
+            <h3>Need Help?</h3>
+            <p>Refer to the detailed GitHub_Workflow_Guide.md file in your repository for comprehensive instructions.</p>
+        </div>
+        
+        <!-- Upcoming Events Tab -->
+        <div id="upcoming-events" class="admin-tab-content">
+            <h2>Upcoming Events Format</h2>
+            <p>To update upcoming events, edit the "upcomingEvents" section in content.json:</p>
+            <pre>{
+  "upcomingEvents": [
+    {
+      "id": 1,
+      "name": "Event Name",
+      "date": "Event Date",
+      "venue": "Event Venue",
+      "description": "Event Description",
+      "formLink": "https://forms.google.com/...",
+      "image": "images/event-image.jpg"
+    }
+  ]
+}</pre>
+            <h3>Adding New Events</h3>
+            <ol>
+                <li>Increment the ID for the new event (ensure each event has a unique ID)</li>
+                <li>Fill in the event name, date, venue, and description</li>
+                <li>Add an optional registration form link if applicable</li>
+                <li>Specify an image from the images directory</li>
+                <li>Save the content.json file</li>
+            </ol>
+            
+            <h3>Automatic Removal of Past Events</h3>
+            <p>The system automatically removes past events from the upcoming events section once their event date has passed. This is handled by the JavaScript code in upcoming.html which compares event dates with the current date.</p>
+            
+            <h3>Moving Events to Past Events</h3>
+            <p>When an event date has passed, the event is automatically moved from the upcomingEvents section to the pastEvents section:</p>
+            <ol>
+                <li>The event is removed from the upcomingEvents array</li>
+                <li>The event is added to the pastEvents array with the same ID</li>
+                <li>The formLink field is removed as it's no longer needed</li>
+            </ol>
+            
+            <h3>Best Practices</h3>
+            <ul>
+                <li>Regularly check that event dates are accurate</li>
+                <li>Use consistent date formatting (e.g., "Month Day, Year")</li>
+                <li>Ensure all image paths are correct and images exist</li>
+                <li>Test the website after making changes to verify events display correctly</li>
+            </ul>
+            
+            <p><strong>Note:</strong> Always increment the ID for new events and ensure all entries are valid JSON.</p>
+        </div>
+        
+        <!-- Past Events Tab -->
+        <div id="past-events" class="admin-tab-content">
+            <h2>Past Events Format</h2>
+            <p>To update past events, edit the "pastEvents" section in content.json:</p>
+            <pre>{
+  "pastEvents": [
+    {
+      "id": 1,
+      "name": "Event Name",
+      "date": "Event Date",
+      "description": "Event Description",
+      "image": "images/event-image.jpg"
+    }
+  ]
+}</pre>
+            
+            <h3>Managing Past Events</h3>
+            <ol>
+                <li>Past events are automatically moved from upcomingEvents when their date passes</li>
+                <li>You can manually add events to this section for historical purposes</li>
+                <li>Remove events from this section if they are no longer relevant</li>
+                <li>Ensure each event has a unique ID</li>
+            </ol>
+            
+            <h3>Event Archive Management</h3>
+            <p>For better organization, consider periodically archiving very old events:</p>
+            <ol>
+                <li>Create a separate archive document for events older than 1 year</li>
+                <li>Remove archived events from content.json to keep the file manageable</li>
+                <li>Update links on the website to point to the archive if needed</li>
+            </ol>
+            
+            <p><strong>Note:</strong> Always increment the ID for new events and ensure all entries are valid JSON.</p>
+        </div>
+        
+        <!-- Event Directories Tab -->
+        <div id="event-directories" class="admin-tab-content">
+            <h2>Event Directories & Slideshow Images</h2>
+            <p>The Events page displays slideshow galleries for each event by scanning event directories in the <code>images/</code> folder. Each event directory should contain numbered images (1.jpg, 2.jpg, etc.) for the slideshow.</p>
+            
+            <h3>Adding New Event Directories</h3>
+            <ol>
+                <li>Create a new folder in the <code>images/</code> directory with a descriptive name for your event</li>
+                <li>Name the folder using clear, descriptive text (e.g., "Annual Sports Day 2025")</li>
+                <li>Add images to the folder with numeric filenames (1.jpg, 2.jpg, 3.jpg, etc.)</li>
+                <li>Number images sequentially from 1 to maintain proper slideshow order</li>
+                <li>Upload up to 20 images per event (the system checks for images 1-20)</li>
+            </ol>
+            
+            <h3>Updating Event Directory Information in content.json</h3>
+            <p>Edit the "eventDirectories" section in the "eventsContent" of content.json to include your new event:</p>
+            <pre>{
+  "eventsContent": {
+    "eventDirectories": [
+      { 
+        "dir": "images/Your Event Folder Name", 
+        "name": "Display Name for Your Event" 
+      }
+    ]
+  }
+}</pre>
+            
+            <h3>Ensuring Events Load Properly in All Environments</h3>
+            <p>To ensure events load correctly when the HTML files are opened directly in the browser, you must maintain complete event information in the content.json file:</p>
+            
+            <h4>For Past Events</h4>
+            <p>Each past event in the "pastEvents" section should include:</p>
+            <ul>
+                <li>Unique ID number</li>
+                <li>Event name</li>
+                <li>Event date</li>
+                <li>Description</li>
+                <li>Main event image path</li>
+                <li>Complete "slideshowImages" array with all image paths for the event gallery</li>
+            </ul>
+            
+            <h4>Sample Past Event Entry</h4>
+            <pre>{
+  "id": 1,
+  "name": "Event Name",
+  "date": "Event Date",
+  "description": "Event Description",
+  "image": "images/main-event-image.jpg",
+  "slideshowImages": [
+    "images/event-folder/1.jpg",
+    "images/event-folder/2.jpg",
+    "images/event-folder/3.jpg"
+  ]
+}</pre>
+            
+            <h4>Cross-Environment Compatibility</h4>
+            <p>The website works in three different environments:</p>
+            <ol>
+                <li><strong>GitHub Deployment:</strong> Content loaded from content.json</li>
+                <li><strong>Direct Browser File Access:</strong> Content loaded from content.json</li>
+                <li><strong>Local Server:</strong> Content loaded from directory scanning (fallback)</li>
+            </ol>
+            
+            <p>For direct browser access to work properly:</p>
+            <ul>
+                <li>All image paths in content.json must be relative to the website root</li>
+                <li>Every past event must have a complete "slideshowImages" array</li>
+                <li>All referenced images must exist in the specified locations</li>
+                <li>Test the website by opening HTML files directly in the browser after making changes</li>
+            </ul>
+            
+            <h4>Thumbnail Hover Slideshow Functionality</h4>
+            <p>The thumbnail hover slideshow functionality displays images from each event's dedicated image folder when users hover over event thumbnails. To ensure this works correctly:</p>
+            <ul>
+                <li>The "slideshowImages" array in each past event must contain valid paths to all images for that event</li>
+                <li>Image paths must be correctly formatted and accessible</li>
+                <li>Up to 5 images from the slideshowImages array will be displayed in the hover slideshow</li>
+                <li>If slideshowImages is missing or empty, the hover functionality will not be enabled for that event</li>
+            </ul>
+            
+            <h3>Best Practices for Event Images</h3>
+            <ul>
+                <li>Use high-quality JPG images with good lighting</li>
+                <li>Resize images to appropriate dimensions (recommended: 1920x1080 pixels)</li>
+                <li>Use descriptive filenames for easy identification</li>
+                <li>Ensure all images in an event folder are consistently sized</li>
+                <li>Number images sequentially to control slideshow order</li>
+                <li>Include a variety of shots (wide angles, close-ups, candid moments)</li>
+            </ul>
+            
+            <h3>Troubleshooting</h3>
+            <p>If event slideshows aren't displaying:</p>
+            <ul>
+                <li>Check that the event directory exists in the <code>images/</code> folder</li>
+                <li>Verify that the directory name matches exactly in content.json</li>
+                <li>Ensure images are named with numeric filenames (1.jpg, 2.jpg, etc.)</li>
+                <li>Confirm that images are valid JPG files</li>
+                <li>Test the website after making changes</li>
+                <li>Verify that all slideshowImages paths in content.json are correct</li>
+                <li>Check browser console for any error messages</li>
+            </ul>
+            
+            <h3>Using the Image Renamer Tool</h3>
+            <p>To help with organizing event photos, you can use the Image Renamer tool:</p>
+            <ol>
+                <li>Open <a href="rename_images.html">rename_images.html</a> in your browser</li>
+                <li>Enter a prefix for your images (e.g., "diwali", "holi", "event")</li>
+                <li>Select multiple JPG files you want to rename</li>
+                <li>Preview the renamed files</li>
+                <li>Download the renamed files</li>
+            </ol>
+            <p><strong>Example:</strong> If you enter "diwali" as prefix and select 3 images, they will be renamed as "diwali1.jpg", "diwali2.jpg", and "diwali3.jpg"</p>
+        </div>
+        
+        <!-- Image Renamer Tab -->
+        <div id="image-renamer" class="admin-tab-content">
+            <h2>Image Renamer Tool</h2>
+            <p>The Image Renamer tool helps you organize event photos by renaming multiple JPG files with a consistent naming pattern.</p>
+            
+            <h3>How to Use:</h3>
+            <ol>
+                <li>Open <a href="rename_images.html">rename_images.html</a> in your browser</li>
+                <li>Enter a prefix for your images (e.g., "diwali", "holi", "event")</li>
+                <li>Select multiple JPG files you want to rename</li>
+                <li>Preview the renamed files</li>
+                <li>Download the renamed files</li>
+            </ol>
+            
+            <h3>Naming Convention:</h3>
+            <p>The tool automatically numbers your files sequentially:</p>
+            <ul>
+                <li>First file: [prefix]1.jpg</li>
+                <li>Second file: [prefix]2.jpg</li>
+                <li>Third file: [prefix]3.jpg</li>
+                <li>And so on...</li>
+            </ul>
+            
+            <h3>Example:</h3>
+            <p>If you enter "diwali" as prefix and select 3 images:</p>
+            <ul>
+                <li>Original files might be: IMG_001.jpg, DSC_002.jpg, photo3.jpg</li>
+                <li>Renamed files will be: diwali1.jpg, diwali2.jpg, diwali3.jpg</li>
+            </ul>
+            
+            <h3>Best Practices:</h3>
+            <ul>
+                <li>Use descriptive prefixes that match your event names</li>
+                <li>Create a new folder for each event before renaming files</li>
+                <li>Always preview files before downloading to confirm naming</li>
+                <li>Keep backups of original files before renaming</li>
+            </ul>
+        </div>
+        
+        <!-- Filename Extractor Tab -->
+        <div id="filename-extractor" class="admin-tab-content">
+            <h2>Filename Extractor Tool</h2>
+            <p>The Filename Extractor tool helps you extract filenames with extensions from a list of file paths and format them for use in content.json or other purposes.</p>
+            
+            <h3>How to Use:</h3>
+            <ol>
+                <li>Open <a href="extract_filenames.html">extract_filenames.html</a> in your browser</li>
+                <li>Either:
+                    <ul>
+                        <li>Paste a list of file paths in the input area (one per line), OR</li>
+                        <li>Select multiple files using the file selector (this automatically extracts filenames)</li>
+                    </ul>
+                </li>
+                <li>Click "Extract Filenames" to get just the filenames with extensions</li>
+                <li>Optionally add a prefix or suffix to each filename</li>
+                <li>Click "Copy to Clipboard" to copy the results</li>
+                <li>Use "Join with Comma" to create a comma-separated list for JSON arrays</li>
+            </ol>
+            
+            <h3>Features:</h3>
+            <ul>
+                <li><strong>File Selection:</strong> Select multiple files directly from your computer to automatically extract their names</li>
+                <li><strong>Extract Filenames:</strong> Get just the filename with extension from full paths</li>
+                <li><strong>Prefix/Suffix:</strong> Add text before or after each filename</li>
+                <li><strong>Copy to Clipboard:</strong> Easily copy results for use elsewhere</li>
+                <li><strong>Join with Comma:</strong> Format filenames as a comma-separated list for JSON arrays</li>
+                <li><strong>Clear All:</strong> Reset all fields to start fresh</li>
+            </ul>
+            
+            <h3>Example Usage:</h3>
+            <p>If you have a list of image paths like:</p>
+            <pre>images/events/diwali/IMG_001.jpg
+images/events/diwali/DSC_002.jpg
+images/events/diwali/photo3.jpg</pre>
+            <p>The tool will extract:</p>
+            <pre>IMG_001.jpg
+DSC_002.jpg
+photo3.jpg</pre>
+            <p>With prefix "diwali" and suffix "":</p>
+            <pre>diwaliIMG_001.jpg
+diwaliDSC_002.jpg
+diwaliphoto3.jpg</pre>
+            <p>Joined with comma:</p>
+            <pre>diwaliIMG_001.jpg, diwaliDSC_002.jpg, diwaliphoto3.jpg</pre>
+            
+            <h3>Best Practices:</h3>
+            <ul>
+                <li>Use this tool when creating "slideshowImages" arrays in content.json</li>
+                <li>Always verify extracted filenames match your actual files</li>
+                <li>Use the prefix feature to standardize naming conventions</li>
+                <li>Join with comma for easy insertion into JSON arrays</li>
+            </ul>
+        </div>
+        
+        <!-- Committee Members Tab -->
+        <div id="committee" class="admin-tab-content">
+            <h2>Committee Members Format</h2>
+            <p>To update committee members, edit the "committeeMembers" section in content.json:</p>
+            <pre>{
+  "committeeMembers": [
+    {
+      "id": 1,
+      "name": "Member Name",
+      "position": "Position Title",
+      "image": "images/member-photo.jpg"
+    }
+  ]
+}</pre>
+            
+            <h3>Special Positions</h3>
+            <p>The following positions are given special prominence on the committee page:</p>
+            <ul>
+                <li><strong>President</strong> - Placed at the top of the committee list</li>
+                <li><strong>General Secretary</strong> - Placed second in the committee list</li>
+                <li><strong>Joint Secretary</strong> - Placed third in the committee list</li>
+                <li><strong>Cultural Secretary</strong> - Placed fourth in the committee list</li>
+                <li><strong>All Other Members</strong> - Listed alphabetically after the special positions</li>
+            </ul>
+            
+            <h3>Adding New Committee Members</h3>
+            <ol>
+                <li>Upload member photos to the <code>images/</code> directory with filenames matching the member names</li>
+                <li>Assign appropriate positions to each member</li>
+                <li>Increment the ID for each new member (ensure each member has a unique ID)</li>
+                <li>Ensure all image paths are correct and images exist</li>
+                <li>Save the content.json file</li>
+            </ol>
+            
+            <h3>Best Practices</h3>
+            <ul>
+                <li>Use high-quality JPG images with good lighting</li>
+                <li>Ensure all member photos are consistently sized (recommended: 500x500 pixels)</li>
+                <li>Use descriptive filenames that match member names exactly</li>
+                <li>Assign appropriate positions to each member</li>
+                <li>Test the website after making changes</li>
+            </ul>
+            
+            <p><strong>Note:</strong> Always increment the ID for new members and ensure all entries are valid JSON.</p>
+        </div>
+        
+        <!-- About Us Tab -->
+        <div id="about" class="admin-tab-content">
+            <h2>About Us Content Format</h2>
+            <p>To update the About Us page, edit the "aboutContent" section in content.json:</p>
+            <pre>{
+  "aboutContent": {
+    "story": "Your club's story content",
+    "mission": "Your mission statement",
+    "vision": "Your vision statement",
+    "joinUs": "Information about joining the club"
+  }
+}</pre>
+            <p><strong>Note:</strong> Ensure all text is properly escaped for JSON (use \" for quotes).</p>
+        </div>
+        
+        <!-- Homepage Tab -->
+        <div id="homepage" class="admin-tab-content">
+            <h2>Homepage Content Format</h2>
+            <p>To update the homepage content, edit the "homepage" section in content.json:</p>
+            <pre>{
+  "homepage": {
+    "header": {
+      "title": "Welcome to AGA Club Bhel Bhopal",
+      "subtitle": "Celebrating Community, Culture and Togetherness",
+      "backgroundImage": "images/hero-bg.jpg"
+    },
+    "leaders": [
+      {
+        "id": 1,
+        "name": "President",
+        "photo": "images/president.jpg",
+        "messageTitle": "President's Message",
+        "message": "Short message text",
+        "fullMessage": "Full message text"
+      }
+    ],
+    "gallery": [
+      {
+        "id": 1,
+        "image": "images/photo.jpg",
+        "alt": "Photo description"
+      }
+    ]
+  }
+}</pre>
+            <h3>Gallery Section Updates</h3>
+            <p>The homepage gallery section has been updated with the following improvements:</p>
+            <ul>
+                <li><strong>Fixed-Size Container:</strong> All gallery images are now contained within a fixed-size wrapper to prevent large images from disrupting the UI layout</li>
+                <li><strong>Uniform Viewing Experience:</strong> All photos are displayed with consistent sizing and positioning</li>
+                <li><strong>Removed Navigation Dots:</strong> The navigation dots below the slideshow have been removed for a cleaner interface</li>
+            </ul>
+            <p><strong>Editing Instructions:</strong></p>
+            <ul>
+                <li><strong>Header:</strong> Update title, subtitle, and backgroundImage path</li>
+                <li><strong>Leaders:</strong> Edit leader information, photos, and messages</li>
+                <li><strong>Gallery:</strong> Add/remove photos for the slideshow carousel</li>
+            </ul>
+            <p><strong>Note:</strong> Always increment IDs for new items and ensure all entries are valid JSON.</p>
+        </div>
+        
+        <!-- Contact Us Tab -->
+        <div id="contact" class="admin-tab-content">
+            <h2>Contact Us Content Format</h2>
+            <p>To update the Contact Us page, edit the "contactContent" section in content.json:</p>
+            <pre>{
+  "contactContent": {
+    "address": "Full postal address",
+    "phone": "Phone number",
+    "email": "Email address",
+    "hours": "Office hours",
+    "location": "Location description"
+  }
+}</pre>
+            <p><strong>Note:</strong> Ensure all text is properly escaped for JSON (use \" for quotes).</p>
+        </div>
+        
+        <!-- Membership Tab -->
+        <div id="membership" class="admin-tab-content">
+            <h2>Membership Page Content</h2>
+            <p>To update the Membership page content, edit the "membershipContent" section in content.json:</p>
+            <pre>{
+  "membershipContent": {
+    "backgroundImage": "images/membership-bg.jpg",
+    "backgroundSlideshow": [
+      "images/membership-bg.jpg",
+      "images/committee-bg.jpg",
+      "images/events-bg.jpg",
+      "images/contact-bg.jpg",
+      "images/about-bg.jpg"
+    ]
+  }
+}</pre>
+            
+            <h3>Membership Page Features</h3>
+            <ul>
+                <li><strong>Membership Form Download:</strong> Users can download the membership form (PDF) directly from the page</li>
+                <li><strong>Member List Preview:</strong> Users can view a preview of the current member list</li>
+                <li><strong>Membership Benefits:</strong> Information about the benefits of becoming a member</li>
+                <li><strong>Membership Requirements:</strong> Details about the requirements for joining the club</li>
+            </ul>
+            
+            <h3>File References</h3>
+            <p>The membership page references the following files:</p>
+            <ul>
+                <li><strong>Membership Form:</strong> images/AGA Club membership forms_new.pdf</li>
+                <li><strong>Member List Preview:</strong> images/list.jpg</li>
+            </ul>
+            
+            <h3>Best Practices</h3>
+            <ul>
+                <li>Ensure the membership form PDF is kept up to date with current requirements</li>
+                <li>Regularly update the member list image to reflect current membership</li>
+                <li>Review and update membership benefits and requirements as needed</li>
+                <li>Test all download links to ensure they work correctly</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Admin logout functionality
+        document.getElementById('adminLogoutBtn').addEventListener('click', function() {
+            // In a real implementation, this would log the user out
+            alert('Admin logout functionality would be implemented here.');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - AGA Club Bhel Bhopal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/jpeg" href="images/aga_club_site.jpg">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <a href="index.html">
+                        <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    </a>
+                    <a href="index.html" class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </a>
+                    <a href="index.html">
+                        <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                    </a>
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navigation Menu Bar -->
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="membership.html" class="nav-link">Membership</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="hero" id="heroSection">
+        <div class="hero-content">
+            <h1>Our Events</h1>
+            <p>Celebrating culture, community, and togetherness through various events</p>
+        </div>
+    </header>
+    <script>
+        // Set active navigation link
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current page filename
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Add active class to the current page link
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Load events page header content
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.loadContent().then(content => {
+                if (content.eventsContent && content.eventsContent.backgroundImage) {
+                    const heroSection = document.getElementById('heroSection');
+                    heroSection.style.background = `url('${content.eventsContent.backgroundImage}')`;
+                    heroSection.style.backgroundSize = 'cover';
+                    heroSection.style.backgroundPosition = 'center';
+                }
+            });
+        });
+    </script>
+
+    <!-- Main Content -->
+    <main>
+        <section class="events-section">
+            <div class="container">
+                <h2>Past Events</h2>
+                <div class="events-grid" id="pastEventsContainer">
+                    <!-- Events will be loaded dynamically -->
+                </div>
+                
+
+                
+                <script>
+                    // Global variables for slideshow
+                    let slideIndex = 1;
+                    let slideshowInterval = null;
+                    let hoverInterval = null;
+                    let hoverSlideIndex = 1;
+                    let startX = 0;
+                    let endX = 0;
+                    
+                    // Event Slideshow Class (similar to header slideshow)
+                    class EventSlideshow {
+                        constructor() {
+                            this.currentSlide = 1;
+                            this.slideInterval = null;
+                            this.modal = null;
+                        }
+                        
+                        init(eventDir, eventName, slideshowImages = null) {
+                            // Remove existing modal if present
+                            const existingModal = document.getElementById('slideshowModal');
+                            if (existingModal) {
+                                existingModal.remove();
+                            }
+                            
+                            // Create modal
+                            this.modal = document.createElement('div');
+                            this.modal.id = 'slideshowModal';
+                            this.modal.className = 'modal';
+                            this.modal.style.display = 'block';
+                            
+                            // Modal content
+                            this.modal.innerHTML = `
+                                <div class="modal-content">
+                                    <span class="close" id="closeButton">&times;</span>
+                                    <h2>${eventName}</h2>
+                                    <div class="slideshow-container">
+                                        <div id="slidesContainer"></div>
+                                        <a class="prev" onclick="eventSlideshow.changeSlide(-1)">&#10094;</a>
+                                        <a class="next" onclick="eventSlideshow.changeSlide(1)">&#10095;</a>
+                                    </div>
+                                    <div class="caption" id="slideCaption">Loading images...</div>
+                                </div>
+                            `;
+                            
+                            document.body.appendChild(this.modal);
+                            
+                            // Add close button functionality
+                            document.getElementById('closeButton').addEventListener('click', () => {
+                                this.close();
+                            });
+                            
+                            // Close modal when clicking outside of it
+                            this.modal.addEventListener('click', (e) => {
+                                if (e.target === this.modal) {
+                                    this.close();
+                                }
+                            });
+                            
+                            // Add keyboard navigation
+                            document.addEventListener('keydown', (e) => {
+                                this.handleKeyboardNavigation(e);
+                            });
+                            
+                            // Add touch swipe functionality
+                            const slidesContainer = document.getElementById('slidesContainer');
+                            slidesContainer.addEventListener('touchstart', handleTouchStart, false);
+                            slidesContainer.addEventListener('touchend', handleTouchEnd, false);
+                            
+                            // Load images
+                            if (slideshowImages && Array.isArray(slideshowImages) && slideshowImages.length > 0) {
+                                // Use slideshow images from content.json
+                                this.loadImagesFromJson(slideshowImages, eventName);
+                            } else {
+                                // Scan directory for images
+                                this.loadImages(eventDir, eventName);
+                            }
+                        }
+                        
+                        loadImagesFromJson(slideshowImages, eventName) {
+                            const slidesContainer = document.getElementById('slidesContainer');
+                            slidesContainer.innerHTML = '';
+                            
+                            // Create slides for each image in the slideshowImages array
+                            slideshowImages.forEach((imgPath, index) => {
+                                const slideDiv = document.createElement('div');
+                                slideDiv.className = 'slides fade';
+                                slideDiv.style.display = 'none';
+                                
+                                // For local file environments, we need to handle paths differently
+                                let imagePath = imgPath;
+                                if (window.location.protocol === 'file:') {
+                                    imagePath = imagePath.replace(/images\//g, './images/');
+                                }
+                                
+                                // Properly encode the path for display
+                                const encodedPath = encodeURI(imagePath);
+                                // Use fixed-size container for consistent display
+                                slideDiv.innerHTML = `
+                                    <div class="gallery-slide-wrapper">
+                                        <img src="${encodedPath}" alt="${eventName} - Photo ${index + 1}">
+                                    </div>
+                                `;
+                                
+                                slidesContainer.appendChild(slideDiv);
+                            });
+                            
+                            // Show the first slide after a brief moment
+                            setTimeout(() => {
+                                this.showSlide(1);
+                                this.startSlideshow();
+                            }, 100);
+                        }
+                        
+                        loadImages(eventDir, eventName) {
+                            const slidesContainer = document.getElementById('slidesContainer');
+                            slidesContainer.innerHTML = '';
+                            
+                            // Create a simple array of possible image paths
+                            const imagePaths = [];
+                            for (let i = 1; i <= 20; i++) {
+                                imagePaths.push(`${eventDir}/${i}.jpg`);
+                            }
+                            
+                            // Load images one by one to check which ones exist
+                            this.loadImageBatch(imagePaths, eventName, slidesContainer);
+                        }
+                        
+                        // Load images and only create slides for those that exist
+                        loadImageBatch(imagePaths, eventName, container) {
+                            let validImages = [];
+                            let checkedCount = 0;
+                            const total = imagePaths.length;
+                            
+                            // Counter for successful loads
+                            let successCount = 0;
+                            
+                            // Track if we're running in a local file environment
+                            const isLocalFile = window.location.protocol === 'file:';
+                            
+                            imagePaths.forEach((imgPath, index) => {
+                                const img = new Image();
+                                
+                                img.onload = () => {
+                                    successCount++;
+                                    validImages.push({path: imgPath, index: index + 1});
+                                    checkedCount++;
+                                    
+                                    // When all images are checked, create slides
+                                    if (checkedCount === total) {
+                                        this.createSlides(validImages, eventName, container);
+                                    }
+                                };
+                                
+                                img.onerror = () => {
+                                    checkedCount++;
+                                    
+                                    // When all images are checked, create slides
+                                    if (checkedCount === total) {
+                                        this.createSlides(validImages, eventName, container);
+                                    }
+                                };
+                                
+                                // For local file environments, we need to handle paths differently
+                                if (isLocalFile) {
+                                    // For local files, we need to adjust the path
+                                    const adjustedPath = imgPath.replace(/images\//g, './images/');
+                                    img.src = encodeURI(adjustedPath);
+                                } else {
+                                    // Properly encode the path for loading
+                                    const encodedPath = encodeURI(imgPath);
+                                    img.src = encodedPath;
+                                }
+                            });
+                            
+                            // Fallback in case no images load after 3 seconds
+                            setTimeout(() => {
+                                if (successCount === 0 && checkedCount < total) {
+                                    this.createSlides(validImages, eventName, container);
+                                }
+                            }, 3000);
+                        }
+                        
+                        // Create slide elements for valid images
+                        createSlides(validImages, eventName, container) {
+                            // Sort by index to maintain order
+                            validImages.sort((a, b) => a.index - b.index);
+                            
+                            // If no valid images, show a message
+                            if (validImages.length === 0) {
+                                container.innerHTML = '<div class="slides fade" style="display:block; text-align: center; padding: 50px;"><p>No images available for this event.</p></div>';
+                                document.getElementById('slideCaption').innerHTML = 'No images available';
+                                return;
+                            }
+                            
+                            // Clear container first
+                            container.innerHTML = '';
+                            
+                            // Create slides for valid images
+                            validImages.forEach((imgData, idx) => {
+                                const slideDiv = document.createElement('div');
+                                slideDiv.className = 'slides fade'; // Add fade class for smooth transitions
+                                slideDiv.style.display = 'none';
+                                
+                                // For local file environments, we need to handle paths differently
+                                let imagePath = imgData.path;
+                                if (window.location.protocol === 'file:') {
+                                    imagePath = imagePath.replace(/images\//g, './images/');
+                                }
+                                
+                                // Properly encode the path for display
+                                const encodedPath = encodeURI(imagePath);
+                                // Use fixed-size container for consistent display
+                                slideDiv.innerHTML = `
+                                    <div class="gallery-slide-wrapper">
+                                        <img src="${encodedPath}" alt="${eventName} - Photo ${imgData.index}">
+                                    </div>
+                                `;
+                                
+                                container.appendChild(slideDiv);
+                            });
+                            
+                            // Show the first slide after a brief moment
+                            setTimeout(() => {
+                                this.showSlide(1);
+                                this.startSlideshow();
+                            }, 100);
+                        }
+                        
+                        showSlide(index) {
+                            const slides = document.getElementsByClassName("slides");
+                            
+                            if (slides.length === 0) {
+                                document.getElementById('slideCaption').innerHTML = 'No images available for this event';
+                                return;
+                            }
+                            
+                            // Update current slide index
+                            if (index > slides.length) { this.currentSlide = 1; }
+                            else if (index < 1) { this.currentSlide = slides.length; }
+                            else { this.currentSlide = index; }
+                            
+                            // Hide all slides
+                            for (let i = 0; i < slides.length; i++) {
+                                slides[i].style.display = "none";
+                            }
+                            
+                            // Show current slide
+                            if (slides[this.currentSlide - 1]) {
+                                slides[this.currentSlide - 1].style.display = "block";
+                                document.getElementById('slideCaption').innerHTML = `Photo ${this.currentSlide} of ${slides.length}`;
+                            }
+                        }
+                        
+                        changeSlide(n) {
+                            // Reset the auto slideshow timer
+                            this.stopSlideshow();
+                            this.startSlideshow();
+                            
+                            this.showSlide(this.currentSlide += n);
+                        }
+                        
+                        startSlideshow() {
+                            if (this.slideInterval) {
+                                clearInterval(this.slideInterval);
+                            }
+                            
+                            this.slideInterval = setInterval(() => {
+                                this.showSlide(this.currentSlide + 1);
+                            }, 5000); // Change slide every 5 seconds as requested
+                        }
+                        
+                        stopSlideshow() {
+                            if (this.slideInterval) {
+                                clearInterval(this.slideInterval);
+                                this.slideInterval = null;
+                            }
+                        }
+                        
+                        handleKeyboardNavigation(e) {
+                            // Only handle if modal is open
+                            const modal = document.getElementById('slideshowModal');
+                            if (!modal) return;
+                            
+                            if (e.key === 'ArrowLeft') {
+                                this.changeSlide(-1);
+                            } else if (e.key === 'ArrowRight') {
+                                this.changeSlide(1);
+                            } else if (e.key === 'Escape') {
+                                this.close();
+                            }
+                        }
+                        
+                        close() {
+                            if (this.modal) {
+                                this.modal.style.display = 'none';
+                                this.modal.remove();
+                            }
+                            this.stopSlideshow();
+                            
+                            // Remove keyboard listener
+                            document.removeEventListener('keydown', this.handleKeyboardNavigation);
+                        }
+                    }
+                    
+                    // Create a global instance
+                    const eventSlideshow = new EventSlideshow();
+                    
+                    // Function to show event slideshow (updated)
+                    function showEventSlideshow(eventDir, eventName, slideshowImages = null) {
+                        eventSlideshow.init(eventDir, eventName, slideshowImages);
+                    }
+                    
+                    // Update existing functions to work with the new class
+                    function changeSlide(n) {
+                        eventSlideshow.changeSlide(n);
+                    }
+                    
+                    function showSlides(n) {
+                        eventSlideshow.showSlide(n);
+                    }
+                    
+                    function startAutoSlideshow() {
+                        eventSlideshow.startSlideshow();
+                    }
+                    
+                    function stopAutoSlideshow() {
+                        eventSlideshow.stopSlideshow();
+                    }
+                    
+                    // Keyboard navigation
+                    function handleKeyboardNavigation(e) {
+                        // Only handle if modal is open
+                        const modal = document.getElementById('slideshowModal');
+                        if (!modal) return;
+                        
+                        if (e.key === 'ArrowLeft') {
+                            changeSlide(-1);
+                        } else if (e.key === 'ArrowRight') {
+                            changeSlide(1);
+                        } else if (e.key === 'Escape') {
+                            closeModal();
+                        }
+                    }
+                    
+                    // Touch swipe handlers
+                    function handleTouchStart(e) {
+                        startX = e.changedTouches[0].screenX;
+                    }
+                    
+                    function handleTouchEnd(e) {
+                        endX = e.changedTouches[0].screenX;
+                        handleSwipe();
+                    }
+                    
+                    function handleSwipe() {
+                        const threshold = 50; // Minimum swipe distance
+                        
+                        if (startX - endX > threshold) {
+                            // Swipe left - next slide
+                            eventSlideshow.changeSlide(1);
+                        } else if (endX - startX > threshold) {
+                            // Swipe right - previous slide
+                            eventSlideshow.changeSlide(-1);
+                        }
+                    }
+                    
+                    // Hover thumbnail slideshow functionality
+                    function startHoverSlideshow(eventElement, eventDir) {
+                        // Clear any existing interval for this element
+                        if (eventElement.hoverInterval) {
+                            clearInterval(eventElement.hoverInterval);
+                            eventElement.hoverInterval = null;
+                        }
+                        
+                        const images = [];
+                        const maxImages = 5; // Show only first 5 images in hover slideshow
+                        let validImages = 0; // Track how many valid images we have
+                        
+                        // Track if we're running in a local file environment
+                        const isLocalFile = window.location.protocol === 'file:';
+                        
+                        // Preload images with proper encoding
+                        for (let i = 1; i <= maxImages; i++) {
+                            const img = new Image();
+                            let imagePath = `${eventDir}/${i}.jpg`;
+                            
+                            // For local file environments, we need to handle paths differently
+                            if (isLocalFile) {
+                                imagePath = imagePath.replace(/images\//g, './images/');
+                            }
+                            
+                            const encodedPath = encodeURI(imagePath);
+                            img.src = encodedPath;
+                            img.onload = function() {
+                                validImages++;
+                            };
+                            img.onerror = function() {
+                                // Don't add invalid images to the array
+                                this.src = ''; // Clear src to prevent loading
+                            };
+                            images.push({index: i, path: imagePath, image: img});
+                        }
+                        
+                        // Wait a bit for images to load before starting slideshow
+                        setTimeout(() => {
+                            // Only start slideshow if we have valid images
+                            if (validImages > 0) {
+                                let validImageIndex = 0;
+                                
+                                // Filter out invalid images
+                                const validImageObjects = images.filter(imgObj => imgObj.image.src);
+                                
+                                // Start hover slideshow
+                                eventElement.hoverInterval = setInterval(() => {
+                                    const eventImage = eventElement.querySelector('.event-image');
+                                    if (eventImage && validImageObjects.length > 0) {
+                                        // For local file environments, we need to handle paths differently
+                                        let imagePath = validImageObjects[validImageIndex].path;
+                                        if (isLocalFile) {
+                                            imagePath = imagePath.replace(/^.*\/\/[^\/]*/, '.');
+                                        }
+                                        eventImage.src = imagePath;
+                                        validImageIndex = (validImageIndex + 1) % validImageObjects.length;
+                                    }
+                                }, 1000); // Change image every 1 second
+                            }
+                        }, 500); // Wait 500ms for images to load
+                    }
+
+                    // New function to handle hover slideshow using slideshowImages from content.json
+                    function startHoverSlideshowFromJson(eventElement, slideshowImages) {
+                        // Clear any existing interval for this element
+                        if (eventElement.hoverInterval) {
+                            clearInterval(eventElement.hoverInterval);
+                            eventElement.hoverInterval = null;
+                        }
+                        
+                        const images = [];
+                        const maxImages = Math.min(5, slideshowImages.length); // Show up to 5 images or total available
+                        let validImages = 0; // Track how many valid images we have
+                        
+                        // Track if we're running in a local file environment
+                        const isLocalFile = window.location.protocol === 'file:';
+                        
+                        // Preload images with proper encoding from slideshowImages array
+                        for (let i = 0; i < maxImages; i++) {
+                            const img = new Image();
+                            let imagePath = slideshowImages[i];
+                            
+                            // For local file environments, we need to handle paths differently
+                            if (isLocalFile) {
+                                imagePath = imagePath.replace(/images\//g, './images/');
+                            }
+                            
+                            const encodedPath = encodeURI(imagePath);
+                            img.src = encodedPath;
+                            img.onload = function() {
+                                validImages++;
+                            };
+                            img.onerror = function() {
+                                // Don't add invalid images to the array
+                                this.src = ''; // Clear src to prevent loading
+                            };
+                            images.push({index: i, path: imagePath, image: img});
+                        }
+                        
+                        // Wait a bit for images to load before starting slideshow
+                        setTimeout(() => {
+                            // Only start slideshow if we have valid images
+                            if (validImages > 0) {
+                                let validImageIndex = 0;
+                                
+                                // Filter out invalid images
+                                const validImageObjects = images.filter(imgObj => imgObj.image.src);
+                                
+                                // Start hover slideshow
+                                eventElement.hoverInterval = setInterval(() => {
+                                    const eventImage = eventElement.querySelector('.event-image');
+                                    if (eventImage && validImageObjects.length > 0) {
+                                        // For local file environments, we need to handle paths differently
+                                        let imagePath = validImageObjects[validImageIndex].path;
+                                        if (isLocalFile) {
+                                            imagePath = imagePath.replace(/^.*\/\/[^\/]*/, '.');
+                                        }
+                                        eventImage.src = imagePath;
+                                        validImageIndex = (validImageIndex + 1) % validImageObjects.length;
+                                    }
+                                }, 1000); // Change image every 1 second
+                            }
+                        }, 500); // Wait 500ms for images to load
+                    }
+
+                    // New function to handle hover slideshow for prefixed events
+                    function startHoverSlideshowWithPrefix(eventElement, eventDir, prefix) {
+                        // Clear any existing interval for this element
+                        if (eventElement.hoverInterval) {
+                            clearInterval(eventElement.hoverInterval);
+                            eventElement.hoverInterval = null;
+                        }
+                        
+                        const images = [];
+                        const maxImages = 5; // Show only first 5 images in hover slideshow
+                        let validImages = 0; // Track how many valid images we have
+                        
+                        // Track if we're running in a local file environment
+                        const isLocalFile = window.location.protocol === 'file:';
+                        
+                        // Preload images with proper encoding using prefix
+                        for (let i = 1; i <= maxImages; i++) {
+                            const img = new Image();
+                            let imagePath = `${eventDir}/${prefix}${i}.jpg`;
+                            
+                            // For local file environments, we need to handle paths differently
+                            if (isLocalFile) {
+                                imagePath = imagePath.replace(/images\//g, './images/');
+                            }
+                            
+                            const encodedPath = encodeURI(imagePath);
+                            img.src = encodedPath;
+                            img.onload = function() {
+                                validImages++;
+                            };
+                            img.onerror = function() {
+                                // Don't add invalid images to the array
+                                this.src = ''; // Clear src to prevent loading
+                            };
+                            images.push({index: i, path: imagePath, image: img});
+                        }
+                        
+                        // Wait a bit for images to load before starting slideshow
+                        setTimeout(() => {
+                            // Only start slideshow if we have valid images
+                            if (validImages > 0) {
+                                let validImageIndex = 0;
+                                
+                                // Filter out invalid images
+                                const validImageObjects = images.filter(imgObj => imgObj.image.src);
+                                
+                                // Start hover slideshow
+                                eventElement.hoverInterval = setInterval(() => {
+                                    const eventImage = eventElement.querySelector('.event-image');
+                                    if (eventImage && validImageObjects.length > 0) {
+                                        // For local file environments, we need to handle paths differently
+                                        let imagePath = validImageObjects[validImageIndex].path;
+                                        if (isLocalFile) {
+                                            imagePath = imagePath.replace(/^.*\/\/[^\/]*/, '.');
+                                        }
+                                        eventImage.src = imagePath;
+                                        validImageIndex = (validImageIndex + 1) % validImageObjects.length;
+                                    }
+                                }, 1000); // Change image every 1 second
+                            }
+                        }, 500); // Wait 500ms for images to load
+                    }
+
+                    function stopHoverSlideshow(eventElement, originalImage) {
+                        // Clear hover interval
+                        if (eventElement.hoverInterval) {
+                            clearInterval(eventElement.hoverInterval);
+                            eventElement.hoverInterval = null;
+                        }
+                        
+                        // Restore original image with proper path handling for local files
+                        const eventImage = eventElement.querySelector('.event-image');
+                        if (eventImage) {
+                            let imagePath = originalImage;
+                            if (window.location.protocol === 'file:') {
+                                imagePath = originalImage.replace(/images\//g, './images/');
+                            }
+                            // Check if the original image exists before setting it
+                            const img = new Image();
+                            img.onload = function() {
+                                eventImage.src = imagePath;
+                            };
+                            img.onerror = function() {
+                                // If original image doesn't exist, try multiple fallbacks in order
+                                const fallbacks = [
+                                    './images/holi.jpg',
+                                    './images/garba.jpg',
+                                    './images/diwali.jpg',
+                                    './images/about-bg.jpg'
+                                ];
+                                
+                                // Try each fallback in sequence
+                                let fallbackIndex = 0;
+                                function tryFallback() {
+                                    if (fallbackIndex < fallbacks.length) {
+                                        const fallbackImg = new Image();
+                                        fallbackImg.onload = function() {
+                                            eventImage.src = fallbacks[fallbackIndex];
+                                        };
+                                        fallbackImg.onerror = function() {
+                                            fallbackIndex++;
+                                            tryFallback(); // Try next fallback
+                                        };
+                                        fallbackImg.src = fallbacks[fallbackIndex];
+                                    } else {
+                                        // If all fallbacks fail, use a data URI for a transparent placeholder
+                                        eventImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                                    }
+                                }
+                                tryFallback();
+                            };
+                            img.src = imagePath;
+                        }
+                    }
+                    
+                    // Load all events from images directory or content.json
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const eventsContainer = document.getElementById('pastEventsContainer');
+                        
+                        // Try to get past events from contentLoader first
+                        contentLoader.loadContent().then(content => {
+                            // Check if we're in a local server environment
+                            const isLocalServer = window.location.protocol === 'http:' && window.location.hostname === 'localhost';
+                            
+                            // For local server, load events by scanning directories
+                            // For browser/GitHub, load events from content.json
+                            if (isLocalServer) {
+                                // For local server, we still want to use the event data from content.json
+                                // Check if pastEvents are defined in content.json
+                                if (content.pastEvents && Object.keys(content.pastEvents).length > 0) {
+                                    // Use past events from content.json even on local server
+                                    eventsContainer.innerHTML = '';
+                                    Object.values(content.pastEvents).forEach(event => {
+                                        // Create event element
+                                        const eventElement = document.createElement('div');
+                                        eventElement.className = 'event-card';
+                                        
+                                        // For local file environments, we need to handle paths differently
+                                        let eventImage = event.image || 'images/about-bg.jpg';
+                                        if (window.location.protocol === 'file:') {
+                                            eventImage = eventImage.replace(/images\//g, './images/');
+                                        }
+                                        
+                                        eventElement.innerHTML = `
+                                            <img src="${encodeURI(eventImage)}" alt="${event.name}" class="event-image" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                                            <div class="event-content">
+                                                <h3>${event.name}</h3>
+                                                <p class="event-date">${event.date}</p>
+                                                <p>${event.description}</p>
+                                                <p>Click to view full gallery of this event</p>
+                                            </div>
+                                        `;
+                                        
+                                        // Store original image for restoration
+                                        const originalImageSrc = eventImage;
+                                        
+                                        // Add hover event for thumbnail slideshow using slideshowImages from content.json
+                                        if (event.slideshowImages && event.slideshowImages.length > 0) {
+                                            eventElement.addEventListener('mouseenter', function() {
+                                                startHoverSlideshowFromJson(this, event.slideshowImages);
+                                            });
+                                            
+                                            eventElement.addEventListener('mouseleave', function() {
+                                                // Clear hover interval for this element
+                                                if (this.hoverInterval) {
+                                                    clearInterval(this.hoverInterval);
+                                                    this.hoverInterval = null;
+                                                }
+                                                stopHoverSlideshow(this, originalImageSrc);
+                                            });
+                                        }
+                                        
+                                        // Add click event to show slideshow
+                                        eventElement.addEventListener('click', function() {
+                                            // Stop hover slideshow when modal opens
+                                            if (this.hoverInterval) {
+                                                clearInterval(this.hoverInterval);
+                                                this.hoverInterval = null;
+                                            }
+                                            showEventSlideshow(null, event.name, event.slideshowImages);
+                                        });
+                                        
+                                        eventsContainer.appendChild(eventElement);
+                                    });
+                                } else {
+                                    // Fallback to directory scanning if no pastEvents in content.json
+                                    let eventDirectories = [];
+                                    
+                                    // Check if event directories are defined in content.json
+                                    if (content.eventsContent && content.eventsContent.eventDirectories) {
+                                        eventDirectories = content.eventsContent.eventDirectories;
+                                    }
+                                    
+                                    // Clear container
+                                    eventsContainer.innerHTML = '';
+                                    
+                                    // Create event cards for each directory
+                                    eventDirectories.forEach((eventDir, index) => {
+                                        // Create event element
+                                        const eventElement = document.createElement('div');
+                                        eventElement.className = 'event-card';
+                                        eventElement.dataset.eventDir = eventDir.dir;
+                                        eventElement.dataset.eventName = eventDir.name;
+                                        
+                                        // Get first image from directory for preview with proper encoding
+                                        let firstImage = `${eventDir.dir}/1.jpg`;
+                                        // If prefix is defined, use it to find the first image
+                                        if (eventDir.prefix) {
+                                            firstImage = `${eventDir.dir}/${eventDir.prefix}1.jpg`;
+                                        }
+                                        
+                                        // For local file environments, we need to handle paths differently
+                                        if (window.location.protocol === 'file:') {
+                                            firstImage = firstImage.replace(/images\//g, './images/');
+                                        }
+                                        
+                                        const encodedFirstImage = encodeURI(firstImage);
+                                        
+                                        eventElement.innerHTML = `
+                                            <img src="${encodedFirstImage}" alt="${eventDir.name}" class="event-image" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                                            <div class="event-content">
+                                                <h3>${eventDir.name}</h3>
+                                                <p class="event-date">Event Photos: ${eventDir.name}</p>
+                                                <p>Click to view full gallery of this event</p>
+                                            </div>
+                                        `;
+                                        
+                                        // Store original image for restoration
+                                        const originalImageSrc = firstImage;
+                                        
+                                        // Add hover event for thumbnail slideshow
+                                        eventElement.addEventListener('mouseenter', function() {
+                                            if (eventDir.prefix) {
+                                                // For prefixed events, we need to handle them differently
+                                                startHoverSlideshowWithPrefix(this, eventDir.dir, eventDir.prefix);
+                                            } else {
+                                                startHoverSlideshow(this, eventDir.dir);
+                                            }
+                                        });
+                                        
+                                        eventElement.addEventListener('mouseleave', function() {
+                                            // Clear hover interval for this element
+                                            if (this.hoverInterval) {
+                                                clearInterval(this.hoverInterval);
+                                                this.hoverInterval = null;
+                                            }
+                                            stopHoverSlideshow(this, originalImageSrc);
+                                        });
+                                        
+                                        // Add click event to show slideshow
+                                        eventElement.addEventListener('click', function() {
+                                            // Stop hover slideshow when modal opens
+                                            if (this.hoverInterval) {
+                                                clearInterval(this.hoverInterval);
+                                                this.hoverInterval = null;
+                                            }
+                                            if (eventDir.prefix) {
+                                                showEventSlideshowWithPrefix(eventDir.dir, eventDir.name, eventDir.prefix);
+                                            } else {
+                                                showEventSlideshow(eventDir.dir, eventDir.name);
+                                            }
+                                        });
+                                        
+                                        eventsContainer.appendChild(eventElement);
+                                    });
+                                }
+                            } else {
+                                // For browser/GitHub, use past events from content.json
+                                if (content.pastEvents && Object.keys(content.pastEvents).length > 0) {
+                                    // Use past events from content.json
+                                    eventsContainer.innerHTML = '';
+                                    Object.values(content.pastEvents).forEach(event => {
+                                        // Create event element
+                                        const eventElement = document.createElement('div');
+                                        eventElement.className = 'event-card';
+                                        
+                                        // For local file environments, we need to handle paths differently
+                                        let eventImage = event.image || 'images/about-bg.jpg';
+                                        if (window.location.protocol === 'file:') {
+                                            eventImage = eventImage.replace(/images\//g, './images/');
+                                        }
+                                        
+                                        eventElement.innerHTML = `
+                                            <img src="${encodeURI(eventImage)}" alt="${event.name}" class="event-image" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                                            <div class="event-content">
+                                                <h3>${event.name}</h3>
+                                                <p class="event-date">${event.date}</p>
+                                                <p>${event.description}</p>
+                                                <p>Click to view full gallery of this event</p>
+                                            </div>
+                                        `;
+                                        
+                                        // Store original image for restoration
+                                        const originalImageSrc = eventImage;
+                                        
+                                        // Add hover event for thumbnail slideshow using slideshowImages from content.json
+                                        if (event.slideshowImages && event.slideshowImages.length > 0) {
+                                            eventElement.addEventListener('mouseenter', function() {
+                                                startHoverSlideshowFromJson(this, event.slideshowImages);
+                                            });
+                                            
+                                            eventElement.addEventListener('mouseleave', function() {
+                                                // Clear hover interval for this element
+                                                if (this.hoverInterval) {
+                                                    clearInterval(this.hoverInterval);
+                                                    this.hoverInterval = null;
+                                                }
+                                                stopHoverSlideshow(this, originalImageSrc);
+                                            });
+                                        }
+                                        
+                                        // Add click event to show slideshow
+                                        eventElement.addEventListener('click', function() {
+                                            // Stop hover slideshow when modal opens
+                                            if (this.hoverInterval) {
+                                                clearInterval(this.hoverInterval);
+                                                this.hoverInterval = null;
+                                            }
+                                            showEventSlideshow(null, event.name, event.slideshowImages);
+                                        });
+                                        
+                                        eventsContainer.appendChild(eventElement);
+                                    });
+                                } else {
+                                    eventsContainer.innerHTML = '<p>No past events data available.</p>';
+                                }
+                            }
+                            
+
+                        }).catch(error => {
+                            console.error('Error loading content:', error);
+                            eventsContainer.innerHTML = '<p>Error loading past events data.</p>';
+                        });
+                    });
+
+
+
+                    // New function to show event slideshow for prefixed events
+                    function showEventSlideshowWithPrefix(eventDir, eventName, prefix) {
+                        // Create modal for slideshow
+                        const modal = document.createElement('div');
+                        modal.id = 'slideshowModal';
+                        modal.className = 'modal';
+                        modal.innerHTML = `
+                            <span class="close" onclick="closeModal()">&times;</span>
+                            <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+                            <a class="next" onclick="changeSlide(1)">&#10095;</a>
+                            <div class="modal-content">
+                                <div class="slideshow-container" id="slideshowContainer"></div>
+                                <div class="caption-container">
+                                    <p id="slideCaption"></p>
+                                </div>
+                            </div>
+                        `;
+                        
+                        document.body.appendChild(modal);
+                        modal.style.display = 'block';
+                        
+                        // Add keyboard navigation
+                        document.addEventListener('keydown', handleKeyboardNavigation);
+                        
+                        // Add touch swipe handlers
+                        modal.addEventListener('touchstart', handleTouchStart, false);
+                        modal.addEventListener('touchend', handleTouchEnd, false);
+                        
+                        // Load images with prefix
+                        const container = document.getElementById('slideshowContainer');
+                        const images = [];
+                        let validImages = 0;
+                        let checkedCount = 0;
+                        const maxImages = 20; // Limit to reasonable number
+                        
+                        // Track if we're running in a local file environment
+                        const isLocalFile = window.location.protocol === 'file:';
+                        
+                        // Preload images with proper encoding using prefix
+                        for (let i = 1; i <= maxImages; i++) {
+                            const img = new Image();
+                            let imagePath = `${eventDir}/${prefix}${i}.jpg`;
+                            
+                            // For local file environments, we need to handle paths differently
+                            if (isLocalFile) {
+                                imagePath = imagePath.replace(/images\//g, './images/');
+                            }
+                            
+                            const encodedPath = encodeURI(imagePath);
+                            img.src = encodedPath;
+                            img.onload = function() {
+                                validImages++;
+                                checkedCount++;
+                                images.push({index: i, path: imagePath});
+                                
+                                // If this is the last image or we've found enough valid images
+                                if (checkedCount === maxImages || validImages >= 15) {
+                                    createSlides(images, eventName, container);
+                                }
+                            };
+                            img.onerror = function() {
+                                checkedCount++;
+                                // If this is the last image
+                                if (checkedCount === maxImages) {
+                                    createSlides(images, eventName, container);
+                                }
+                            };
+                        }
+                        
+                        // Fallback in case no images load within 3 seconds
+                        setTimeout(() => {
+                            if (checkedCount < maxImages) {
+                                createSlides(images, eventName, container);
+                            }
+                        }, 3000);
+                    }
+                    
+                    // AUTOMATIC EVENT GALLERY FUNCTIONALITY
+                    // This function creates an automatic gallery showing first 3 photos from each event
+                    function createAutomaticEventGallery() {
+                        const galleryContainer = document.createElement('div');
+                        galleryContainer.className = 'automatic-gallery-section';
+                        galleryContainer.innerHTML = `
+                            <div class="container">
+                                <h2>Event Highlights Gallery</h2>
+                                <div class="automatic-gallery-grid" id="automaticGalleryGrid"></div>
+                            </div>
+                        `;
+                        
+                        // Insert the automatic gallery section after the events section
+                        const eventsSection = document.querySelector('.events-section');
+                        eventsSection.parentNode.insertBefore(galleryContainer, eventsSection.nextSibling);
+                        
+                        // Load content and populate the gallery
+                        contentLoader.loadContent().then(content => {
+                            const galleryGrid = document.getElementById('automaticGalleryGrid');
+                            galleryGrid.innerHTML = '';
+                            
+                            if (content.pastEvents && Object.keys(content.pastEvents).length > 0) {
+                                Object.values(content.pastEvents).forEach(event => {
+                                    // Take only first 3 images from each event
+                                    const imagesToShow = event.slideshowImages ? event.slideshowImages.slice(0, 3) : [];
+                                    
+                                    if (imagesToShow.length > 0) {
+                                        imagesToShow.forEach((imgPath, index) => {
+                                            const galleryItem = document.createElement('div');
+                                            galleryItem.className = 'gallery-item';
+                                            
+                                            // Handle local file paths
+                                            let imagePath = imgPath;
+                                            if (window.location.protocol === 'file:') {
+                                                imagePath = imagePath.replace(/images\//g, './images/');
+                                            }
+                                            
+                                            galleryItem.innerHTML = `
+                                                <img src="${encodeURI(imagePath)}" alt="${event.name} - Photo ${index + 1}" 
+                                                     onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                                                <div class="gallery-overlay">
+                                                    <div class="gallery-info">
+                                                        <h4>${event.name}</h4>
+                                                        <p>${event.date}</p>
+                                                    </div>
+                                                </div>
+                                            `;
+                                            
+                                            // Add click event to show full slideshow for this event
+                                            galleryItem.addEventListener('click', function() {
+                                                showEventSlideshow(null, event.name, event.slideshowImages);
+                                            });
+                                            
+                                            galleryGrid.appendChild(galleryItem);
+                                        });
+                                    }
+                                });
+                            } else {
+                                galleryGrid.innerHTML = '<p class="no-events-message">No event photos available at this time.</p>';
+                            }
+                        }).catch(error => {
+                            console.error('Error loading automatic gallery:', error);
+                            document.getElementById('automaticGalleryGrid').innerHTML = '<p class="error-message">Error loading gallery photos.</p>';
+                        });
+                    }
+                    
+                    // Initialize the automatic gallery when DOM is loaded
+                    document.addEventListener('DOMContentLoaded', function() {
+                        createAutomaticEventGallery();
+                    });
+
+                </script>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AGA Club Bhel Bhopal. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/contentLoader.js"></script>
+    <script src="js/backgroundSlideshow.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Initialize background slideshow
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.loadContent().then(content => {
+                if (content.eventsContent && content.eventsContent.backgroundSlideshow) {
+                    backgroundSlideshow.init(content.eventsContent.backgroundSlideshow);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

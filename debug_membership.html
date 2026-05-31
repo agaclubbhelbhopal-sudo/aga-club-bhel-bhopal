@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Membership</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; font-family: monospace; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Debug Membership Page</h1>
+    <div id="debug" class="debug">Loading...</div>
+    <div id="result"></div>
+
+    <script src="js/contentLoader.js"></script>
+    <script>
+        const debugDiv = document.getElementById('debug');
+        const resultDiv = document.getElementById('result');
+
+        function debug(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugDiv.innerHTML += timestamp + ' - ' + message + '<br>';
+            console.log(message);
+        }
+
+        debug('Starting debug...');
+        debug('contentLoader type: ' + typeof contentLoader);
+        debug('contentLoader defined: ' + (typeof contentLoader !== 'undefined'));
+
+        if (typeof contentLoader !== 'undefined') {
+            debug('Calling getMembershipData()...');
+            
+            contentLoader.getMembershipData()
+                .then(members => {
+                    debug('Success! Retrieved ' + members.length + ' members');
+                    
+                    if (members.length > 0) {
+                        debug('First member data: ' + JSON.stringify(members[0]));
+                        
+                        let tableHTML = '<table><thead><tr><th>Name</th><th>Staff No.</th><th>Membership No.</th><th>Membership Date</th></tr></thead><tbody>';
+                        members.forEach(member => {
+                            tableHTML += `<tr><td>${member.Name || 'N/A'}</td><td>${member['Staff No.'] || 'N/A'}</td><td>${member['Membership No.'] || 'N/A'}</td><td>${member['Membership Date'] || 'N/A'}</td></tr>`;
+                        });
+                        tableHTML += '</tbody></table>';
+                        resultDiv.innerHTML = tableHTML;
+                    } else {
+                        debug('No members found');
+                        resultDiv.innerHTML = '<p>No members found</p>';
+                    }
+                })
+                .catch(error => {
+                    debug('ERROR: ' + error.message);
+                    debug('Error stack: ' + (error.stack || 'No stack'));
+                    console.error('Full error:', error);
+                });
+        } else {
+            debug('ERROR: contentLoader is not defined');
+            debug('Available globals: ' + Object.keys(window).filter(key => key.includes('content')).join(', '));
+        }
+    </script>
+</body>
+</html>

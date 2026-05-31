@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filename Extractor - AGA Club</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+            resize: vertical;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: #27ae60;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .btn-warning {
+            background-color: #f39c12;
+        }
+        
+        .btn-warning:hover {
+            background-color: #d35400;
+        }
+        
+        .result-area {
+            margin-top: 20px;
+        }
+        
+        .notification {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .notification.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .notification.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .instructions {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .file-info {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    <div class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </div>
+                    <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navigation Menu Bar -->
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <h1>Filename Extractor</h1>
+            
+            <div class="instructions">
+                <h3>Instructions</h3>
+                <ul>
+                    <li>Either paste a list of file paths in the input area OR select files using the file selector</li>
+                    <li>Click "Extract Filenames" to get just the filenames with extensions</li>
+                    <li>Click "Copy to Clipboard" to copy the results</li>
+                    <li>Use "Add Prefix/Suffix" to add text before/after each filename</li>
+                    <li>Use "Join with Comma" to create a comma-separated list</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="form-group">
+                    <label for="fileInput">Select Files:</label>
+                    <input type="file" id="fileInput" multiple>
+                    <div id="fileInfo" class="file-info" style="display: none;"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputText">Or Paste File Paths (one per line):</label>
+                    <textarea id="inputText" placeholder="Enter file paths here, one per line.
+Example:
+images/event1/1.jpg
+images/event1/2.jpg
+images/event1/3.jpg"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="prefix">Prefix (optional):</label>
+                    <input type="text" id="prefix" placeholder="Text to add before each filename">
+                </div>
+                
+                <div class="form-group">
+                    <label for="suffix">Suffix (optional):</label>
+                    <input type="text" id="suffix" placeholder="Text to add after each filename">
+                </div>
+                
+                <button onclick="extractFilenames()">Extract Filenames</button>
+                <button class="btn-success" onclick="copyToClipboard()">Copy to Clipboard</button>
+                <button class="btn-warning" onclick="joinWithComma()">Join with Comma</button>
+                <button onclick="clearAll()">Clear All</button>
+                
+                <div id="notification" class="notification"></div>
+                
+                <div class="result-area">
+                    <label for="outputText">Output:</label>
+                    <textarea id="outputText" placeholder="Results will appear here..."></textarea>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AGA Club Bhel Bhopal. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Handle file selection
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                // Display file info
+                const fileInfo = document.getElementById('fileInfo');
+                fileInfo.innerHTML = `Selected ${files.length} file(s)`;
+                fileInfo.style.display = 'block';
+                
+                // Create file paths from selected files
+                let filePaths = [];
+                for (let i = 0; i < files.length; i++) {
+                    // For web purposes, we'll create a fake path using the filename
+                    // In a real filesystem, this would be the actual path
+                    filePaths.push(`images/${files[i].name}`);
+                }
+                
+                // Display in the textarea
+                document.getElementById('inputText').value = filePaths.join('\n');
+            } else {
+                document.getElementById('fileInfo').style.display = 'none';
+            }
+        });
+        
+        function showNotification(message, isSuccess) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + (isSuccess ? 'success' : 'error');
+            notification.style.display = 'block';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function extractFilenames() {
+            const inputText = document.getElementById('inputText').value;
+            const prefix = document.getElementById('prefix').value;
+            const suffix = document.getElementById('suffix').value;
+            
+            if (!inputText.trim()) {
+                showNotification('Please enter some file paths first or select files.', false);
+                return;
+            }
+            
+            // Split input by newlines and filter out empty lines
+            const lines = inputText.split('\n').filter(line => line.trim() !== '');
+            
+            // Extract filenames (everything after the last slash)
+            const filenames = lines.map(line => {
+                // Get everything after the last slash or backslash
+                const parts = line.split(/[\/\\]/);
+                const filename = parts[parts.length - 1];
+                return prefix + filename + suffix;
+            });
+            
+            // Display results
+            document.getElementById('outputText').value = filenames.join('\n');
+            showNotification('Filenames extracted successfully!', true);
+        }
+        
+        function copyToClipboard() {
+            const outputText = document.getElementById('outputText');
+            
+            if (!outputText.value.trim()) {
+                showNotification('Nothing to copy. Extract filenames first.', false);
+                return;
+            }
+            
+            outputText.select();
+            document.execCommand('copy');
+            
+            showNotification('Copied to clipboard!', true);
+        }
+        
+        function joinWithComma() {
+            const outputText = document.getElementById('outputText');
+            
+            if (!outputText.value.trim()) {
+                showNotification('Nothing to join. Extract filenames first.', false);
+                return;
+            }
+            
+            // Split by newlines, filter empty lines, and join with commas
+            const lines = outputText.value.split('\n').filter(line => line.trim() !== '');
+            outputText.value = lines.join(', ');
+            
+            showNotification('Joined with commas!', true);
+        }
+        
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+            document.getElementById('prefix').value = '';
+            document.getElementById('suffix').value = '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('fileInfo').style.display = 'none';
+            showNotification('All fields cleared!', true);
+        }
+    </script>
+</body>
+</html>

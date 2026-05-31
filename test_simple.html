@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Member Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Simple Member List Test</h1>
+    <div id="status">Loading...</div>
+    <div id="memberList"></div>
+
+    <script>
+        // Simple test - just load members.json directly
+        fetch('members.json')
+            .then(response => {
+                document.getElementById('status').innerHTML = 'Response status: ' + response.status;
+                if (!response.ok) {
+                    throw new Error('HTTP error: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(members => {
+                document.getElementById('status').innerHTML = 'Success! Found ' + members.length + ' members';
+                
+                if (members.length > 0) {
+                    let tableHTML = '<table><thead><tr><th>Name</th><th>Staff No.</th><th>Membership No.</th><th>Membership Date</th></tr></thead><tbody>';
+                    members.forEach(member => {
+                        tableHTML += `<tr><td>${member.Name}</td><td>${member['Staff No.']}</td><td>${member['Membership No.']}</td><td>${member['Membership Date']}</td></tr>`;
+                    });
+                    tableHTML += '</tbody></table>';
+                    document.getElementById('memberList').innerHTML = tableHTML;
+                }
+            })
+            .catch(error => {
+                document.getElementById('status').innerHTML = 'Error: ' + error.message;
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>

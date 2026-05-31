@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage Photos Manager - AGA Club</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .section h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+        .upload-area {
+            border: 2px dashed #3498db;
+            padding: 20px;
+            text-align: center;
+            margin: 15px 0;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+        }
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .photo-item {
+            text-align: center;
+        }
+        .photo-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .photo-item p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .instructions {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 10px 0;
+        }
+        .note {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Homepage Photos Manager</h1>
+        
+        <div class="instructions">
+            <h2>How to Use This Tool:</h2>
+            <div class="step">1. Upload photos for each section using the upload areas below</div>
+            <div class="step">2. Download the photos to your computer</div>
+            <div class="step">3. Place them in your website's images folder</div>
+            <div class="step">4. Update the content.json file with the new image paths</div>
+        </div>
+        
+        <!-- Header Background Section -->
+        <div class="section">
+            <h2>Header Background Image</h2>
+            <p>Current: images/hero-bg.jpg (Should be a wide landscape image)</p>
+            <div class="upload-area">
+                <input type="file" id="headerBgInput" accept="image/*">
+                <p>Choose header background image (recommended: 1920x600 pixels)</p>
+                <button id="downloadHeaderBg" disabled>Download Header Image</button>
+            </div>
+        </div>
+        
+        <!-- Leader Photos Section -->
+        <div class="section">
+            <h2>Leader Photos</h2>
+            <p>Current files: images/president.jpg, images/chairman.jpg (Square images work best)</p>
+            
+            <div class="upload-area">
+                <input type="file" id="presidentInput" accept="image/*">
+                <p>Choose President photo</p>
+                <button id="downloadPresident" disabled>Download President Photo</button>
+            </div>
+            
+            <div class="upload-area">
+                <input type="file" id="chairmanInput" accept="image/*">
+                <p>Choose Chairman photo</p>
+                <button id="downloadChairman" disabled>Download Chairman Photo</button>
+            </div>
+        </div>
+        
+        <!-- Gallery Photos Section -->
+        <div class="section">
+            <h2>Gallery Photos</h2>
+            <p>These images appear in the homepage slideshow</p>
+            
+            <div class="upload-area">
+                <input type="file" id="gallery1Input" accept="image/*" multiple>
+                <p>Choose multiple gallery images (Hold Ctrl to select multiple files)</p>
+                <div id="galleryPreview"></div>
+                <button id="downloadGallery" disabled>Download Selected Gallery Images</button>
+            </div>
+            
+            <div class="note">
+                <p><strong>Note:</strong> After downloading, rename gallery images to meaningful names like:</p>
+                <ul>
+                    <li>holi-celebration.jpg</li>
+                    <li>garba-festival.jpg</li>
+                    <li>diwali-event.jpg</li>
+                    <li>basketball-tournament.jpg</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle header background image
+        const headerBgInput = document.getElementById('headerBgInput');
+        const downloadHeaderBg = document.getElementById('downloadHeaderBg');
+        let headerBgFile = null;
+        
+        headerBgInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                headerBgFile = this.files[0];
+                downloadHeaderBg.disabled = false;
+            }
+        });
+        
+        downloadHeaderBg.addEventListener('click', function() {
+            if (headerBgFile) {
+                const link = document.createElement('a');
+                link.download = 'hero-bg.jpg';
+                link.href = URL.createObjectURL(headerBgFile);
+                link.click();
+            }
+        });
+        
+        // Handle president photo
+        const presidentInput = document.getElementById('presidentInput');
+        const downloadPresident = document.getElementById('downloadPresident');
+        let presidentFile = null;
+        
+        presidentInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                presidentFile = this.files[0];
+                downloadPresident.disabled = false;
+            }
+        });
+        
+        downloadPresident.addEventListener('click', function() {
+            if (presidentFile) {
+                const link = document.createElement('a');
+                link.download = 'president.jpg';
+                link.href = URL.createObjectURL(presidentFile);
+                link.click();
+            }
+        });
+        
+        // Handle chairman photo
+        const chairmanInput = document.getElementById('chairmanInput');
+        const downloadChairman = document.getElementById('downloadChairman');
+        let chairmanFile = null;
+        
+        chairmanInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                chairmanFile = this.files[0];
+                downloadChairman.disabled = false;
+            }
+        });
+        
+        downloadChairman.addEventListener('click', function() {
+            if (chairmanFile) {
+                const link = document.createElement('a');
+                link.download = 'chairman.jpg';
+                link.href = URL.createObjectURL(chairmanFile);
+                link.click();
+            }
+        });
+        
+        // Handle gallery photos
+        const gallery1Input = document.getElementById('gallery1Input');
+        const downloadGallery = document.getElementById('downloadGallery');
+        const galleryPreview = document.getElementById('galleryPreview');
+        let galleryFiles = [];
+        
+        gallery1Input.addEventListener('change', function(e) {
+            galleryFiles = Array.from(this.files);
+            downloadGallery.disabled = galleryFiles.length === 0;
+            
+            // Preview selected images
+            galleryPreview.innerHTML = '<h3>Selected Images:</h3>';
+            galleryFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100px';
+                    img.style.margin = '5px';
+                    galleryPreview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+        
+        downloadGallery.addEventListener('click', function() {
+            if (galleryFiles.length > 0) {
+                galleryFiles.forEach((file, index) => {
+                    setTimeout(() => {
+                        const link = document.createElement('a');
+                        link.download = `gallery-${index + 1}.jpg`;
+                        link.href = URL.createObjectURL(file);
+                        link.click();
+                    }, index * 500); // Small delay between downloads
+                });
+            }
+        });
+    </script>
+</body>
+</html>

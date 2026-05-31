@@ -1,0 +1,13 @@
+{
+  "name": "aga-club-app",
+  "version": "1.0.0",
+  "description": "AGA Club Bhel Bhopal Website",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "dependencies": {},
+  "author": "AGA Club",
+  "license": "MIT"
+}

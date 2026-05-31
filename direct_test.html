@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Membership Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .membership-section { padding: 20px; }
+        #memberListContainer table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        #memberListContainer th, #memberListContainer td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        #memberListContainer th { background-color: #f2f2f2; }
+        .error { color: red; padding: 10px; background: #ffe0e0; border-radius: 5px; }
+        .loading { color: blue; padding: 10px; background: #e0f0ff; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="membership-section">
+        <div class="container">
+            <h2>Membership Test</h2>
+            <div id="status" class="loading">Loading member data...</div>
+            <div id="memberListContainer"></div>
+        </div>
+    </div>
+
+    <script src="js/contentLoader.js"></script>
+    <script>
+        // Override console.log to show on page
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const statusDiv = document.getElementById('status');
+            if (statusDiv) {
+                statusDiv.innerHTML += '<br>' + args.join(' ');
+            }
+        };
+
+        console.log('=== Starting Membership Data Load ===');
+        console.log('contentLoader available:', typeof contentLoader);
+        
+        if (typeof contentLoader !== 'undefined') {
+            console.log('Calling getMembershipData...');
+            
+            contentLoader.getMembershipData()
+                .then(members => {
+                    console.log('Received members:', members.length);
+                    
+                    if (members.length > 0) {
+                        console.log('First member:', members[0]);
+                        
+                        let tableHTML = '<table><thead><tr><th>Name</th><th>Staff No.</th><th>Membership No.</th><th>Membership Date</th></tr></thead><tbody>';
+                        members.forEach(member => {
+                            tableHTML += `<tr><td>${member.Name || 'N/A'}</td><td>${member['Staff No.'] || 'N/A'}</td><td>${member['Membership No.'] || 'N/A'}</td><td>${member['Membership Date'] || 'N/A'}</td></tr>`;
+                        });
+                        tableHTML += '</tbody></table>';
+                        
+                        document.getElementById('memberListContainer').innerHTML = tableHTML;
+                        document.getElementById('status').innerHTML = 'Success! Loaded ' + members.length + ' members';
+                        document.getElementById('status').className = '';
+                    } else {
+                        console.log('No members found');
+                        document.getElementById('status').innerHTML = 'No members found';
+                        document.getElementById('status').className = 'error';
+                    }
+                })
+                .catch(error => {
+                    console.log('ERROR:', error.message);
+                    document.getElementById('status').innerHTML = 'Error: ' + error.message;
+                    document.getElementById('status').className = 'error';
+                });
+        } else {
+            console.log('ERROR: contentLoader not defined');
+            document.getElementById('status').innerHTML = 'Error: contentLoader not available';
+            document.getElementById('status').className = 'error';
+        }
+    </script>
+</body>
+</html>

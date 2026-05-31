@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Content Refresh</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    <div class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </div>
+                    <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="membership.html" class="nav-link">Membership</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="messages-section">
+            <div class="container">
+                <h2>Test Content Refresh</h2>
+                <button id="refreshButton">Force Refresh Content</button>
+                <div id="status"></div>
+                <div class="leaders-container" id="leadersContainer">
+                    <!-- Leader cards will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/contentLoader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshButton = document.getElementById('refreshButton');
+            const statusDiv = document.getElementById('status');
+            
+            // Load content initially
+            loadLeaderMessages();
+            
+            // Add event listener for refresh button
+            refreshButton.addEventListener('click', function() {
+                statusDiv.innerHTML = '<p>Refreshing content...</p>';
+                
+                // Force refresh the content
+                contentLoader.forceRefresh().then(content => {
+                    statusDiv.innerHTML = '<p style="color: green;">Content refreshed successfully!</p>';
+                    displayLeaderMessages(content);
+                }).catch(error => {
+                    statusDiv.innerHTML = `<p style="color: red;">Error refreshing content: ${error.message}</p>`;
+                    console.error('Error:', error);
+                });
+            });
+            
+            function loadLeaderMessages() {
+                contentLoader.loadContent().then(content => {
+                    displayLeaderMessages(content);
+                }).catch(error => {
+                    statusDiv.innerHTML = `<p style="color: red;">Error loading content: ${error.message}</p>`;
+                    console.error('Error:', error);
+                });
+            }
+            
+            function displayLeaderMessages(content) {
+                if (content.homepage && content.homepage.leaders) {
+                    const leadersContainer = document.getElementById('leadersContainer');
+                    const leaders = content.homepage.leaders;
+                    
+                    leadersContainer.innerHTML = '';
+                    
+                    leaders.forEach(leader => {
+                        const leaderCard = document.createElement('div');
+                        leaderCard.className = 'leader-card';
+                        leaderCard.innerHTML = `
+                            <img src="${leader.photo}" alt="${leader.name}" class="leader-photo">
+                            <h3>${leader.name}</h3>
+                            <h3>${leader.messageTitle}</h3>
+                            <p>${leader.message}</p>
+                            <button class="read-more" data-full-message="${leader.fullMessage}">Read Full Message</button>
+                        `;
+                        leadersContainer.appendChild(leaderCard);
+                    });
+                    
+                    // Add event listeners to read more buttons
+                    document.querySelectorAll('.read-more').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const fullMessage = this.getAttribute('data-full-message');
+                            const leaderName = this.parentElement.querySelector('h3').textContent;
+                            showFullMessageModal(leaderName, fullMessage);
+                        });
+                    });
+                }
+            }
+            
+            // Function to show full message in a modal
+            function showFullMessageModal(leaderName, fullMessage) {
+                // Create modal if it doesn't exist
+                let modal = document.getElementById('messageModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'messageModal';
+                    modal.className = 'modal';
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2 id="modalLeaderName"></h2>
+                            <div class="modal-message" id="modalMessageContent"></div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                    
+                    // Add event listener for close button
+                    modal.querySelector('.close').addEventListener('click', function() {
+                        modal.style.display = 'none';
+                    });
+                    
+                    // Close modal when clicking outside of it
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+                
+                // Set content and show modal
+                document.getElementById('modalLeaderName').textContent = leaderName;
+                document.getElementById('modalMessageContent').textContent = fullMessage;
+                modal.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

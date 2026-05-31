@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGA Club Bhel Bhopal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/jpeg" href="images/aga_club_site.jpg">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <a href="index.html">
+                        <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    </a>
+                    <a href="index.html" class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </a>
+                    <a href="index.html">
+                        <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                    </a>
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navigation Menu Bar -->
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="membership.html" class="nav-link">Membership</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+
+            </ul>
+            <div class="hamburger-menu">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="hero" id="heroSection">
+        <div class="hero-slideshow-container">
+            <img class="hero-slideshow-image" id="heroSlideshowImage" alt="Hero slideshow image">
+        </div>
+        <div class="hero-content">
+            <h1 id="heroTitle">Welcome to AGA Club Bhel Bhopal</h1>
+            <p id="heroSubtitle">Celebrating Community, Culture, and Togetherness</p>
+        </div>
+    </header>
+    <script>
+        // Set active navigation link
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current page filename
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Add active class to the current page link
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Load homepage header content
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.loadContent().then(content => {
+                if (content.homepage && content.homepage.header) {
+                    const header = content.homepage.header;
+                    document.getElementById('heroTitle').textContent = header.title;
+                    document.getElementById('heroSubtitle').textContent = header.subtitle;
+                    
+                    // Only initialize slideshow, no background image
+                    // Background slideshow will be handled by backgroundSlideshow.js
+                }
+            });
+        });
+    </script>
+
+    <!-- Main Content -->
+    <main>
+        <!-- President and Secretary Messages -->
+        <section class="messages-section">
+            <div class="container">
+                <h2>Messages from our Leaders</h2>
+                <div class="leaders-container" id="leadersContainer">
+                    <!-- Leader cards will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+        <script>
+            // Load leader messages
+            document.addEventListener('DOMContentLoaded', function() {
+                contentLoader.loadContent().then(content => {
+                    if (content.homepage && content.homepage.leaders) {
+                        const leadersContainer = document.getElementById('leadersContainer');
+                        const leaders = content.homepage.leaders;
+                        
+                        leadersContainer.innerHTML = '';
+                        
+                        leaders.forEach(leader => {
+                            const leaderCard = document.createElement('div');
+                            leaderCard.className = 'leader-card';
+                            leaderCard.innerHTML = `
+                                <img src="${leader.photo}" alt="${leader.name}" class="leader-photo">
+                                <h3>${leader.name}</h3>
+                                <h3>${leader.messageTitle}</h3>
+                                <p>${leader.message}</p>
+                                <button class="read-more" data-full-message="${leader.fullMessage}">Read Full Message</button>
+                            `;
+                            leadersContainer.appendChild(leaderCard);
+                        });
+                        
+                        // Add event listeners to read more buttons
+                        document.querySelectorAll('.read-more').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const fullMessage = this.getAttribute('data-full-message');
+                                const leaderName = this.parentElement.querySelector('h3').textContent;
+                                showFullMessageModal(leaderName, fullMessage);
+                            });
+                        });
+                    }
+                });
+            });
+            
+            // Function to show full message in a modal
+            function showFullMessageModal(leaderName, fullMessage) {
+                // Create modal if it doesn't exist
+                let modal = document.getElementById('messageModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'messageModal';
+                    modal.className = 'modal';
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2 id="modalLeaderName"></h2>
+                            <div class="modal-message" id="modalMessageContent"></div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                    
+                    // Add event listener for close button
+                    modal.querySelector('.close').addEventListener('click', function() {
+                        modal.style.display = 'none';
+                    });
+                    
+                    // Close modal when clicking outside of it
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+                
+                // Set content and show modal
+                document.getElementById('modalLeaderName').textContent = leaderName;
+                document.getElementById('modalMessageContent').textContent = fullMessage;
+                modal.style.display = 'block';
+            }
+        </script>
+
+        <!-- Photo Gallery Section -->
+        <section class="gallery-section" id="mainGallerySection">
+            <h2>Event Gallery</h2>
+            <div class="slideshow-container modern-slideshow automatic-only" id="slideshowContainer">
+                <!-- Slides will be loaded dynamically -->
+            </div>
+        </section>
+        <script>
+            // Modern gallery slideshow with event names and automatic photo selection
+            document.addEventListener('DOMContentLoaded', function() {
+                contentLoader.loadContent().then(content => {
+                    // Get past events to extract photos from
+                    const pastEvents = content.pastEvents ? Object.values(content.pastEvents) : [];
+                    
+                    // Collect first 3 photos from each event with event information
+                    const galleryPhotos = [];
+                    
+                    pastEvents.forEach(event => {
+                        // Use slideshowImages if available, otherwise fall back to event.image
+                        let eventPhotos = [];
+                        if (event.slideshowImages && Array.isArray(event.slideshowImages)) {
+                            eventPhotos = [...event.slideshowImages];
+                        } else if (event.image) {
+                            eventPhotos = [event.image];
+                        }
+                        
+                        // Filter out any invalid or empty image paths
+                        eventPhotos = eventPhotos.filter(photo => photo && typeof photo === 'string' && photo.trim() !== '');
+                        
+                        // Take exactly the first 3 photos from each event
+                        const photosToAdd = eventPhotos.slice(0, 3);
+                        
+                        // Add these photos to our gallery with event information
+                        photosToAdd.forEach((photo, index) => {
+                            galleryPhotos.push({
+                                image: photo,
+                                alt: `${event.name} - Photo ${index + 1}`,
+                                eventName: event.name,
+                                eventDate: event.date,
+                                eventId: event.id
+                            });
+                        });
+                    });
+                    
+                    // Filter out any undefined or empty images
+                    const validPhotos = galleryPhotos.filter(photo => photo.image);
+                    
+                    if (validPhotos.length > 0) {
+                        const slideshowContainer = document.getElementById('slideshowContainer');
+                        
+                        // Clear existing content
+                        slideshowContainer.innerHTML = '';
+                        
+                        // Add slides with modern design
+                        validPhotos.forEach((item, index) => {
+                            const slide = document.createElement('div');
+                            slide.className = 'slide fade';
+                            slide.innerHTML = `
+                                <div class="gallery-slide-wrapper">
+                                    <img src="${item.image}" alt="${item.alt}" onerror="this.parentElement.parentElement.style.display='none'; this.parentElement.parentElement.classList.add('broken-slide');">
+                                    <div class="slide-content-overlay">
+                                        <div class="event-info">
+                                            <h3 class="event-name">${item.eventName}</h3>
+                                            <p class="event-date">${item.eventDate}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            slideshowContainer.appendChild(slide);
+                        });
+                        
+                        // Simplified automatic slideshow functionality
+                        let gallerySlideIndex = 1;
+                        let slideshowInterval;
+                        
+                        // Simple show slides function
+                        function showGallerySlides(n) {
+                            let slides = slideshowContainer.querySelectorAll('.slide');
+                            
+                            // Get only non-broken slides
+                            let visibleSlides = Array.from(slides).filter(slide => 
+                                !slide.classList.contains('broken-slide')
+                            );
+                            
+                            if (visibleSlides.length === 0) return;
+                            
+                            // Wrap around
+                            if (n > visibleSlides.length) { gallerySlideIndex = 1 }
+                            if (n < 1) { gallerySlideIndex = visibleSlides.length }
+                            
+                            // Hide all slides
+                            slides.forEach(slide => {
+                                slide.style.display = "none";
+                            });
+                            
+                            // Show current slide
+                            if (visibleSlides[gallerySlideIndex - 1]) {
+                                visibleSlides[gallerySlideIndex - 1].style.display = "block";
+                            }
+                        }
+                        
+                        // Auto-advance function
+                        function autoAdvance() {
+                            gallerySlideIndex++;
+                            showGallerySlides(gallerySlideIndex);
+                        }
+                        
+                        // Start automatic slideshow
+                        function startSlideshow() {
+                            slideshowInterval = setInterval(autoAdvance, 4000); // 4 seconds
+                        }
+                        
+                        // Initialize and start slideshow with a slight delay
+                        setTimeout(() => {
+                            showGallerySlides(gallerySlideIndex);
+                            startSlideshow();
+                        }, 500);
+                        
+                        // Hide broken images after load
+                        setTimeout(() => {
+                            const slides = slideshowContainer.querySelectorAll('.slide');
+                            slides.forEach(slide => {
+                                const img = slide.querySelector('img');
+                                if (img && img.naturalHeight === 0) {
+                                    slide.classList.add('broken-slide');
+                                    slide.style.display = 'none';
+                                }
+                            });
+                            
+                            // Recalculate visible slides
+                            showGallerySlides(gallerySlideIndex);
+                        }, 2000);
+                        
+                    } else {
+                        // If no photos available, show a message
+                        const slideshowContainer = document.getElementById('slideshowContainer');
+                        slideshowContainer.innerHTML = '<div class="slide fade" style="display: block; text-align: center; padding: 50px;"><p>No event photos available at this time.</p></div>';
+                    }
+                }).catch(error => {
+                    // Show error message
+                    const slideshowContainer = document.getElementById('slideshowContainer');
+                    slideshowContainer.innerHTML = '<div class="slide fade" style="display: block; text-align: center; padding: 50px;"><p>Error loading event photos. Please try again later.</p></div>';
+                });
+            });
+        </script>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AGA Club Bhel Bhopal. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/contentLoader.js"></script>
+    <script src="js/backgroundSlideshow.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Initialize background slideshow
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.loadContent().then(content => {
+                if (content.homepage && content.homepage.header && content.homepage.header.backgroundSlideshow) {
+                    backgroundSlideshow.init(content.homepage.header.backgroundSlideshow);
+                }
+            });
+        });
+        
+        // Position hero content 10mm above gallery section
+        document.addEventListener('DOMContentLoaded', function() {
+            const heroSection = document.getElementById('heroSection');
+            const gallerySection = document.getElementById('mainGallerySection');
+            
+            if (heroSection && gallerySection) {
+                // Add a small delay to ensure elements are rendered
+                setTimeout(function() {
+                    // The CSS already handles the 10mm spacing, but we can add dynamic adjustments if needed
+                    console.log('Hero and gallery sections positioned');
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>

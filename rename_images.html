@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Renamer - AGA Club</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .instructions {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 10px 0;
+        }
+        .note {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .preview {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .preview-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .preview-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 3px;
+        }
+        .preview-info {
+            flex: 1;
+        }
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Renamer Tool</h1>
+        
+        <div class="instructions">
+            <h2>How to Use This Tool:</h2>
+            <div class="step">1. Enter a prefix for your images (e.g., "diwali", "holi", "event")</div>
+            <div class="step">2. Select multiple JPG files you want to rename</div>
+            <div class="step">3. Preview the renamed files</div>
+            <div class="step">4. Download the renamed files</div>
+        </div>
+        
+        <div class="section">
+            <h2>Rename Your Images</h2>
+            
+            <div class="form-group">
+                <label for="prefixInput">Prefix for renamed files:</label>
+                <input type="text" id="prefixInput" placeholder="Enter prefix (e.g., diwali, holi, event)">
+            </div>
+            
+            <div class="form-group">
+                <label for="fileInput">Select JPG files to rename:</label>
+                <input type="file" id="fileInput" accept="image/jpeg, image/jpg" multiple>
+            </div>
+            
+            <button id="previewBtn" disabled>Preview Renamed Files</button>
+            <button id="downloadBtn" disabled>Download Renamed Files</button>
+        </div>
+        
+        <div class="section">
+            <h2>Preview</h2>
+            <div id="previewArea">
+                <p>Select files and click "Preview Renamed Files" to see the changes.</p>
+            </div>
+        </div>
+        
+        <div class="note">
+            <p><strong>Note:</strong> This tool renames your files locally in your browser. 
+            The renamed files will be downloaded to your computer. You can then move them to 
+            the appropriate folder in your website's images directory.</p>
+            <p><strong>Example:</strong> If you enter "diwali" as prefix and select 3 images, 
+            they will be renamed as "diwali1.jpg", "diwali2.jpg", and "diwali3.jpg"</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const prefixInput = document.getElementById('prefixInput');
+        const fileInput = document.getElementById('fileInput');
+        const previewBtn = document.getElementById('previewBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const previewArea = document.getElementById('previewArea');
+        
+        // State variables
+        let selectedFiles = [];
+        let renamedFiles = [];
+        
+        // Enable/disable buttons based on inputs
+        function updateButtonStates() {
+            const prefix = prefixInput.value.trim();
+            const hasFiles = selectedFiles.length > 0;
+            
+            previewBtn.disabled = !(prefix && hasFiles);
+            downloadBtn.disabled = renamedFiles.length === 0;
+        }
+        
+        // Handle prefix input
+        prefixInput.addEventListener('input', updateButtonStates);
+        
+        // Handle file selection
+        fileInput.addEventListener('change', function(e) {
+            selectedFiles = Array.from(this.files).filter(file => 
+                file.type === 'image/jpeg' || file.name.toLowerCase().endsWith('.jpg')
+            );
+            renamedFiles = [];
+            updateButtonStates();
+            
+            if (selectedFiles.length === 0 && this.files.length > 0) {
+                alert('Please select only JPG files.');
+                this.value = '';
+            }
+        });
+        
+        // Preview renamed files
+        previewBtn.addEventListener('click', function() {
+            const prefix = prefixInput.value.trim();
+            
+            if (!prefix) {
+                alert('Please enter a prefix.');
+                return;
+            }
+            
+            if (selectedFiles.length === 0) {
+                alert('Please select JPG files to rename.');
+                return;
+            }
+            
+            // Generate renamed file list
+            renamedFiles = selectedFiles.map((file, index) => ({
+                original: file,
+                newName: `${prefix}${index + 1}.jpg`,
+                index: index + 1
+            }));
+            
+            // Display preview
+            displayPreview();
+            updateButtonStates();
+        });
+        
+        // Display preview of renamed files
+        function displayPreview() {
+            if (renamedFiles.length === 0) {
+                previewArea.innerHTML = '<p>No files to preview.</p>';
+                return;
+            }
+            
+            let previewHTML = '<h3>Renamed Files Preview:</h3>';
+            
+            renamedFiles.forEach(item => {
+                previewHTML += `
+                    <div class="preview-item">
+                        <div class="preview-info">
+                            <div><strong>Original:</strong> ${item.original.name}</div>
+                            <div><strong>Renamed:</strong> ${item.newName}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            previewHTML += `
+                <div class="note">
+                    <p><strong>Total files to rename:</strong> ${renamedFiles.length}</p>
+                </div>
+            `;
+            
+            previewArea.innerHTML = previewHTML;
+        }
+        
+        // Download renamed files
+        downloadBtn.addEventListener('click', function() {
+            if (renamedFiles.length === 0) {
+                alert('No files to download. Please preview files first.');
+                return;
+            }
+            
+            // Download files one by one with a delay
+            renamedFiles.forEach((item, index) => {
+                setTimeout(() => {
+                    downloadFile(item.original, item.newName);
+                }, index * 500); // 500ms delay between downloads
+            });
+            
+            // Show success message
+            setTimeout(() => {
+                alert(`Downloaded ${renamedFiles.length} files successfully!`);
+            }, (renamedFiles.length * 500) + 1000);
+        });
+        
+        // Download a single file with a new name
+        function downloadFile(file, newName) {
+            const link = document.createElement('a');
+            link.download = newName;
+            link.href = URL.createObjectURL(file);
+            link.click();
+        }
+        
+        // Initialize button states
+        updateButtonStates();
+    </script>
+</body>
+</html>

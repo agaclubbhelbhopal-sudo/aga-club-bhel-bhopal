@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Membership Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #result { margin-top: 20px; padding: 20px; border: 1px solid #ccc; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Basic Membership Test</h1>
+    <button onclick="testBasic()">Test Basic Loading</button>
+    <button onclick="testGoogleSheet()">Test Google Sheet</button>
+    <button onclick="testJson()">Test JSON File</button>
+    <div id="result"></div>
+
+    <script src="js/contentLoader.js"></script>
+    <script>
+        function showResult(message) {
+            document.getElementById('result').innerHTML = '<pre>' + message + '</pre>';
+        }
+
+        function testBasic() {
+            alert('Testing basic functionality...');
+            console.log('=== BASIC TEST START ===');
+            
+            if (typeof contentLoader === 'undefined') {
+                alert('contentLoader is NOT defined!');
+                showResult('ERROR: contentLoader is not defined');
+                return;
+            }
+            
+            alert('contentLoader is defined, testing getMembershipData...');
+            
+            contentLoader.getMembershipData()
+                .then(members => {
+                    alert('Success! Found ' + members.length + ' members');
+                    showResult('Success! Found ' + members.length + ' members\n\nFirst member: ' + JSON.stringify(members[0], null, 2));
+                })
+                .catch(error => {
+                    alert('Error: ' + error.message);
+                    showResult('Error: ' + error.message + '\n\n' + (error.stack || 'No stack trace'));
+                });
+        }
+
+        function testGoogleSheet() {
+            alert('Testing Google Sheet directly...');
+            
+            const MEMBERSHIP_SHEET_ID = '1ykvrLVy3uWkyHRTg7bRYnitSo2v8YsISX2I3ojtvl74';
+            const MEMBERSHIP_SHEET_GID = '1304605237';
+            const sheetUrl = `https://docs.google.com/spreadsheets/d/${MEMBERSHIP_SHEET_ID}/export?format=csv&gid=${MEMBERSHIP_SHEET_GID}`;
+            
+            alert('Fetching from: ' + sheetUrl);
+            
+            fetch(sheetUrl)
+                .then(response => {
+                    alert('Response status: ' + response.status);
+                    return response.text();
+                })
+                .then(text => {
+                    alert('Success! Received ' + text.length + ' characters');
+                    showResult('Google Sheet Data:\n\n' + text.substring(0, 500));
+                })
+                .catch(error => {
+                    alert('Google Sheet Error: ' + error.message);
+                    showResult('Google Sheet Error: ' + error.message);
+                });
+        }
+
+        function testJson() {
+            alert('Testing members.json file...');
+            
+            fetch('members.json')
+                .then(response => {
+                    alert('JSON Response status: ' + response.status);
+                    return response.json();
+                })
+                .then(members => {
+                    alert('JSON Success! Found ' + members.length + ' members');
+                    showResult('JSON Success! Found ' + members.length + ' members\n\nFirst member: ' + JSON.stringify(members[0], null, 2));
+                })
+                .catch(error => {
+                    alert('JSON Error: ' + error.message);
+                    showResult('JSON Error: ' + error.message);
+                });
+        }
+    </script>
+</body>
+</html>

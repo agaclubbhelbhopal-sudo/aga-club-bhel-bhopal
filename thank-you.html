@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - AGA Club Bhel Bhopal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    <div class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </div>
+                    <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navigation Menu Bar -->
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="membership.html" class="nav-link">Membership</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="hero" id="heroSection">
+        <div class="hero-content">
+            <h1>Thank You!</h1>
+            <p>We have received your message</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="contact-section">
+            <div class="container">
+                <div class="thank-you-container">
+                    <h2>Message Received</h2>
+                    <p>Thank you for contacting AGA Club Bhel Bhopal. We have received your message and will get back to you as soon as possible.</p>
+                    <p>If your inquiry is urgent, you can also reach us directly at:</p>
+                    <ul>
+                        <li><strong>Phone:</strong> 0755 2503343</li>
+                        <li><strong>Email:</strong> agaclubbhel@gmail.com</li>
+                    </ul>
+                    <a href="contact.html" class="btn">Send Another Message</a>
+                    <a href="index.html" class="btn secondary">Return to Home</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AGA Club Bhel Bhopal. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set active navigation link
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current page filename
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Add active class to the current page link
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Load contact page header content
+        document.addEventListener('DOMContentLoaded', function() {
+            // For thank you page, we can use a simple background
+            const heroSection = document.getElementById('heroSection');
+            heroSection.style.background = 'linear-gradient(135deg, #1a3c6c 0%, #2980b9 100%)';
+        });
+    </script>
+    
+    <style>
+        .thank-you-container {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+        
+        .thank-you-container h2 {
+            color: #1a3c6c;
+            margin-bottom: 20px;
+        }
+        
+        .thank-you-container p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .thank-you-container ul {
+            text-align: left;
+            max-width: 300px;
+            margin: 20px auto;
+            padding-left: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #1a3c6c;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn.secondary {
+            background: #7f8c8d;
+        }
+        
+        .btn.secondary:hover {
+            background: #95a5a6;
+        }
+    </style>
+</body>
+</html>

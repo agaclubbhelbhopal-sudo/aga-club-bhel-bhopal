@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheet Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .log { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffe0e0; color: #d00; }
+        .success { background: #e0ffe0; color: #080; }
+        pre { background: #f8f8f8; padding: 10px; border: 1px solid #ddd; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Google Sheet Direct Test</h1>
+    <div id="log"></div>
+    <div id="result"></div>
+
+    <script>
+        const logDiv = document.getElementById('log');
+        const resultDiv = document.getElementById('result');
+
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = 'log ' + type;
+            div.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            logDiv.appendChild(div);
+        }
+
+        // Test Google Sheet access
+        const MEMBERSHIP_SHEET_ID = '1ykvrLVy3uWkyHRTg7bRYnitSo2v8YsISX2I3ojtvl74';
+        const MEMBERSHIP_SHEET_GID = '1304605237';
+        
+        log('Testing direct Google Sheet access...');
+        const sheetUrl = `https://docs.google.com/spreadsheets/d/${MEMBERSHIP_SHEET_ID}/export?format=csv&gid=${MEMBERSHIP_SHEET_GID}`;
+        log('URL: ' + sheetUrl);
+        
+        fetch(sheetUrl)
+            .then(response => {
+                log('Response status: ' + response.status + ' ' + response.statusText, response.ok ? 'success' : 'error');
+                log('Response headers: ' + JSON.stringify([...response.headers.entries()]));
+                
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('HTTP error: ' + response.status);
+                }
+            })
+            .then(text => {
+                log('Success! Received ' + text.length + ' characters of data', 'success');
+                log('First 500 characters:');
+                const pre = document.createElement('pre');
+                pre.textContent = text.substring(0, 500);
+                resultDiv.appendChild(pre);
+                
+                // Parse CSV
+                const lines = text.split('\n').filter(line => line.trim());
+                if (lines.length > 0) {
+                    log('Found ' + lines.length + ' lines (including header)');
+                    log('Header: ' + lines[0]);
+                }
+            })
+            .catch(error => {
+                log('ERROR: ' + error.message, 'error');
+                log('This might be due to CORS policy. The sheet needs to be publicly accessible.', 'error');
+                
+                // Show the error details
+                const pre = document.createElement('pre');
+                pre.textContent = error.stack || error.message;
+                resultDiv.appendChild(pre);
+            });
+    </script>
+</body>
+</html>

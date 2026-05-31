@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resize Logo - AGA Club</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .upload-area {
+            border: 2px dashed #3498db;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            display: none;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        #downloadBtn {
+            background-color: #27ae60;
+        }
+        #downloadBtn:hover {
+            background-color: #219653;
+        }
+        .instructions {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resize Logo to 512x512 Pixels</h1>
+        
+        <div class="instructions">
+            <h2>Instructions:</h2>
+            <div class="step">1. Click "Choose File" below to select your logo</div>
+            <div class="step">2. Click "Resize Logo" to resize it to 512x512 pixels</div>
+            <div class="step">3. Click "Download Resized Logo" to save the resized image</div>
+            <div class="step">4. Replace the existing logo file with the downloaded one</div>
+        </div>
+        
+        <div class="upload-area">
+            <input type="file" id="imageInput" accept="image/*">
+            <p>Choose your logo image file (JPG, PNG, etc.)</p>
+        </div>
+        
+        <canvas id="canvas" width="512" height="512"></canvas>
+        
+        <div style="text-align: center;">
+            <button id="resizeBtn" disabled>Resize Logo</button>
+            <button id="downloadBtn" disabled>Download Resized Logo</button>
+        </div>
+        
+        <div id="result" style="margin-top: 20px; text-align: center;"></div>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const resizeBtn = document.getElementById('resizeBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const resultDiv = document.getElementById('result');
+        
+        let originalImage = null;
+        
+        // When a file is selected
+        imageInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    originalImage = new Image();
+                    originalImage.onload = function() {
+                        resizeBtn.disabled = false;
+                        resultDiv.innerHTML = `Original image loaded: ${Math.round(originalImage.width)}×${Math.round(originalImage.height)} pixels`;
+                    };
+                    originalImage.src = event.target.result;
+                };
+                
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        
+        // Resize the image
+        resizeBtn.addEventListener('click', function() {
+            if (!originalImage) return;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw resized image on canvas
+            ctx.drawImage(originalImage, 0, 0, 512, 512);
+            
+            // Show canvas
+            canvas.style.display = 'block';
+            
+            // Enable download button
+            downloadBtn.disabled = false;
+            
+            resultDiv.innerHTML = 'Logo resized to 512×512 pixels. Click "Download Resized Logo" to save it.';
+        });
+        
+        // Download the resized image
+        downloadBtn.addEventListener('click', function() {
+            if (!canvas.toDataURL) return;
+            
+            const link = document.createElement('a');
+            link.download = 'aga club logo.jpg';
+            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.click();
+            
+            resultDiv.innerHTML = 'Logo downloaded! Replace the existing "aga club logo.jpg" file in your images folder with this new file.';
+        });
+    </script>
+</body>
+</html>

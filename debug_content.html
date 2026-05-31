@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Content Loading</title>
+</head>
+<body>
+    <h1>Content Loading Debug</h1>
+    <button id="loadContent">Load Content</button>
+    <button id="forceRefresh">Force Refresh</button>
+    <div id="output"></div>
+
+    <script src="js/contentLoader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadButton = document.getElementById('loadContent');
+            const refreshButton = document.getElementById('forceRefresh');
+            const output = document.getElementById('output');
+            
+            loadButton.addEventListener('click', async function() {
+                try {
+                    output.innerHTML = '<p>Loading content...</p>';
+                    
+                    // Check status first
+                    const status = contentLoader.getStatus();
+                    console.log('ContentLoader status:', status);
+                    output.innerHTML += `<p>Status: ${JSON.stringify(status, null, 2)}</p>`;
+                    
+                    // Load content
+                    const content = await contentLoader.loadContent();
+                    console.log('Loaded content:', content);
+                    
+                    // Display president message
+                    if (content.homepage && content.homepage.leaders && content.homepage.leaders[0]) {
+                        output.innerHTML += `<h2>President Message:</h2><p>${content.homepage.leaders[0].message}</p>`;
+                        output.innerHTML += `<h2>Secretary Message:</h2><p>${content.homepage.leaders[1].message}</p>`;
+                    } else {
+                        output.innerHTML += '<p>No leader messages found in content</p>';
+                    }
+                } catch (error) {
+                    output.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                    console.error('Error loading content:', error);
+                }
+            });
+            
+            refreshButton.addEventListener('click', async function() {
+                try {
+                    output.innerHTML = '<p>Force refreshing content...</p>';
+                    const content = await contentLoader.forceRefresh();
+                    output.innerHTML += '<p style="color: green;">Force refresh completed!</p>';
+                    
+                    // Display president message
+                    if (content.homepage && content.homepage.leaders && content.homepage.leaders[0]) {
+                        output.innerHTML += `<h2>President Message:</h2><p>${content.homepage.leaders[0].message}</p>`;
+                        output.innerHTML += `<h2>Secretary Message:</h2><p>${content.homepage.leaders[1].message}</p>`;
+                    }
+                } catch (error) {
+                    output.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                    console.error('Error refreshing content:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

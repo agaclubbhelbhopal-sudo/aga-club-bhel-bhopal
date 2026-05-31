@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - AGA Club Bhel Bhopal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/jpeg" href="images/aga_club_site.jpg">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <a href="index.html">
+                        <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    </a>
+                    <a href="index.html" class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </a>
+                    <a href="index.html">
+                        <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                    </a>
+                </div>
+                <p class="registration-number" id="regNumber">Reg. No.: 01/01/01/40737/24</p>
+                <script>
+                    // Hidden admin panel trigger
+                    let clickCount = 0;
+                    let lastClickTime = 0;
+                    const regNumberElement = document.getElementById('regNumber');
+                    
+                    regNumberElement.addEventListener('click', function() {
+                        const currentTime = new Date().getTime();
+                        
+                        // Reset click count if more than 2 seconds have passed
+                        if (currentTime - lastClickTime > 2000) {
+                            clickCount = 0;
+                        }
+                        
+                        clickCount++;
+                        lastClickTime = currentTime;
+                        
+                        // Open admin panel after 4 consecutive clicks
+                        if (clickCount >= 4) {
+                            clickCount = 0;
+                            window.open('admin-panel.html', '_blank');
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navigation Menu Bar -->
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="membership.html" class="nav-link">Membership</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+
+
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="hero" id="heroSection">
+        <div class="hero-content">
+            <h1>About Us</h1>
+            <p>Learn more about AGA Club Bhel Bhopal and our mission</p>
+        </div>
+    </header>
+    <script>
+        // Set active navigation link
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current page filename
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Add active class to the current page link
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Load about page header content
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.getAboutContent().then(content => {
+                if (content.backgroundImage) {
+                    const heroSection = document.getElementById('heroSection');
+                    heroSection.style.background = `url('${content.backgroundImage}')`;
+                    heroSection.style.backgroundSize = 'cover';
+                    heroSection.style.backgroundPosition = 'center';
+                }
+            });
+        });
+    </script>
+
+    <!-- Main Content -->
+    <main>
+        <section class="about-section">
+            <div class="container">
+                <div class="about-content">
+                    <div id="aboutContent">
+                        <h2>Our Story</h2>
+                        <p>Established in [year], AGA Club Bhel Bhopal has been a cornerstone of community life in the BHEL township. Named after the visionary leaders who founded our organization, we have grown from a small group of enthusiastic volunteers to a thriving community hub that brings together hundreds of families.</p>
+                        
+                        <h2>Our Mission</h2>
+                        <p>Our mission is to foster a sense of community, celebrate our rich cultural heritage, and provide recreational and educational opportunities for all age groups. We believe in the power of togetherness and strive to create an environment where every member feels valued and connected.</p>
+                        
+                        <h2>Our Vision</h2>
+                        <p>We envision a vibrant, inclusive community where traditions are preserved, new friendships are formed, and everyone has the opportunity to participate in meaningful activities. Our goal is to be a beacon of cultural and social excellence in BHEL Bhopal.</p>
+                        
+                        <h2>What We Do</h2>
+                        <div class="activities-grid">
+                            <div class="activity-card">
+                                <h3>Cultural Events</h3>
+                                <p>From Holi Milan to Diwali Samaroh, we celebrate festivals with great enthusiasm, bringing together families for memorable experiences.</p>
+                            </div>
+                            <div class="activity-card">
+                                <h3>Sports Activities</h3>
+                                <p>We organize various sports tournaments throughout the year, including basketball, cricket, and badminton competitions.</p>
+                            </div>
+                            <div class="activity-card">
+                                <h3>Children's Programs</h3>
+                                <p>Our children's competition programs provide platforms for young talents to showcase their skills in arts, poetry, and performance.</p>
+                            </div>
+                            <div class="activity-card">
+                                <h3>Community Service</h3>
+                                <p>We engage in various community service initiatives, contributing to the welfare and development of our neighborhood.</p>
+                            </div>
+                        </div>
+                        
+                        <h2>Join Us</h2>
+                        <p>If you share our passion for community building and cultural celebration, we invite you to become a member of AGA Club. Whether you want to volunteer, participate in events, or simply be part of our community, there's a place for you here.</p>
+                        <p>Contact us through our <a href="contact.html">Contact Us</a> page to learn more about membership opportunities.</p>
+                    </div>
+                    <script>
+                        // Load about content from content.json
+                        document.addEventListener('DOMContentLoaded', function() {
+                            contentLoader.getAboutContent().then(aboutContent => {
+                                const contentContainer = document.getElementById('aboutContent');
+                                
+                                if (aboutContent.story || aboutContent.mission || aboutContent.vision || aboutContent.joinUs) {
+                                    contentContainer.innerHTML = `
+                                        <h2>Our Story</h2>
+                                        <p>${aboutContent.story || 'Not set'}</p>
+                                        
+                                        <h2>Our Mission</h2>
+                                        <p>${aboutContent.mission || 'Not set'}</p>
+                                        
+                                        <h2>Our Vision</h2>
+                                        <p>${aboutContent.vision || 'Not set'}</p>
+                                        
+                                        <h2>What We Do</h2>
+                                        <div class="activities-grid">
+                                            <div class="activity-card">
+                                                <h3>Cultural Events</h3>
+                                                <p>From Holi Milan to Diwali Samaroh, we celebrate festivals with great enthusiasm, bringing together families for memorable experiences.</p>
+                                            </div>
+                                            <div class="activity-card">
+                                                <h3>Sports Activities</h3>
+                                                <p>We organize various sports tournaments throughout the year, including basketball, cricket, and badminton competitions.</p>
+                                            </div>
+                                            <div class="activity-card">
+                                                <h3>Children's Programs</h3>
+                                                <p>Our children's competition programs provide platforms for young talents to showcase their skills in arts, poetry, and performance.</p>
+                                            </div>
+                                            <div class="activity-card">
+                                                <h3>Community Service</h3>
+                                                <p>We engage in various community service initiatives, contributing to the welfare and development of our neighborhood.</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <h2>Join Us</h2>
+                                        <p>${aboutContent.joinUs || 'Not set'}</p>
+                                        <p>Contact us through our <a href="contact.html">Contact Us</a> page to learn more about membership opportunities.</p>
+                                    `;
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AGA Club Bhel Bhopal. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/contentLoader.js"></script>
+    <script src="js/backgroundSlideshow.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Initialize background slideshow
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.getAboutContent().then(content => {
+                if (content.backgroundSlideshow) {
+                    backgroundSlideshow.init(content.backgroundSlideshow);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

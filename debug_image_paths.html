@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Image Paths</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .member { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
+        .member img { width: 100px; height: 100px; object-fit: cover; margin-right: 10px; vertical-align: top; }
+        .info { display: inline-block; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Debug Image Paths</h1>
+    <button id="loadContent">Load Committee Members</button>
+    <button id="forceRefresh">Force Refresh</button>
+    <div id="output"></div>
+
+    <script src="js/contentLoader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadButton = document.getElementById('loadContent');
+            const refreshButton = document.getElementById('forceRefresh');
+            const output = document.getElementById('output');
+            
+            loadButton.addEventListener('click', async function() {
+                try {
+                    output.innerHTML = '<p>Loading content...</p>';
+                    const content = await contentLoader.loadContent();
+                    
+                    const committeeMembersArray = content.committeeMembers ? Object.values(content.committeeMembers) : [];
+                    if (committeeMembersArray.length > 0) {
+                        output.innerHTML = `<h2>Found ${committeeMembersArray.length} committee members</h2>`;
+                        
+                        committeeMembersArray.forEach((member, index) => {
+                            const memberDiv = document.createElement('div');
+                            memberDiv.className = 'member';
+                            
+                            // Test if image exists
+                            const img = new Image();
+                            img.src = member.image;
+                            
+                            img.onload = function() {
+                                memberDiv.innerHTML = `
+                                    <img src="${member.image}" alt="${member.name}" onerror="this.src='images/placeholder-member.jpg'">
+                                    <div class="info">
+                                        <strong>${member.name}</strong><br>
+                                        Position: ${member.position}<br>
+                                        Image Path: ${member.image}<br>
+                                        <span class="success">✓ Image loaded successfully</span>
+                                    </div>
+                                `;
+                            };
+                            
+                            img.onerror = function() {
+                                memberDiv.innerHTML = `
+                                    <img src="${member.image}" alt="${member.name}" onerror="this.src='images/placeholder-member.jpg'">
+                                    <div class="info">
+                                        <strong>${member.name}</strong><br>
+                                        Position: ${member.position}<br>
+                                        Image Path: ${member.image}<br>
+                                        <span class="error">✗ Failed to load image</span>
+                                    </div>
+                                `;
+                            };
+                            
+                            output.appendChild(memberDiv);
+                        });
+                    } else {
+                        output.innerHTML = '<p>No committee members found</p>';
+                    }
+                } catch (error) {
+                    output.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                    console.error('Error:', error);
+                }
+            });
+            
+            refreshButton.addEventListener('click', async function() {
+                try {
+                    output.innerHTML = '<p>Force refreshing content...</p>';
+                    const content = await contentLoader.forceRefresh();
+                    output.innerHTML += '<p class="success">Force refresh completed!</p>';
+                } catch (error) {
+                    output.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
