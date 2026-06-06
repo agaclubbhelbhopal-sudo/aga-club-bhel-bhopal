@@ -1830,13 +1830,13 @@
     {
       "id": 8,
       "name": "Shri Arun Sahu",
-      "position": "Member",
+      "position": "Sub-sport secretary",
       "image": "images/Shri Arun Sahu.jpg"
     },
     {
       "id": 9,
       "name": "Shri Birendra Singh",
-      "position": "Member",
+      "position": "Sports secretary",
       "image": "images/Shri Birendra Singh.jpg"
     },
     {
@@ -1848,7 +1848,7 @@
     {
       "id": 11,
       "name": "Shri Jay Parihar",
-      "position": "Member",
+      "position": "Media secretary",
       "image": "images/Shri Jay Parihar.jpg"
     },
     {
@@ -1906,70 +1906,16 @@
       "image": "images/Shri Vimal Kumar Sahu.jpg"
     },
     {
-      "id": 21,
-      "name": "Shri Vinay Savita",
-      "position": "Member",
-      "image": "images/Shri Vinay Savita.jpg"
-    },
-    {
       "id": 22,
       "name": "Shri Vinod Sahu",
       "position": "Member",
       "image": "images/Shri Vinod Sahu.jpg"
     },
     {
-      "id": 1,
-      "name": "Shri Vipul Agrawal",
-      "position": "President",
-      "image": "images/VIPUL AGRAWAL.jpg"
-    },
-    {
-      "id": 2,
-      "name": "Shri Prashant Pathak",
-      "position": "Vice President",
-      "image": "images/Prashant-Pathak.jpg"
-    },
-    {
-      "id": 3,
-      "name": "Shri Vedprakash Sharma",
-      "position": "General Secretary",
-      "image": "images/Shri Vedprakash Sharma.jpg"
-    },
-    {
-      "id": 4,
-      "name": "Shri Rakesh Kumar Shakya",
-      "position": "Joint Secretary",
-      "image": "images/Shri Rakesh Kumar Shakya.jpg"
-    },
-    {
-      "id": 6,
-      "name": "Abhay Kumar Saxena",
-      "position": "Treasurer",
-      "image": "images/Abhay Kumar Saxena.jpg"
-    },
-    {
-      "id": 5,
-      "name": "Yogesh Sarathe",
-      "position": "Cultural Secretary",
-      "image": "images/Yogesh Sarathe.jpg"
-    },
-    {
-      "id": 21,
-      "name": "Shri Vinay Kumar Savita",
-      "position": "Admin Secretary",
-      "image": "images/Shri Vinay Savita.jpg"
-    },
-    {
-      "id": 9,
-      "name": "Shri Birendra Singh",
-      "position": "Sports Secretary",
-      "image": "images/Shri Birendra Singh.jpg"
-    },
-    {
-      "id": 8,
-      "name": "Shri Arun Sahu",
-      "position": "Sub Sports Secretary",
-      "image": "images/Shri Arun Sahu.jpg"
+      "id": 1766128522501,
+      "name": "Shri Deependra Agrawal",
+      "position": "Executive Member",
+      "image": "images/Shri Deependra Agrawal.jpeg"
     },
     {
       "id": 1766121096254,
@@ -1978,40 +1924,10 @@
       "image": "images/Shri Saurabh Kushwah.jpeg"
     },
     {
-      "id": 19,
-      "name": "Shri Upendra Prasad",
-      "position": "Office Secretary",
-      "image": "images/Shri Upendra Prasad.jpg"
-    },
-    {
-      "id": 11,
-      "name": "Shri Jay Parihar",
-      "position": "Media Secretary",
-      "image": "images/Shri Jay Parihar.jpg"
-    },
-    {
-      "id": 10,
-      "name": "Shri C.K. Sharma",
-      "position": "Executive Member",
-      "image": "images/Shri C.K. Sharma.jpg"
-    },
-    {
-      "id": 12,
-      "name": "Shri Mahendra Thakre",
-      "position": "Executive Member",
-      "image": "images/Shri Mahendra Thakre.jpg"
-    },
-    {
-      "id": 14,
-      "name": "Shri Rajesh Barman",
-      "position": "Executive Member",
-      "image": "images/Shri Rajesh Barman.jpg"
-    },
-    {
-      "id": 1766128522501,
-      "name": "Shri Deependra Agrawal",
-      "position": "Executive Member",
-      "image": "images/Shri Deependra Agrawal.jpeg"
+      "id": 21,
+      "name": "Shri Vinay Savita",
+      "position": "It secretary ",
+      "image": "images/Shri Vinay Savita.jpg"
     },
     {
       "id": 1766125578088,
@@ -2026,34 +1942,10 @@
       "image": "images/Shri Omprakash Titre.jpeg"
     },
     {
-      "id": 15,
-      "name": "Shri Ravi Yadav",
-      "position": "Executive Member",
-      "image": "images/Shri Ravi Yadav.jpg"
-    },
-    {
-      "id": 16,
-      "name": "Shri Sandeep Lokhande",
-      "position": "Executive Member",
-      "image": "images/Shri Sandeep Lokhande.jpg"
-    },
-    {
       "id": 17,
       "name": "Shri Sonu Kushwaha",
       "position": "Executive Member",
       "image": "images/Shri Sonu Kushwaha.jpg"
-    },
-    {
-      "id": 7,
-      "name": "Shri Anand Jaiswal",
-      "position": "Executive Member",
-      "image": "images/Shri Anand Jaiswal.jpg"
-    },
-    {
-      "id": 18,
-      "name": "Shri Sunderlal",
-      "position": "Executive Member",
-      "image": "images/Shri Sunderlal.jpg"
     },
     {
       "id": 1766128950904,
