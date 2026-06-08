@@ -39,6 +39,18 @@ class ContentLoader {
     // Resolve image paths for different environments
     resolveImagePath(imagePath) {
         if (!imagePath) return imagePath;
+
+        imagePath = String(imagePath).replace(/\\/g, '/');
+
+        // Keep deployed/intranet paths relative. Older local edits may have saved
+        // file:///C:/.../images/name.jpg, which cannot load from another computer.
+        const imagesIndex = imagePath.toLowerCase().lastIndexOf('/images/');
+        if (!this.isLocalFile && imagesIndex >= 0) {
+            return imagePath.substring(imagesIndex + 1);
+        }
+        if (!this.isLocalFile && imagePath.toLowerCase().startsWith('file:')) {
+            return imagePath.replace(/^file:\/\/\/?/i, '').replace(/^.*?images\//i, 'images/');
+        }
         
         // If it's already a full URL, return as is
         if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('file://')) {
@@ -137,6 +149,19 @@ class ContentLoader {
                 }
             });
         }
+
+        // Process past events images and slideshow media
+        if (content.pastEvents) {
+            const pastEventsArray = Array.isArray(content.pastEvents) ? content.pastEvents : Object.values(content.pastEvents);
+            pastEventsArray.forEach(event => {
+                if (event.image) {
+                    event.image = this.resolveImagePath(event.image);
+                }
+                if (Array.isArray(event.slideshowImages)) {
+                    event.slideshowImages = event.slideshowImages.map(path => this.resolveImagePath(path));
+                }
+            });
+        }
         
         // Process logos
         if (content.logo) {
@@ -198,6 +223,20 @@ class ContentLoader {
         console.log('loadContentInternal called. Is local file:', this.isLocalFile);
         let result;
 
+        try {
+            result = await this.loadFromContentJs();
+            console.log('Loaded from content.js successfully');
+        } catch (contentJsError) {
+            console.warn('Failed to load from content.js, falling back to content.json', contentJsError);
+        }
+
+        if (result) {
+            result = this.processContentPaths(result);
+            this.cache = result;
+            console.log('Content loading and processing completed');
+            return result;
+        }
+
         // For file protocol (opening HTML directly), try to load from content.json
         if (this.isLocalFile) {
             console.log('Loading from JSON in local file mode');
@@ -230,6 +269,36 @@ class ContentLoader {
         this.cache = result;
         console.log('Content loading and processing completed');
         return result;
+    }
+
+    loadFromContentJs() {
+        if (window.AGA_CONTENT) {
+            return Promise.resolve(this.cloneContent(window.AGA_CONTENT));
+        }
+
+        return new Promise((resolve, reject) => {
+            const existingScript = document.querySelector('script[data-aga-content]');
+            if (existingScript) {
+                existingScript.addEventListener('load', () => {
+                    window.AGA_CONTENT ? resolve(this.cloneContent(window.AGA_CONTENT)) : reject(new Error('content.js loaded but AGA_CONTENT was not found'));
+                }, { once: true });
+                existingScript.addEventListener('error', () => reject(new Error('content.js failed to load')), { once: true });
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = 'content.js';
+            script.dataset.agaContent = 'true';
+            script.onload = () => {
+                window.AGA_CONTENT ? resolve(this.cloneContent(window.AGA_CONTENT)) : reject(new Error('content.js loaded but AGA_CONTENT was not found'));
+            };
+            script.onerror = () => reject(new Error('content.js failed to load'));
+            document.head.appendChild(script);
+        });
+    }
+
+    cloneContent(content) {
+        return JSON.parse(JSON.stringify(content));
     }
 
     async loadFromJson() {
@@ -1664,13 +1733,6 @@ class ContentLoader {
 
     // Enhanced getUpcomingEvents that checks for automatic migration
     async getUpcomingEvents() {
-        // Try to migrate events automatically
-        try {
-            await this.migrateEventsAutomatically();
-        } catch (error) {
-            console.warn('Automatic event migration failed:', error);
-        }
-        
         const content = await this.loadContent();
         return content.upcomingEvents ? Object.values(content.upcomingEvents) : [];
     }

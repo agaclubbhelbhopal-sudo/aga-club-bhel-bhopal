@@ -8,8 +8,8 @@ class BackgroundSlideshow {
     }
 
     init(slides) {
-        this.slides = slides;
         this.heroSection = document.getElementById('heroSection');
+        this.slides = this.buildSlides(slides);
         
         console.log('BackgroundSlideshow: Initializing with', this.slides.length, 'slides');
         console.log('BackgroundSlideshow: Slides data:', this.slides);
@@ -50,7 +50,7 @@ class BackgroundSlideshow {
         }
         
         // Get the current slide path
-        let slidePath = this.slides[this.currentSlide];
+        let slidePath = this.normalizeMediaPath(this.slides[this.currentSlide]);
         
         // Log for debugging
         console.log(`BackgroundSlideshow: Showing slide ${this.currentSlide + 1}/${this.slides.length}: "${slidePath}"`);
@@ -60,20 +60,106 @@ class BackgroundSlideshow {
         
         // Update the image element instead of background
         const slideshowImage = document.getElementById('heroSlideshowImage');
+        const slideshowVideo = this.getOrCreateVideoElement();
         if (slideshowImage) {
-            slideshowImage.src = slidePath;
-            slideshowImage.style.opacity = '0';
-            
-            // Fade in the new image
-            setTimeout(() => {
-                slideshowImage.style.opacity = '1';
-            }, 50);
+            if (this.isVideoPath(slidePath)) {
+                slideshowImage.style.display = 'none';
+                slideshowVideo.style.display = 'block';
+                slideshowVideo.src = slidePath;
+                slideshowVideo.style.opacity = '0';
+                slideshowVideo.load();
+                slideshowVideo.play().catch(() => {
+                    console.warn('BackgroundSlideshow: Video autoplay was blocked');
+                });
+                
+                setTimeout(() => {
+                    slideshowVideo.style.opacity = '1';
+                }, 50);
+            } else {
+                slideshowVideo.pause();
+                slideshowVideo.style.display = 'none';
+                slideshowImage.style.display = 'block';
+                slideshowImage.src = slidePath;
+                slideshowImage.style.opacity = '0';
+                
+                // Fade in the new image
+                setTimeout(() => {
+                    slideshowImage.style.opacity = '1';
+                }, 50);
+            }
         }
         
         // Remove fade effect after transition
         setTimeout(() => {
             this.heroSection.classList.remove('background-fade');
         }, 1000);
+    }
+
+    isVideoPath(path) {
+        return /\.(mp4|webm|ogg|mov)$/i.test(path || '');
+    }
+
+    isSupportedMediaPath(path) {
+        return /\.(jpg|jpeg|png|gif|webp|svg|mp4|webm|ogg|mov)(\?.*)?$/i.test(path || '');
+    }
+
+    normalizeMediaPath(path) {
+        if (!path) return '';
+        let mediaPath = String(path).replace(/\\/g, '/').trim();
+        const imagesIndex = mediaPath.toLowerCase().lastIndexOf('/images/');
+        if (imagesIndex >= 0 && !/^https?:\/\//i.test(mediaPath) && !/^file:/i.test(mediaPath)) {
+            mediaPath = mediaPath.slice(imagesIndex + 1);
+        }
+        return mediaPath.replace(/^\/+/, '');
+    }
+
+    getCurrentBackgroundPath() {
+        if (!this.heroSection) return '';
+        const backgroundImage = this.heroSection.style.backgroundImage || this.heroSection.style.background || '';
+        const match = backgroundImage.match(/url\((['"]?)(.*?)\1\)/i);
+        return match ? match[2] : '';
+    }
+
+    buildSlides(slides) {
+        const allSlides = [];
+        const backgroundPath = this.getCurrentBackgroundPath();
+        if (backgroundPath) {
+            allSlides.push(backgroundPath);
+        }
+        if (Array.isArray(slides)) {
+            allSlides.push(...slides);
+        } else if (slides) {
+            allSlides.push(slides);
+        }
+
+        const seen = new Set();
+        return allSlides
+            .map(path => this.normalizeMediaPath(path))
+            .filter(path => path && this.isSupportedMediaPath(path))
+            .filter(path => {
+                const key = path.toLowerCase();
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
+    }
+
+    getOrCreateVideoElement() {
+        let video = document.getElementById('heroSlideshowVideo');
+        if (!video) {
+            const container = document.querySelector('.hero-slideshow-container');
+            video = document.createElement('video');
+            video.id = 'heroSlideshowVideo';
+            video.className = 'hero-slideshow-image';
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.style.display = 'none';
+            if (container) {
+                container.appendChild(video);
+            }
+        }
+        return video;
     }
 
     nextSlide() {
