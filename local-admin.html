@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGA Club Local Content Editor</title>
+  <style>
+    :root {
+      --blue: #1a3c6c;
+      --light: #eef6ff;
+      --line: #d8e4f0;
+      --danger: #b42318;
+      --success: #12703d;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f8fc;
+      color: #1f2937;
+    }
+
+    header {
+      background: var(--blue);
+      color: white;
+      padding: 18px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 4px 18px rgba(0,0,0,.18);
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+    }
+
+    header p { margin: 0; opacity: .9; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 82px);
+    }
+
+    aside {
+      border-right: 1px solid var(--line);
+      background: white;
+      padding: 16px;
+      position: sticky;
+      top: 82px;
+      height: calc(100vh - 82px);
+      overflow: auto;
+    }
+
+    main {
+      padding: 22px;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    .tab {
+      display: block;
+      width: 100%;
+      text-align: left;
+      border: 1px solid transparent;
+      background: transparent;
+      padding: 11px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #1f2937;
+      font-size: 15px;
+    }
+
+    .tab.active {
+      background: var(--light);
+      border-color: #b9d6f2;
+      color: var(--blue);
+      font-weight: bold;
+    }
+
+    .panel {
+      display: none;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, .06);
+    }
+
+    .panel.active { display: block; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 0 0 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 10px 14px;
+      cursor: pointer;
+      background: var(--blue);
+      color: white;
+      font-weight: bold;
+    }
+
+    button.secondary {
+      background: #e7eef7;
+      color: #1f2937;
+    }
+
+    button.danger { background: var(--danger); }
+    button.success { background: var(--success); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #334155;
+    }
+
+    input, textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      padding: 10px;
+      font: inherit;
+      background: white;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      margin: 12px 0;
+      background: #fbfdff;
+    }
+
+    .item-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      font-weight: bold;
+      color: var(--blue);
+    }
+
+    .list-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .list-row input { flex: 1; }
+
+    .notice {
+      padding: 12px 14px;
+      background: #fff8dd;
+      border: 1px solid #f4d06f;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .status {
+      margin-top: 12px;
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    @media (max-width: 800px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AGA Club Local Content Editor</h1>
+    <p>Edit content locally, then save/download the updated <strong>content.js</strong> file.</p>
+  </header>
+
+  <div class="layout">
+    <aside id="tabs"></aside>
+    <main>
+      <div class="notice">
+        Chrome/Edge me <strong>Save content.js</strong> button se existing file overwrite choose kar sakte hain.
+        Agar browser allow na kare, downloaded <strong>content.js</strong> ko website folder me replace kar dijiye.
+      </div>
+      <div class="toolbar">
+        <button class="success" onclick="saveContentJs()">Save content.js</button>
+        <button class="secondary" onclick="downloadContentJson()">Download content.json backup</button>
+        <button class="secondary" onclick="location.href='index.html'">Open Website</button>
+      </div>
+      <div id="panels"></div>
+      <div class="status" id="status"></div>
+    </main>
+  </div>
+
+  <script src="content.js"></script>
+  <script>
+    const content = JSON.parse(JSON.stringify(window.AGA_CONTENT || {}));
+    const sections = [
+      ['basic', 'Basic Info'],
+      ['home', 'Homepage'],
+      ['leaders', 'Leader Messages'],
+      ['upcoming', 'Upcoming Events'],
+      ['past', 'Past Events'],
+      ['committee', 'Committee'],
+      ['about', 'About'],
+      ['contact', 'Contact'],
+      ['members', 'Members']
+    ];
+
+    function ensureData() {
+      content.homepage ||= {};
+      content.homepage.header ||= {};
+      content.homepage.leaders ||= [];
+      content.homepage.gallery ||= [];
+      content.homepage.header.backgroundSlideshow ||= [];
+      content.upcomingEvents ||= [];
+      content.pastEvents ||= [];
+      content.committeeMembers = Array.isArray(content.committeeMembers) ? content.committeeMembers : Object.values(content.committeeMembers || {});
+      content.aboutContent ||= {};
+      content.contactContent ||= {};
+      content.membershipContent ||= {};
+      content.members ||= [];
+    }
+
+    function setStatus(message) {
+      document.getElementById('status').textContent = message;
+      setTimeout(() => document.getElementById('status').textContent = '', 5000);
+    }
+
+    function text(value) {
+      return String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    }
+
+    function field(label, path, type = 'input') {
+      const value = getPath(path);
+      const input = type === 'textarea'
+        ? `<textarea data-path="${path}">${text(value)}</textarea>`
+        : `<input data-path="${path}" value="${text(value)}">`;
+      return `<div class="field"><label>${label}</label>${input}</div>`;
+    }
+
+    function getPath(path) {
+      return path.split('.').reduce((obj, key) => obj ? obj[key] : '', content);
+    }
+
+    function setPath(path, value) {
+      const keys = path.split('.');
+      let target = content;
+      while (keys.length > 1) {
+        const key = keys.shift();
+        target[key] ||= {};
+        target = target[key];
+      }
+      target[keys[0]] = value;
+    }
+
+    function bindSimpleFields() {
+      document.querySelectorAll('[data-path]').forEach(input => {
+        input.addEventListener('input', () => setPath(input.dataset.path, input.value));
+      });
+    }
+
+    function renderTabs() {
+      document.getElementById('tabs').innerHTML = sections.map(([id, label], index) =>
+        `<button class="tab ${index === 0 ? 'active' : ''}" onclick="showPanel('${id}')">${label}</button>`
+      ).join('');
+    }
+
+    function renderPanels() {
+      const panels = document.getElementById('panels');
+      panels.innerHTML = sections.map(([id], index) => `<section class="panel ${index === 0 ? 'active' : ''}" id="panel-${id}"></section>`).join('');
+      renderBasic();
+      renderHome();
+      renderLeaders();
+      renderUpcoming();
+      renderPast();
+      renderCommittee();
+      renderAbout();
+      renderContact();
+      renderMembers();
+      bindSimpleFields();
+    }
+
+    function showPanel(id) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById(`panel-${id}`).classList.add('active');
+    }
+
+    function renderBasic() {
+      document.getElementById('panel-basic').innerHTML = `
+        <h2>Basic Info</h2>
+        <div class="grid">
+          ${field('Registration Number', 'registrationNumber')}
+          ${field('Left Logo Path', 'logo')}
+          ${field('Right Logo Path', 'logo2')}
+        </div>`;
+    }
+
+    function renderHome() {
+      document.getElementById('panel-home').innerHTML = `
+        <h2>Homepage</h2>
+        <div class="grid">
+          ${field('Hero Title', 'homepage.header.title')}
+          ${field('Hero Subtitle', 'homepage.header.subtitle')}
+          ${field('Hero Background Image', 'homepage.header.backgroundImage')}
+        </div>
+        ${renderStringList('Hero Slideshow Images', content.homepage.header.backgroundSlideshow, value => {
+          content.homepage.header.backgroundSlideshow = value;
+          renderPanels();
+          showPanelById('home');
+        })}
+        ${renderGallery()}`;
+    }
+
+    function renderGallery() {
+      return `<h3>Homepage Gallery</h3>
+        <button onclick="content.homepage.gallery.push({id: Date.now(), image: 'images/new-photo.jpg', alt: 'New Photo'}); renderPanels(); showPanelById('home');">Add Gallery Image</button>
+        ${content.homepage.gallery.map((item, index) => `
+          <div class="item">
+            <div class="item-title">Gallery ${index + 1}<button class="danger" onclick="content.homepage.gallery.splice(${index},1); renderPanels(); showPanelById('home');">Delete</button></div>
+            <div class="grid">
+              <div class="field"><label>Image Path</label><input value="${text(item.image)}" oninput="content.homepage.gallery[${index}].image=this.value"></div>
+              <div class="field"><label>Alt Text</label><input value="${text(item.alt)}" oninput="content.homepage.gallery[${index}].alt=this.value"></div>
+            </div>
+          </div>`).join('')}`;
+    }
+
+    function renderLeaders() {
+      document.getElementById('panel-leaders').innerHTML = `
+        <h2>Leader Messages</h2>
+        <button onclick="content.homepage.leaders.push({id: Date.now(), name: 'Name', photo: 'images/photo.jpg', messageTitle: 'Message Title', message: '', fullMessage: ''}); renderPanels(); showPanelById('leaders');">Add Leader</button>
+        ${content.homepage.leaders.map((leader, index) => `
+          <div class="item">
+            <div class="item-title">${text(leader.name || 'Leader')}<button class="danger" onclick="content.homepage.leaders.splice(${index},1); renderPanels(); showPanelById('leaders');">Delete</button></div>
+            <div class="grid">
+              <div class="field"><label>Name</label><input value="${text(leader.name)}" oninput="content.homepage.leaders[${index}].name=this.value"></div>
+              <div class="field"><label>Photo Path</label><input value="${text(leader.photo)}" oninput="content.homepage.leaders[${index}].photo=this.value"></div>
+              <div class="field"><label>Message Title</label><input value="${text(leader.messageTitle)}" oninput="content.homepage.leaders[${index}].messageTitle=this.value"></div>
+            </div>
+            <div class="field"><label>Short Message</label><textarea oninput="content.homepage.leaders[${index}].message=this.value">${text(leader.message)}</textarea></div>
+            <div class="field"><label>Full Message</label><textarea oninput="content.homepage.leaders[${index}].fullMessage=this.value">${text(leader.fullMessage)}</textarea></div>
+          </div>`).join('')}`;
+    }
+
+    function eventEditor(listName, panelId, heading, includeFormLink) {
+      const list = content[listName];
+      document.getElementById(`panel-${panelId}`).innerHTML = `
+        <h2>${heading}</h2>
+        <button onclick="content.${listName}.push({id: Date.now(), name: 'New Event', date: '', venue: '', description: '', image: 'images/event.jpg', ${includeFormLink ? "formLink: ''," : ''} slideshowImages: []}); renderPanels(); showPanelById('${panelId}');">Add Event</button>
+        ${list.map((item, index) => `
+          <div class="item">
+            <div class="item-title">${text(item.name || 'Event')}<button class="danger" onclick="content.${listName}.splice(${index},1); renderPanels(); showPanelById('${panelId}');">Delete</button></div>
+            <div class="grid">
+              ${eventInput(listName, index, 'name', 'Event Name')}
+              ${eventInput(listName, index, 'date', 'Date')}
+              ${eventInput(listName, index, 'venue', 'Venue')}
+              ${includeFormLink ? eventInput(listName, index, 'formLink', 'Form Link') : ''}
+              ${eventInput(listName, index, 'image', 'Main Image Path')}
+            </div>
+            <div class="field"><label>Description</label><textarea oninput="content.${listName}[${index}].description=this.value">${text(item.description)}</textarea></div>
+            ${renderStringList('Slideshow Images', item.slideshowImages || [], value => {
+              content[listName][index].slideshowImages = value;
+              renderPanels();
+              showPanelById(panelId);
+            })}
+          </div>`).join('')}`;
+    }
+
+    function eventInput(listName, index, key, label) {
+      return `<div class="field"><label>${label}</label><input value="${text(content[listName][index][key])}" oninput="content.${listName}[${index}].${key}=this.value"></div>`;
+    }
+
+    function renderUpcoming() { eventEditor('upcomingEvents', 'upcoming', 'Upcoming Events', true); }
+    function renderPast() { eventEditor('pastEvents', 'past', 'Past Events', false); }
+
+    function renderCommittee() {
+      document.getElementById('panel-committee').innerHTML = `
+        <h2>Committee Members</h2>
+        <button onclick="content.committeeMembers.push({id: Date.now(), name: 'Member Name', position: 'Member', image: 'images/member.jpg'}); renderPanels(); showPanelById('committee');">Add Committee Member</button>
+        ${content.committeeMembers.map((member, index) => `
+          <div class="item">
+            <div class="item-title">${text(member.name)}<button class="danger" onclick="content.committeeMembers.splice(${index},1); renderPanels(); showPanelById('committee');">Delete</button></div>
+            <div class="grid">
+              <div class="field"><label>Name</label><input value="${text(member.name)}" oninput="content.committeeMembers[${index}].name=this.value"></div>
+              <div class="field"><label>Position</label><input value="${text(member.position)}" oninput="content.committeeMembers[${index}].position=this.value"></div>
+              <div class="field"><label>Photo Path</label><input value="${text(member.image)}" oninput="content.committeeMembers[${index}].image=this.value"></div>
+            </div>
+          </div>`).join('')}`;
+    }
+
+    function renderAbout() {
+      document.getElementById('panel-about').innerHTML = `
+        <h2>About Page</h2>
+        ${field('Story', 'aboutContent.story', 'textarea')}
+        ${field('Mission', 'aboutContent.mission', 'textarea')}
+        ${field('Vision', 'aboutContent.vision', 'textarea')}
+        ${field('Join Us', 'aboutContent.joinUs', 'textarea')}
+        ${field('Background Image', 'aboutContent.backgroundImage')}
+        ${renderStringList('Background Slideshow', content.aboutContent.backgroundSlideshow || [], value => {
+          content.aboutContent.backgroundSlideshow = value;
+          renderPanels();
+          showPanelById('about');
+        })}`;
+    }
+
+    function renderContact() {
+      document.getElementById('panel-contact').innerHTML = `
+        <h2>Contact Page</h2>
+        <div class="grid">
+          ${field('Phone', 'contactContent.phone')}
+          ${field('Email', 'contactContent.email')}
+          ${field('Office Hours', 'contactContent.hours')}
+          ${field('Background Image', 'contactContent.backgroundImage')}
+        </div>
+        ${field('Address', 'contactContent.address', 'textarea')}
+        ${field('Location Details', 'contactContent.location', 'textarea')}
+        ${renderStringList('Background Slideshow', content.contactContent.backgroundSlideshow || [], value => {
+          content.contactContent.backgroundSlideshow = value;
+          renderPanels();
+          showPanelById('contact');
+        })}`;
+    }
+
+    function renderMembers() {
+      document.getElementById('panel-members').innerHTML = `
+        <h2>Members</h2>
+        <button onclick="content.members.push({'Sl. No.': content.members.length + 1, 'Staff No.': '', Name: 'New Member', 'Contact No.': '', Department: ''}); renderPanels(); showPanelById('members');">Add Member</button>
+        ${content.members.map((member, index) => `
+          <div class="item">
+            <div class="item-title">${text(member.Name || 'Member')}<button class="danger" onclick="content.members.splice(${index},1); renderPanels(); showPanelById('members');">Delete</button></div>
+            <div class="grid">
+              ${memberInput(index, 'Sl. No.', 'Sl. No.')}
+              ${memberInput(index, 'Staff No.', 'Staff No.')}
+              ${memberInput(index, 'Name', 'Name')}
+              ${memberInput(index, 'Contact No.', 'Contact No.')}
+              ${memberInput(index, 'Department', 'Department')}
+            </div>
+          </div>`).join('')}`;
+    }
+
+    function memberInput(index, key, label) {
+      return `<div class="field"><label>${label}</label><input value="${text(content.members[index][key])}" oninput="content.members[${index}]['${key}']=this.value"></div>`;
+    }
+
+    function renderStringList(label, list, onChange) {
+      const safeList = Array.isArray(list) ? list : [];
+      const id = `list-${Math.random().toString(36).slice(2)}`;
+      window[id] = onChange;
+      return `<h3>${label}</h3>
+        <button type="button" onclick="const values=[...document.querySelectorAll('[data-list=${id}]')].map(i=>i.value); values.push('images/new-image.jpg'); window['${id}'](values)">Add Image</button>
+        ${safeList.map((item, index) => `
+          <div class="list-row">
+            <input data-list="${id}" value="${text(item)}" oninput="window['${id}']([...document.querySelectorAll('[data-list=${id}]')].map(i=>i.value))">
+            <button class="danger" type="button" onclick="const values=[...document.querySelectorAll('[data-list=${id}]')].map(i=>i.value); values.splice(${index},1); window['${id}'](values)">Delete</button>
+          </div>`).join('')}`;
+    }
+
+    function showPanelById(id) {
+      document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+      document.getElementById(`panel-${id}`).classList.add('active');
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab.textContent === sections.find(section => section[0] === id)[1]));
+    }
+
+    function contentJsText() {
+      sortOrderedCollections();
+      return `window.AGA_CONTENT = ${JSON.stringify(content, null, 2)};\n`;
+    }
+
+    function sortOrderedCollections() {
+      const orderValue = (item, fallback) => {
+        const value = Number(item.serialNo || item.order || item.sequence || fallback);
+        return Number.isFinite(value) ? value : fallback;
+      };
+      removeDuplicateCommitteeMembers();
+
+      if (Array.isArray(content.pastEvents)) {
+        const newestFirst = (content.eventsContent && content.eventsContent.pastEventsSortOrder) !== 'firstOnTop';
+        content.pastEvents.sort((a, b) => {
+          const aOrder = orderValue(a, 0);
+          const bOrder = orderValue(b, 0);
+          return newestFirst ? bOrder - aOrder : aOrder - bOrder;
+        });
+      }
+      if (Array.isArray(content.upcomingEvents)) {
+        content.upcomingEvents.sort((a, b) => orderValue(a, 0) - orderValue(b, 0));
+      }
+      if (Array.isArray(content.committeeMembers)) {
+        content.committeeMembers.sort((a, b) => orderValue(a, 0) - orderValue(b, 0));
+      }
+    }
+
+    function committeeDuplicateKey(member) {
+      return `${String(member.name || '').trim().toLowerCase()}|${String(member.position || '').trim().toLowerCase()}`;
+    }
+
+    function removeDuplicateCommitteeMembers() {
+      if (!Array.isArray(content.committeeMembers)) return 0;
+      const seen = new Set();
+      const unique = [];
+      let removed = 0;
+
+      content.committeeMembers.forEach(member => {
+        const key = committeeDuplicateKey(member);
+        if (!String(member.name || '').trim()) {
+          unique.push(member);
+          return;
+        }
+        if (seen.has(key)) {
+          removed += 1;
+          return;
+        }
+        seen.add(key);
+        unique.push(member);
+      });
+
+      content.committeeMembers = unique;
+      return removed;
+    }
+
+    async function saveContentJs() {
+      const fileText = contentJsText();
+      if ('showSaveFilePicker' in window) {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: 'content.js',
+          types: [{ description: 'JavaScript file', accept: { 'text/javascript': ['.js'] } }]
+        });
+        const writable = await handle.createWritable();
+        await writable.write(fileText);
+        await writable.close();
+        setStatus('content.js saved. Website refresh karke changes dekhiye.');
+        return;
+      }
+      download('content.js', fileText, 'text/javascript');
+      setStatus('content.js downloaded. Is file ko website folder me replace kijiye.');
+    }
+
+    function downloadContentJson() {
+      download('content.json', JSON.stringify(content, null, 2), 'application/json');
+    }
+
+    function download(filename, data, type) {
+      const blob = new Blob([data], { type });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    ensureData();
+    renderTabs();
+    renderPanels();
+  </script>
+  <style>
+    .media-control {
+      display: grid;
+      grid-template-columns: 110px minmax(180px, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .media-preview {
+      width: 110px;
+      height: 78px;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: #64748b;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .media-preview img,
+    .media-preview video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .media-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .small-note {
+      display: block;
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 6px;
+      line-height: 1.35;
+    }
+  </style>
+  <script>
+    let siteDirectoryHandle = null;
+    const temporaryMediaPreviews = {};
+    const pendingMediaFiles = {};
+    const mediaExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'mp4', 'webm', 'ogg', 'mov'];
+
+    function isVideoPath(path) {
+      return /\.(mp4|webm|ogg|mov)$/i.test(path || '');
+    }
+
+    function isMediaPath(path) {
+      return new RegExp(`\\.(${mediaExtensions.join('|')})$`, 'i').test(path || '');
+    }
+
+    function normalizeMediaPath(path) {
+      if (!path) return '';
+      const clean = String(path).replace(/\\/g, '/').replace(/^file:\/\/\/?/i, '');
+      const imagesIndex = clean.toLowerCase().lastIndexOf('/images/');
+      if (imagesIndex >= 0) return clean.slice(imagesIndex + 1);
+      if (clean.toLowerCase().startsWith('images/')) return clean;
+      return clean.replace(/^\/+/, '');
+    }
+
+    function safeMediaFilename(name) {
+      const dotIndex = name.lastIndexOf('.');
+      const base = dotIndex >= 0 ? name.slice(0, dotIndex) : name;
+      const ext = dotIndex >= 0 ? name.slice(dotIndex).toLowerCase() : '';
+      const safeBase = base
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-zA-Z0-9._-]/g, '')
+        .replace(/-+/g, '-')
+        || `media-${Date.now()}`;
+      return `${safeBase}${ext}`;
+    }
+
+    async function chooseWebsiteFolder() {
+      if (!('showDirectoryPicker' in window)) {
+        alert('Folder select Chrome/Edge me supported hai. Agar browser allow na kare to image/video ko manually images folder me copy karke path enter karein.');
+        return;
+      }
+
+      siteDirectoryHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+      setStatus('Website folder selected. Ab Choose File se media images folder me copy ho sakta hai.');
+    }
+
+    async function copyFileToImagesFolder(file) {
+      const filename = safeMediaFilename(file.name);
+      const path = `images/${filename}`;
+      temporaryMediaPreviews[path] = URL.createObjectURL(file);
+      pendingMediaFiles[path] = file;
+      if (!siteDirectoryHandle) return path;
+
+      const imagesHandle = await siteDirectoryHandle.getDirectoryHandle('images', { create: true });
+      const fileHandle = await imagesHandle.getFileHandle(filename, { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(file);
+      await writable.close();
+      delete pendingMediaFiles[path];
+      return path;
+    }
+
+    async function copyPendingMediaFiles() {
+      const pendingPaths = Object.keys(pendingMediaFiles);
+      if (pendingPaths.length === 0) return;
+
+      if (!siteDirectoryHandle) {
+        await chooseWebsiteFolder();
+      }
+
+      if (!siteDirectoryHandle) {
+        throw new Error('Website folder select nahi hua, isliye media files save nahi ho payi.');
+      }
+
+      const imagesHandle = await siteDirectoryHandle.getDirectoryHandle('images', { create: true });
+      for (const path of pendingPaths) {
+        const file = pendingMediaFiles[path];
+        const filename = path.split('/').pop();
+        const fileHandle = await imagesHandle.getFileHandle(filename, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(file);
+        await writable.close();
+        delete pendingMediaFiles[path];
+      }
+    }
+
+    async function copyMultipleFilesToImagesFolder(fileList) {
+      const files = Array.from(fileList || []);
+      const paths = [];
+      for (const file of files) {
+        const path = await copyFileToImagesFolder(file);
+        if (path) paths.push(path);
+      }
+      return paths;
+    }
+
+    function mediaPreviewHtml(path) {
+      const normalized = normalizeMediaPath(path);
+      if (!normalized) return '<div class="media-preview">No media</div>';
+      const previewPath = temporaryMediaPreviews[normalized] || normalized;
+      if (isVideoPath(normalized)) {
+        return `<div class="media-preview"><video src="${text(previewPath)}" muted controls></video></div>`;
+      }
+      return `<div class="media-preview"><img src="${text(previewPath)}" alt="" onerror="this.parentElement.textContent='Preview not found'"></div>`;
+    }
+
+    function mediaControl(value, onChange, options = {}) {
+      const id = `media-${Math.random().toString(36).slice(2)}`;
+      const textId = `${id}-text`;
+      window[textId] = function(path) {
+        onChange(normalizeMediaPath(path));
+      };
+      window[id] = async function(fileInput) {
+        const file = fileInput.files && fileInput.files[0];
+        if (!file) return;
+        const path = await copyFileToImagesFolder(file);
+        if (!path) return;
+        onChange(path);
+        renderPanels();
+        showPanelById(options.panelId || activePanelId());
+        setStatus(siteDirectoryHandle ? `${path} copied to images folder.` : `${path} selected. Save content.js par media file images folder me copy hogi.`);
+      };
+
+      const normalized = normalizeMediaPath(value);
+      return `
+        <div class="media-control">
+          ${mediaPreviewHtml(normalized)}
+          <div>
+            <input value="${text(normalized)}" oninput="window['${textId}'](this.value)">
+            <div class="media-actions">
+              <button type="button" class="secondary" onclick="document.getElementById('${id}').click()">Choose File</button>
+              <button type="button" class="secondary" onclick="window['${id}-text']('')">Clear</button>
+            </div>
+            <input id="${id}" type="file" accept="image/*,.gif,video/*" style="display:none" onchange="window['${id}'](this)">
+            <span class="small-note">Path relative rakhein, example: images/event-photo.jpg. Intranet par file names me special symbols aur bahut zyada spaces avoid karein.</span>
+          </div>
+        </div>`;
+    }
+
+    function mediaField(label, value, onChange, panelId) {
+      const control = mediaControl(value, path => onChange(normalizeMediaPath(path)), { panelId });
+      return `<div class="field"><label>${label}</label>${control}</div>`;
+    }
+
+    function activePanelId() {
+      const active = document.querySelector('.panel.active');
+      return active ? active.id.replace('panel-', '') : 'home';
+    }
+
+    function addWebsiteFolderButton() {
+      const toolbar = document.querySelector('.toolbar');
+      if (!toolbar || document.getElementById('choose-folder-btn')) return;
+      const button = document.createElement('button');
+      button.id = 'choose-folder-btn';
+      button.type = 'button';
+      button.className = 'secondary';
+      button.textContent = 'Choose Website Folder';
+      button.onclick = chooseWebsiteFolder;
+      toolbar.insertBefore(button, toolbar.firstChild);
+    }
+
+    const originalField = field;
+    function panelForPath(path) {
+      if (path.startsWith('homepage.')) return 'home';
+      if (path.startsWith('aboutContent.')) return 'about';
+      if (path.startsWith('contactContent.')) return 'contact';
+      if (path.startsWith('committeeContent.')) return 'committee';
+      if (path.startsWith('upcomingContent.')) return 'upcoming';
+      if (path.startsWith('membershipContent.')) return 'members';
+      return activePanelId();
+    }
+
+    field = function(label, path, type = 'input') {
+      const value = getPath(path);
+      if (type === 'media' || /image|logo|photo|video/i.test(label + ' ' + path)) {
+        return mediaField(label, value, nextValue => setPath(path, nextValue), panelForPath(path));
+      }
+      return originalField(label, path, type);
+    };
+
+    renderHome = function() {
+      document.getElementById('panel-home').innerHTML = `
+        <h2>Homepage</h2>
+        <div class="grid">
+          ${field('Hero Title', 'homepage.header.title')}
+          ${field('Hero Subtitle', 'homepage.header.subtitle')}
+          ${field('Hero Background Image', 'homepage.header.backgroundImage')}
+        </div>
+        ${renderStringList('Hero Slideshow Images', content.homepage.header.backgroundSlideshow, value => {
+          content.homepage.header.backgroundSlideshow = value;
+          renderPanels();
+          showPanelById('home');
+        }, 'home')}
+        ${renderGallery()}`;
+    };
+
+    renderGallery = function() {
+      return `<h3>Homepage Gallery</h3>
+        <button onclick="content.homepage.gallery.push({id: Date.now(), image: 'images/new-photo.jpg', alt: 'New Photo'}); renderPanels(); showPanelById('home');">Add Gallery Image</button>
+        ${content.homepage.gallery.map((item, index) => `
+          <div class="item">
+            <div class="item-title">Gallery ${index + 1}<button class="danger" onclick="content.homepage.gallery.splice(${index},1); renderPanels(); showPanelById('home');">Delete</button></div>
+            <div class="grid">
+              ${mediaField('Image / Video', item.image, path => content.homepage.gallery[index].image = path, 'home')}
+              <div class="field"><label>Alt Text</label><input value="${text(item.alt)}" oninput="content.homepage.gallery[${index}].alt=this.value"></div>
+            </div>
+          </div>`).join('')}`;
+    };
+
+    renderLeaders = function() {
+      document.getElementById('panel-leaders').innerHTML = `
+        <h2>Leader Messages</h2>
+        <button onclick="content.homepage.leaders.push({id: Date.now(), name: 'Name', photo: 'images/photo.jpg', messageTitle: 'Message Title', message: '', fullMessage: ''}); renderPanels(); showPanelById('leaders');">Add Leader</button>
+        ${content.homepage.leaders.map((leader, index) => `
+          <div class="item">
+            <div class="item-title">${text(leader.name || 'Leader')}<button class="danger" onclick="content.homepage.leaders.splice(${index},1); renderPanels(); showPanelById('leaders');">Delete</button></div>
+            <div class="grid">
+              <div class="field"><label>Name</label><input value="${text(leader.name)}" oninput="content.homepage.leaders[${index}].name=this.value"></div>
+              ${mediaField('Photo', leader.photo, path => content.homepage.leaders[index].photo = path, 'leaders')}
+              <div class="field"><label>Message Title</label><input value="${text(leader.messageTitle)}" oninput="content.homepage.leaders[${index}].messageTitle=this.value"></div>
+            </div>
+            <div class="field"><label>Short Message</label><textarea oninput="content.homepage.leaders[${index}].message=this.value">${text(leader.message)}</textarea></div>
+            <div class="field"><label>Full Message</label><textarea oninput="content.homepage.leaders[${index}].fullMessage=this.value">${text(leader.fullMessage)}</textarea></div>
+          </div>`).join('')}`;
+    };
+
+    eventEditor = function(listName, panelId, heading, includeFormLink) {
+      const list = content[listName];
+      content.eventsContent ||= {};
+      const sortOrderControls = listName === 'pastEvents' ? `
+        <div class="toolbar">
+          <button type="button" class="secondary" onclick="content.eventsContent.pastEventsSortOrder='lastOnTop'; renderPanels(); showPanelById('past');">Last Added On Top</button>
+          <button type="button" class="secondary" onclick="content.eventsContent.pastEventsSortOrder='firstOnTop'; renderPanels(); showPanelById('past');">First Added On Top</button>
+          <span class="small-note">Current: ${(content.eventsContent.pastEventsSortOrder || 'lastOnTop') === 'firstOnTop' ? 'First Added On Top' : 'Last Added On Top'}</span>
+        </div>` : '';
+      document.getElementById(`panel-${panelId}`).innerHTML = `
+        <h2>${heading}</h2>
+        ${sortOrderControls}
+        <button onclick="content.${listName}.push({id: Date.now(), serialNo: content.${listName}.length + 1, name: 'New Event', date: '', venue: '', description: '', image: 'images/event.jpg', ${includeFormLink ? "formLink: ''," : ''} slideshowImages: []}); renderPanels(); showPanelById('${panelId}');">Add Event</button>
+        ${list.map((item, index) => `
+          <div class="item">
+            <div class="item-title">${text(item.name || 'Event')}<button class="danger" onclick="content.${listName}.splice(${index},1); renderPanels(); showPanelById('${panelId}');">Delete</button></div>
+            <div class="grid">
+              ${eventInput(listName, index, 'serialNo', 'Serial No.', panelId)}
+              ${eventInput(listName, index, 'name', 'Event Name', panelId)}
+              ${eventInput(listName, index, 'date', 'Date', panelId)}
+              ${eventInput(listName, index, 'venue', 'Venue', panelId)}
+              ${includeFormLink ? eventInput(listName, index, 'formLink', 'Form Link', panelId) : ''}
+              ${eventInput(listName, index, 'image', 'Main Image / Video', panelId)}
+            </div>
+            <div class="field"><label>Description</label><textarea oninput="content.${listName}[${index}].description=this.value">${text(item.description)}</textarea></div>
+            ${renderStringList('Slideshow Images / Videos', item.slideshowImages || [], value => {
+              content[listName][index].slideshowImages = value;
+              renderPanels();
+              showPanelById(panelId);
+            }, panelId)}
+          </div>`).join('')}`;
+    };
+
+    eventInput = function(listName, index, key, label, panelId) {
+      if (/image|video/i.test(key + label)) {
+        return mediaField(label, content[listName][index][key], path => content[listName][index][key] = path, panelId);
+      }
+      return `<div class="field"><label>${label}</label><input value="${text(content[listName][index][key])}" oninput="content.${listName}[${index}].${key}=this.value"></div>`;
+    };
+
+    renderCommittee = function() {
+      document.getElementById('panel-committee').innerHTML = `
+        <h2>Committee Members</h2>
+        <div class="toolbar">
+          <button onclick="content.committeeMembers.push({id: Date.now(), serialNo: content.committeeMembers.length + 1, name: 'Member Name', position: 'Member', image: 'images/member.jpg'}); renderPanels(); showPanelById('committee');">Add Committee Member</button>
+          <button type="button" class="secondary" onclick="const removed = removeDuplicateCommitteeMembers(); renderPanels(); showPanelById('committee'); setStatus(removed ? removed + ' duplicate committee member(s) removed.' : 'No duplicate committee members found.');">Remove Duplicates</button>
+        </div>
+        ${content.committeeMembers.map((member, index) => `
+          <div class="item">
+            <div class="item-title">${text(member.name)}<button class="danger" onclick="content.committeeMembers.splice(${index},1); renderPanels(); showPanelById('committee');">Delete</button></div>
+            <div class="grid">
+              <div class="field"><label>Serial No.</label><input type="number" value="${text(member.serialNo || index + 1)}" oninput="content.committeeMembers[${index}].serialNo=this.value"></div>
+              <div class="field"><label>Name</label><input value="${text(member.name)}" oninput="content.committeeMembers[${index}].name=this.value"></div>
+              <div class="field"><label>Position</label><input value="${text(member.position)}" oninput="content.committeeMembers[${index}].position=this.value"></div>
+              ${mediaField('Photo', member.image, path => content.committeeMembers[index].image = path, 'committee')}
+            </div>
+          </div>`).join('')}`;
+    };
+
+    renderAbout = function() {
+      document.getElementById('panel-about').innerHTML = `
+        <h2>About Page</h2>
+        ${field('Story', 'aboutContent.story', 'textarea')}
+        ${field('Mission', 'aboutContent.mission', 'textarea')}
+        ${field('Vision', 'aboutContent.vision', 'textarea')}
+        ${field('Join Us', 'aboutContent.joinUs', 'textarea')}
+        ${field('Background Image', 'aboutContent.backgroundImage')}
+        ${renderStringList('Background Slideshow', content.aboutContent.backgroundSlideshow || [], value => {
+          content.aboutContent.backgroundSlideshow = value;
+          renderPanels();
+          showPanelById('about');
+        }, 'about')}`;
+    };
+
+    renderContact = function() {
+      document.getElementById('panel-contact').innerHTML = `
+        <h2>Contact Page</h2>
+        <div class="grid">
+          ${field('Phone', 'contactContent.phone')}
+          ${field('Email', 'contactContent.email')}
+          ${field('Office Hours', 'contactContent.hours')}
+          ${field('Background Image', 'contactContent.backgroundImage')}
+        </div>
+        ${field('Address', 'contactContent.address', 'textarea')}
+        ${field('Location Details', 'contactContent.location', 'textarea')}
+        ${renderStringList('Background Slideshow', content.contactContent.backgroundSlideshow || [], value => {
+          content.contactContent.backgroundSlideshow = value;
+          renderPanels();
+          showPanelById('contact');
+        }, 'contact')}`;
+    };
+
+    if (!sections.some(section => section[0] === 'heroes')) {
+      sections.splice(2, 0, ['heroes', 'Page Heroes']);
+    }
+
+    function ensureHeroContent() {
+      content.homepage ||= {};
+      content.homepage.header ||= {};
+      content.homepage.header.backgroundSlideshow ||= [];
+      ['aboutContent', 'contactContent', 'committeeContent', 'eventsContent', 'upcomingContent', 'membershipContent'].forEach(key => {
+        content[key] ||= {};
+        content[key].backgroundSlideshow ||= [];
+      });
+    }
+
+    function renderPageHeroes() {
+      ensureHeroContent();
+      const pages = [
+        { label: 'Home Page', object: content.homepage.header, imageKey: 'backgroundImage', listKey: 'backgroundSlideshow' },
+        { label: 'About Page', object: content.aboutContent, imageKey: 'backgroundImage', listKey: 'backgroundSlideshow' },
+        { label: 'Contact Page', object: content.contactContent, imageKey: 'backgroundImage', listKey: 'backgroundSlideshow' },
+        { label: 'Committee Page', object: content.committeeContent, imageKey: 'backgroundImage', listKey: 'backgroundSlideshow' },
+        { label: 'Events Page', object: content.eventsContent, imageKey: 'backgroundImage', listKey: 'backgroundSlideshow' },
+        { label: 'Upcoming Events Page', object: content.upcomingContent, imageKey: 'backgroundImage', listKey: 'backgroundSlideshow' },
+        { label: 'Membership Page', object: content.membershipContent, imageKey: 'backgroundImage', listKey: 'backgroundSlideshow' }
+      ];
+
+      document.getElementById('panel-heroes').innerHTML = `
+        <h2>All Page Hero Sections</h2>
+        <p class="small-note">Yahan se har page ka hero background image/video path aur hero slideshow add, edit, delete kar sakte hain.</p>
+        ${pages.map((page, pageIndex) => `
+          <div class="item">
+            <div class="item-title">${page.label}</div>
+            ${page.label === 'Home Page' ? `
+              <div class="grid">
+                <div class="field"><label>Hero Title</label><input value="${text(page.object.title)}" oninput="content.homepage.header.title=this.value"></div>
+                <div class="field"><label>Hero Subtitle</label><input value="${text(page.object.subtitle)}" oninput="content.homepage.header.subtitle=this.value"></div>
+              </div>` : ''}
+            ${mediaField('Hero Background Image / Video', page.object[page.imageKey], path => page.object[page.imageKey] = path, 'heroes')}
+            ${renderStringList(`${page.label} Hero Slideshow Images / Videos`, page.object[page.listKey] || [], value => {
+              page.object[page.listKey] = value;
+              renderPanels();
+              showPanelById('heroes');
+            }, 'heroes')}
+          </div>`).join('')}`;
+    }
+
+    renderPanels = function() {
+      const currentPanel = activePanelId();
+      const panels = document.getElementById('panels');
+      panels.innerHTML = sections.map(([id], index) => `<section class="panel ${index === 0 ? 'active' : ''}" id="panel-${id}"></section>`).join('');
+      renderBasic();
+      renderHome();
+      renderPageHeroes();
+      renderLeaders();
+      renderUpcoming();
+      renderPast();
+      renderCommittee();
+      renderAbout();
+      renderContact();
+      renderMembers();
+      bindSimpleFields();
+      showPanelById(sections.some(section => section[0] === currentPanel) ? currentPanel : 'basic');
+    };
+
+    renderStringList = function(label, list, onChange, panelIdOverride) {
+      const safeList = Array.isArray(list) ? list : [];
+      const id = `list-${Math.random().toString(36).slice(2)}`;
+      window[id] = onChange;
+      const panelId = panelIdOverride || activePanelId();
+      const multiId = `${id}-multi`;
+      window[multiId] = async function(fileInput) {
+        const paths = await copyMultipleFilesToImagesFolder(fileInput.files);
+        if (!paths.length) return;
+        const values = [...document.querySelectorAll(`[data-list=${id}]`)].map(i => normalizeMediaPath(i.value));
+        window[id]([...values, ...paths]);
+        renderPanels();
+        showPanelById(panelId);
+      };
+      return `<h3>${label}</h3>
+        <button type="button" onclick="const values=[...document.querySelectorAll('[data-list=${id}]')].map(i=>i.value); values.push('images/new-image.jpg'); window['${id}'](values)">Add Image / Video</button>
+        <button type="button" class="secondary" onclick="document.getElementById('${multiId}').click()">Choose Multiple Files</button>
+        <input id="${multiId}" type="file" accept="image/*,.gif,video/*" multiple style="display:none" onchange="window['${multiId}'](this)">
+        ${safeList.map((item, index) => {
+          const setterId = `${id}-${index}`;
+          window[setterId] = path => {
+            const values = [...document.querySelectorAll(`[data-list=${id}]`)].map(i => i.value);
+            values[index] = normalizeMediaPath(path);
+            window[id](values);
+          };
+          return `
+          <div class="list-row" style="align-items:flex-start">
+            <input data-list="${id}" value="${text(normalizeMediaPath(item))}" oninput="window['${id}']([...document.querySelectorAll('[data-list=${id}]')].map(i=>normalizeMediaPath(i.value)))">
+            ${mediaPreviewHtml(item)}
+            <button class="secondary" type="button" onclick="document.getElementById('${setterId}-file').click()">Choose File</button>
+            <input id="${setterId}-file" type="file" accept="image/*,.gif,video/*" style="display:none" onchange="(async()=>{const file=this.files[0]; if(!file) return; const path=await copyFileToImagesFolder(file); if(!path) return; window['${setterId}'](path); renderPanels(); showPanelById('${panelId}');})()">
+            <button class="danger" type="button" onclick="const values=[...document.querySelectorAll('[data-list=${id}]')].map(i=>i.value); values.splice(${index},1); window['${id}'](values)">Delete</button>
+          </div>`;
+        }).join('')}`;
+    };
+
+    const originalSaveContentJs = saveContentJs;
+    saveContentJs = async function() {
+      try {
+        await copyPendingMediaFiles();
+      } catch (error) {
+        alert(error.message);
+        return;
+      }
+
+      const fileText = contentJsText();
+      if (siteDirectoryHandle) {
+        const fileHandle = await siteDirectoryHandle.getFileHandle('content.js', { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(fileText);
+        await writable.close();
+        setStatus('content.js saved in selected website folder. Website refresh karke changes dekhiye.');
+        return;
+      }
+
+      await originalSaveContentJs();
+    };
+
+    renderTabs();
+    addWebsiteFolderButton();
+    renderPanels();
+  </script>
+</body>
+</html>

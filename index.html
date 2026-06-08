@@ -7,24 +7,6 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/jpeg" href="images/aga_club_site.jpg">
 </head>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", function(user) {
-      if (!user && window.location.hash.indexOf("confirmation_token") !== -1) {
-        window.netlifyIdentity.open("signup");
-      }
-    });
-
-    window.netlifyIdentity.on("login", function() {
-      window.location.href = "/admin/";
-    });
-
-    window.netlifyIdentity.on("confirm", function() {
-      window.location.href = "/admin/";
-    });
-  }
-</script>
 <body>
     <!-- Navigation Menu -->
     <nav class="navbar">
@@ -117,8 +99,12 @@
                     document.getElementById('heroTitle').textContent = header.title;
                     document.getElementById('heroSubtitle').textContent = header.subtitle;
                     
-                    // Only initialize slideshow, no background image
-                    // Background slideshow will be handled by backgroundSlideshow.js
+                    if (header.backgroundImage) {
+                        const heroSection = document.getElementById('heroSection');
+                        heroSection.style.background = `url('${header.backgroundImage}')`;
+                        heroSection.style.backgroundSize = 'cover';
+                        heroSection.style.backgroundPosition = 'center';
+                    }
                 }
             });
         });
@@ -368,8 +354,8 @@
         // Initialize background slideshow
         document.addEventListener('DOMContentLoaded', function() {
             contentLoader.loadContent().then(content => {
-                if (content.homepage && content.homepage.header && content.homepage.header.backgroundSlideshow) {
-                    backgroundSlideshow.init(content.homepage.header.backgroundSlideshow);
+                if (content.homepage && content.homepage.header) {
+                    backgroundSlideshow.init(content.homepage.header.backgroundSlideshow || []);
                 }
             });
         });

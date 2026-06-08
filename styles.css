@@ -571,6 +571,10 @@ body {
 
 .hero-content {
     z-index: 1;
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     padding: 20px 30px;
     background-color: rgba(0, 0, 0, 0);
@@ -1073,6 +1077,12 @@ footer {
 
 .event-content {
     padding: 20px;
+}
+
+.serial-no {
+    color: #1a3c6c;
+    font-weight: 700;
+    margin-right: 4px;
 }
 
 .event-date {

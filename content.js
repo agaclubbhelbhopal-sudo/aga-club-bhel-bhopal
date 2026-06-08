@@ -1,4 +1,4 @@
-{
+window.AGA_CONTENT = {
   "registrationNumber": "01/01/01/40737/24",
   "logo": "images/aga_club_logo.jpg",
   "logo2": "images/logo-english.png",
@@ -2073,4 +2073,4 @@
       "": ""
     }
   ]
-}
+};

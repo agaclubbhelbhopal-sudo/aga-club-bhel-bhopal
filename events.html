@@ -61,6 +61,9 @@
 
     <!-- Header Section -->
     <header class="hero" id="heroSection">
+        <div class="hero-slideshow-container">
+            <img class="hero-slideshow-image" id="heroSlideshowImage" alt="Hero slideshow image">
+        </div>
         <div class="hero-content">
             <h1>Our Events</h1>
             <p>Celebrating culture, community, and togetherness through various events</p>
@@ -108,6 +111,47 @@
 
                 
                 <script>
+                    function normalizeMediaPath(path) {
+                        if (!path) return '';
+                        const clean = String(path).replace(/\\/g, '/');
+                        const imagesIndex = clean.toLowerCase().lastIndexOf('/images/');
+                        if (imagesIndex >= 0) return clean.slice(imagesIndex + 1);
+                        return clean.replace(/^file:\/\/\/?/i, '').replace(/^\/+/, '');
+                    }
+
+                    function isVideoPath(path) {
+                        return /\.(mp4|webm|ogg|mov)$/i.test(path || '');
+                    }
+
+                    function renderEventMedia(path, alt) {
+                        const mediaPath = normalizeMediaPath(path || 'images/about-bg.jpg');
+                        if (isVideoPath(mediaPath)) {
+                            return `<video src="${mediaPath}" class="event-image" muted controls playsinline preload="metadata"></video>`;
+                        }
+                        return `<img src="${mediaPath}" alt="${alt}" class="event-image" onerror="this.src='images/about-bg.jpg'">`;
+                    }
+
+                    function renderSlideMedia(path, alt) {
+                        const mediaPath = normalizeMediaPath(path);
+                        if (isVideoPath(mediaPath)) {
+                            return `<video src="${mediaPath}" controls playsinline preload="metadata"></video>`;
+                        }
+                        return `<img src="${mediaPath}" alt="${alt}">`;
+                    }
+
+                    function orderValue(item, fallback) {
+                        const value = Number(item.serialNo || item.order || item.sequence || item.id || fallback);
+                        return Number.isFinite(value) ? value : fallback;
+                    }
+
+                    function sortedItems(items, sortOrder) {
+                        const newestFirst = sortOrder !== 'firstOnTop';
+                        return Object.values(items || {}).sort((a, b) => {
+                            const result = orderValue(a, 0) - orderValue(b, 0);
+                            return newestFirst ? -result : result;
+                        });
+                    }
+
                     // Global variables for slideshow
                     let slideIndex = 1;
                     let slideshowInterval = null;
@@ -206,7 +250,7 @@
                                 // Use fixed-size container for consistent display
                                 slideDiv.innerHTML = `
                                     <div class="gallery-slide-wrapper">
-                                        <img src="${encodedPath}" alt="${eventName} - Photo ${index + 1}">
+                                        ${renderSlideMedia(encodedPath, `${eventName} - Photo ${index + 1}`)}
                                     </div>
                                 `;
                                 
@@ -321,7 +365,7 @@
                                 // Use fixed-size container for consistent display
                                 slideDiv.innerHTML = `
                                     <div class="gallery-slide-wrapper">
-                                        <img src="${encodedPath}" alt="${eventName} - Photo ${imgData.index}">
+                                        ${renderSlideMedia(encodedPath, `${eventName} - Photo ${imgData.index}`)}
                                     </div>
                                 `;
                                 
@@ -473,244 +517,76 @@
                         }
                     }
                     
-                    // Hover thumbnail slideshow functionality
+                    function normalizeHoverImagePath(path) {
+                        let imagePath = normalizeMediaPath(path);
+                        if (window.location.protocol === 'file:') {
+                            imagePath = imagePath.replace(/images\//g, './images/');
+                        }
+                        return imagePath;
+                    }
+
+                    function buildDirectoryHoverImages(eventDir, prefix = '') {
+                        const images = [];
+                        for (let i = 1; i <= 5; i++) {
+                            images.push(`${eventDir}/${prefix}${i}.jpg`);
+                        }
+                        return images;
+                    }
+
+                    function startStableHoverSlideshow(eventElement, imagePaths) {
+                        stopHoverSlideshow(eventElement);
+
+                        const eventImage = eventElement.querySelector('img.event-image');
+                        if (!eventImage) return;
+
+                        const slides = (imagePaths || [])
+                            .map(normalizeHoverImagePath)
+                            .filter(path => path && !isVideoPath(path));
+
+                        if (slides.length < 2) return;
+
+                        const originalImage = eventElement.dataset.originalImage || eventImage.getAttribute('src');
+                        eventElement.dataset.originalImage = originalImage;
+                        eventElement.hoverSlides = slides;
+                        eventElement.hoverSlideIndex = 0;
+
+                        eventElement.hoverInterval = setInterval(() => {
+                            const image = eventElement.querySelector('img.event-image');
+                            if (!image || !eventElement.matches(':hover')) {
+                                stopHoverSlideshow(eventElement, originalImage);
+                                return;
+                            }
+
+                            eventElement.hoverSlideIndex = (eventElement.hoverSlideIndex + 1) % eventElement.hoverSlides.length;
+                            const nextImage = eventElement.hoverSlides[eventElement.hoverSlideIndex];
+                            if (image.getAttribute('src') !== nextImage) {
+                                image.src = nextImage;
+                            }
+                        }, 1200);
+                    }
+
                     function startHoverSlideshow(eventElement, eventDir) {
-                        // Clear any existing interval for this element
-                        if (eventElement.hoverInterval) {
-                            clearInterval(eventElement.hoverInterval);
-                            eventElement.hoverInterval = null;
-                        }
-                        
-                        const images = [];
-                        const maxImages = 5; // Show only first 5 images in hover slideshow
-                        let validImages = 0; // Track how many valid images we have
-                        
-                        // Track if we're running in a local file environment
-                        const isLocalFile = window.location.protocol === 'file:';
-                        
-                        // Preload images with proper encoding
-                        for (let i = 1; i <= maxImages; i++) {
-                            const img = new Image();
-                            let imagePath = `${eventDir}/${i}.jpg`;
-                            
-                            // For local file environments, we need to handle paths differently
-                            if (isLocalFile) {
-                                imagePath = imagePath.replace(/images\//g, './images/');
-                            }
-                            
-                            const encodedPath = encodeURI(imagePath);
-                            img.src = encodedPath;
-                            img.onload = function() {
-                                validImages++;
-                            };
-                            img.onerror = function() {
-                                // Don't add invalid images to the array
-                                this.src = ''; // Clear src to prevent loading
-                            };
-                            images.push({index: i, path: imagePath, image: img});
-                        }
-                        
-                        // Wait a bit for images to load before starting slideshow
-                        setTimeout(() => {
-                            // Only start slideshow if we have valid images
-                            if (validImages > 0) {
-                                let validImageIndex = 0;
-                                
-                                // Filter out invalid images
-                                const validImageObjects = images.filter(imgObj => imgObj.image.src);
-                                
-                                // Start hover slideshow
-                                eventElement.hoverInterval = setInterval(() => {
-                                    const eventImage = eventElement.querySelector('.event-image');
-                                    if (eventImage && validImageObjects.length > 0) {
-                                        // For local file environments, we need to handle paths differently
-                                        let imagePath = validImageObjects[validImageIndex].path;
-                                        if (isLocalFile) {
-                                            imagePath = imagePath.replace(/^.*\/\/[^\/]*/, '.');
-                                        }
-                                        eventImage.src = imagePath;
-                                        validImageIndex = (validImageIndex + 1) % validImageObjects.length;
-                                    }
-                                }, 1000); // Change image every 1 second
-                            }
-                        }, 500); // Wait 500ms for images to load
+                        startStableHoverSlideshow(eventElement, buildDirectoryHoverImages(eventDir));
                     }
 
-                    // New function to handle hover slideshow using slideshowImages from content.json
                     function startHoverSlideshowFromJson(eventElement, slideshowImages) {
-                        // Clear any existing interval for this element
-                        if (eventElement.hoverInterval) {
-                            clearInterval(eventElement.hoverInterval);
-                            eventElement.hoverInterval = null;
-                        }
-                        
-                        const images = [];
-                        const maxImages = Math.min(5, slideshowImages.length); // Show up to 5 images or total available
-                        let validImages = 0; // Track how many valid images we have
-                        
-                        // Track if we're running in a local file environment
-                        const isLocalFile = window.location.protocol === 'file:';
-                        
-                        // Preload images with proper encoding from slideshowImages array
-                        for (let i = 0; i < maxImages; i++) {
-                            const img = new Image();
-                            let imagePath = slideshowImages[i];
-                            
-                            // For local file environments, we need to handle paths differently
-                            if (isLocalFile) {
-                                imagePath = imagePath.replace(/images\//g, './images/');
-                            }
-                            
-                            const encodedPath = encodeURI(imagePath);
-                            img.src = encodedPath;
-                            img.onload = function() {
-                                validImages++;
-                            };
-                            img.onerror = function() {
-                                // Don't add invalid images to the array
-                                this.src = ''; // Clear src to prevent loading
-                            };
-                            images.push({index: i, path: imagePath, image: img});
-                        }
-                        
-                        // Wait a bit for images to load before starting slideshow
-                        setTimeout(() => {
-                            // Only start slideshow if we have valid images
-                            if (validImages > 0) {
-                                let validImageIndex = 0;
-                                
-                                // Filter out invalid images
-                                const validImageObjects = images.filter(imgObj => imgObj.image.src);
-                                
-                                // Start hover slideshow
-                                eventElement.hoverInterval = setInterval(() => {
-                                    const eventImage = eventElement.querySelector('.event-image');
-                                    if (eventImage && validImageObjects.length > 0) {
-                                        // For local file environments, we need to handle paths differently
-                                        let imagePath = validImageObjects[validImageIndex].path;
-                                        if (isLocalFile) {
-                                            imagePath = imagePath.replace(/^.*\/\/[^\/]*/, '.');
-                                        }
-                                        eventImage.src = imagePath;
-                                        validImageIndex = (validImageIndex + 1) % validImageObjects.length;
-                                    }
-                                }, 1000); // Change image every 1 second
-                            }
-                        }, 500); // Wait 500ms for images to load
+                        startStableHoverSlideshow(eventElement, slideshowImages);
                     }
 
-                    // New function to handle hover slideshow for prefixed events
                     function startHoverSlideshowWithPrefix(eventElement, eventDir, prefix) {
-                        // Clear any existing interval for this element
-                        if (eventElement.hoverInterval) {
-                            clearInterval(eventElement.hoverInterval);
-                            eventElement.hoverInterval = null;
-                        }
-                        
-                        const images = [];
-                        const maxImages = 5; // Show only first 5 images in hover slideshow
-                        let validImages = 0; // Track how many valid images we have
-                        
-                        // Track if we're running in a local file environment
-                        const isLocalFile = window.location.protocol === 'file:';
-                        
-                        // Preload images with proper encoding using prefix
-                        for (let i = 1; i <= maxImages; i++) {
-                            const img = new Image();
-                            let imagePath = `${eventDir}/${prefix}${i}.jpg`;
-                            
-                            // For local file environments, we need to handle paths differently
-                            if (isLocalFile) {
-                                imagePath = imagePath.replace(/images\//g, './images/');
-                            }
-                            
-                            const encodedPath = encodeURI(imagePath);
-                            img.src = encodedPath;
-                            img.onload = function() {
-                                validImages++;
-                            };
-                            img.onerror = function() {
-                                // Don't add invalid images to the array
-                                this.src = ''; // Clear src to prevent loading
-                            };
-                            images.push({index: i, path: imagePath, image: img});
-                        }
-                        
-                        // Wait a bit for images to load before starting slideshow
-                        setTimeout(() => {
-                            // Only start slideshow if we have valid images
-                            if (validImages > 0) {
-                                let validImageIndex = 0;
-                                
-                                // Filter out invalid images
-                                const validImageObjects = images.filter(imgObj => imgObj.image.src);
-                                
-                                // Start hover slideshow
-                                eventElement.hoverInterval = setInterval(() => {
-                                    const eventImage = eventElement.querySelector('.event-image');
-                                    if (eventImage && validImageObjects.length > 0) {
-                                        // For local file environments, we need to handle paths differently
-                                        let imagePath = validImageObjects[validImageIndex].path;
-                                        if (isLocalFile) {
-                                            imagePath = imagePath.replace(/^.*\/\/[^\/]*/, '.');
-                                        }
-                                        eventImage.src = imagePath;
-                                        validImageIndex = (validImageIndex + 1) % validImageObjects.length;
-                                    }
-                                }, 1000); // Change image every 1 second
-                            }
-                        }, 500); // Wait 500ms for images to load
+                        startStableHoverSlideshow(eventElement, buildDirectoryHoverImages(eventDir, prefix));
                     }
 
                     function stopHoverSlideshow(eventElement, originalImage) {
-                        // Clear hover interval
                         if (eventElement.hoverInterval) {
                             clearInterval(eventElement.hoverInterval);
                             eventElement.hoverInterval = null;
                         }
-                        
-                        // Restore original image with proper path handling for local files
-                        const eventImage = eventElement.querySelector('.event-image');
-                        if (eventImage) {
-                            let imagePath = originalImage;
-                            if (window.location.protocol === 'file:') {
-                                imagePath = originalImage.replace(/images\//g, './images/');
-                            }
-                            // Check if the original image exists before setting it
-                            const img = new Image();
-                            img.onload = function() {
-                                eventImage.src = imagePath;
-                            };
-                            img.onerror = function() {
-                                // If original image doesn't exist, try multiple fallbacks in order
-                                const fallbacks = [
-                                    './images/holi.jpg',
-                                    './images/garba.jpg',
-                                    './images/diwali.jpg',
-                                    './images/about-bg.jpg'
-                                ];
-                                
-                                // Try each fallback in sequence
-                                let fallbackIndex = 0;
-                                function tryFallback() {
-                                    if (fallbackIndex < fallbacks.length) {
-                                        const fallbackImg = new Image();
-                                        fallbackImg.onload = function() {
-                                            eventImage.src = fallbacks[fallbackIndex];
-                                        };
-                                        fallbackImg.onerror = function() {
-                                            fallbackIndex++;
-                                            tryFallback(); // Try next fallback
-                                        };
-                                        fallbackImg.src = fallbacks[fallbackIndex];
-                                    } else {
-                                        // If all fallbacks fail, use a data URI for a transparent placeholder
-                                        eventImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-                                    }
-                                }
-                                tryFallback();
-                            };
-                            img.src = imagePath;
+
+                        const eventImage = eventElement.querySelector('img.event-image');
+                        const restoreImage = originalImage || eventElement.dataset.originalImage;
+                        if (eventImage && restoreImage) {
+                            eventImage.src = normalizeHoverImagePath(restoreImage);
                         }
                     }
                     
@@ -731,7 +607,7 @@
                                 if (content.pastEvents && Object.keys(content.pastEvents).length > 0) {
                                     // Use past events from content.json even on local server
                                     eventsContainer.innerHTML = '';
-                                    Object.values(content.pastEvents).forEach(event => {
+                                    sortedItems(content.pastEvents, content.eventsContent && content.eventsContent.pastEventsSortOrder).forEach((event, eventIndex) => {
                                         // Create event element
                                         const eventElement = document.createElement('div');
                                         eventElement.className = 'event-card';
@@ -743,7 +619,7 @@
                                         }
                                         
                                         eventElement.innerHTML = `
-                                            <img src="${encodeURI(eventImage)}" alt="${event.name}" class="event-image" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                                            ${renderEventMedia(eventImage, event.name)}
                                             <div class="event-content">
                                                 <h3>${event.name}</h3>
                                                 <p class="event-date">${event.date}</p>
@@ -870,7 +746,7 @@
                                 if (content.pastEvents && Object.keys(content.pastEvents).length > 0) {
                                     // Use past events from content.json
                                     eventsContainer.innerHTML = '';
-                                    Object.values(content.pastEvents).forEach(event => {
+                                    sortedItems(content.pastEvents, content.eventsContent && content.eventsContent.pastEventsSortOrder).forEach((event, eventIndex) => {
                                         // Create event element
                                         const eventElement = document.createElement('div');
                                         eventElement.className = 'event-card';
@@ -882,7 +758,7 @@
                                         }
                                         
                                         eventElement.innerHTML = `
-                                            <img src="${encodeURI(eventImage)}" alt="${event.name}" class="event-image" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                                            ${renderEventMedia(eventImage, event.name)}
                                             <div class="event-content">
                                                 <h3>${event.name}</h3>
                                                 <p class="event-date">${event.date}</p>
