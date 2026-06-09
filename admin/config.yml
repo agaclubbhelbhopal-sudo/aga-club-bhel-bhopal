@@ -34,10 +34,12 @@ collections:
                 fields:
                   - { label: "Title", name: "title", widget: "string" }
                   - { label: "Subtitle", name: "subtitle", widget: "string", required: false }
-                  - { label: "Background Image", name: "backgroundImage", widget: "file", required: false }
-                  - label: "Hero Slideshow"
+                  - { label: "Hero Background Image / GIF / Video", name: "backgroundImage", widget: "file", required: false }
+                  - label: "Hero Slideshow Images / GIF / Videos"
                     name: "backgroundSlideshow"
                     widget: "list"
+                    required: false
+                    hint: "Add, delete, or reorder hero slideshow media for the Home page."
                     field: { label: "Image", name: "image", widget: "file" }
               - label: "Leader Messages"
                 name: "leaders"
@@ -58,11 +60,6 @@ collections:
                   - { label: "ID", name: "id", widget: "number", value_type: "int", required: false }
                   - { label: "Image", name: "image", widget: "file" }
                   - { label: "Alt Text", name: "alt", widget: "string", required: false }
-              - label: "Homepage Background Slideshow"
-                name: "backgroundSlideshow"
-                widget: "list"
-                required: false
-                field: { label: "Image", name: "image", widget: "file" }
           - label: "Upcoming Events"
             name: "upcomingEvents"
             widget: "list"
@@ -107,50 +104,54 @@ collections:
             name: "aboutContent"
             widget: "object"
             fields:
+              - { label: "Hero Background Image / GIF / Video", name: "backgroundImage", widget: "file", required: false }
+              - label: "Hero Slideshow Images / GIF / Videos"
+                name: "backgroundSlideshow"
+                widget: "list"
+                required: false
+                hint: "Add, delete, or reorder hero slideshow media for the About page."
+                field: { label: "Image", name: "image", widget: "file" }
               - { label: "Story", name: "story", widget: "text", required: false }
               - { label: "Mission", name: "mission", widget: "text", required: false }
               - { label: "Vision", name: "vision", widget: "text", required: false }
               - { label: "Join Us", name: "joinUs", widget: "text", required: false }
-              - { label: "Background Image", name: "backgroundImage", widget: "file", required: false }
-              - label: "Background Slideshow"
-                name: "backgroundSlideshow"
-                widget: "list"
-                required: false
-                field: { label: "Image", name: "image", widget: "file" }
           - label: "Contact Page"
             name: "contactContent"
             widget: "object"
             fields:
+              - { label: "Hero Background Image / GIF / Video", name: "backgroundImage", widget: "file", required: false }
+              - label: "Hero Slideshow Images / GIF / Videos"
+                name: "backgroundSlideshow"
+                widget: "list"
+                required: false
+                hint: "Add, delete, or reorder hero slideshow media for the Contact page."
+                field: { label: "Image", name: "image", widget: "file" }
               - { label: "Address", name: "address", widget: "text", required: false }
               - { label: "Phone", name: "phone", widget: "string", required: false }
               - { label: "Email", name: "email", widget: "string", required: false }
               - { label: "Office Hours", name: "hours", widget: "string", required: false }
               - { label: "Location Details", name: "location", widget: "text", required: false }
-              - { label: "Background Image", name: "backgroundImage", widget: "file", required: false }
-              - label: "Background Slideshow"
-                name: "backgroundSlideshow"
-                widget: "list"
-                required: false
-                field: { label: "Image", name: "image", widget: "file" }
-          - label: "Committee Page Background"
+          - label: "Committee Page Hero"
             name: "committeeContent"
             widget: "object"
             fields:
-              - { label: "Background Image", name: "backgroundImage", widget: "file", required: false }
-              - label: "Background Slideshow"
+              - { label: "Hero Background Image / GIF / Video", name: "backgroundImage", widget: "file", required: false }
+              - label: "Hero Slideshow Images / GIF / Videos"
                 name: "backgroundSlideshow"
                 widget: "list"
                 required: false
+                hint: "Add, delete, or reorder hero slideshow media for the Committee page."
                 field: { label: "Image", name: "image", widget: "file" }
-          - label: "Events Page"
+          - label: "Events Page Hero and Settings"
             name: "eventsContent"
             widget: "object"
             fields:
-              - { label: "Background Image", name: "backgroundImage", widget: "file", required: false }
-              - label: "Background Slideshow"
+              - { label: "Hero Background Image / GIF / Video", name: "backgroundImage", widget: "file", required: false }
+              - label: "Hero Slideshow Images / GIF / Videos"
                 name: "backgroundSlideshow"
                 widget: "list"
                 required: false
+                hint: "Add, delete, or reorder hero slideshow media for the Past Events page."
                 field: { label: "Image", name: "image", widget: "file" }
               - label: "Past Events Order"
                 name: "pastEventsSortOrder"
@@ -169,25 +170,27 @@ collections:
                   - { label: "Folder", name: "dir", widget: "string", required: false }
                   - { label: "Name", name: "name", widget: "string", required: false }
                   - { label: "File Prefix", name: "prefix", widget: "string", required: false }
-          - label: "Upcoming Page Background"
+          - label: "Upcoming Events Page Hero"
             name: "upcomingContent"
             widget: "object"
             fields:
-              - { label: "Background Image", name: "backgroundImage", widget: "file", required: false }
-              - label: "Background Slideshow"
+              - { label: "Hero Background Image / GIF / Video", name: "backgroundImage", widget: "file", required: false }
+              - label: "Hero Slideshow Images / GIF / Videos"
                 name: "backgroundSlideshow"
                 widget: "list"
                 required: false
+                hint: "Add, delete, or reorder hero slideshow media for the Upcoming Events page."
                 field: { label: "Image", name: "image", widget: "file" }
-          - label: "Membership Page"
+          - label: "Membership Page Hero"
             name: "membershipContent"
             widget: "object"
             fields:
-              - { label: "Background Image", name: "backgroundImage", widget: "file", required: false }
-              - label: "Background Slideshow"
+              - { label: "Hero Background Image / GIF / Video", name: "backgroundImage", widget: "file", required: false }
+              - label: "Hero Slideshow Images / GIF / Videos"
                 name: "backgroundSlideshow"
                 widget: "list"
                 required: false
+                hint: "Add, delete, or reorder hero slideshow media for the Membership page."
                 field: { label: "Image", name: "image", widget: "file" }
           - label: "Members"
             name: "members"
