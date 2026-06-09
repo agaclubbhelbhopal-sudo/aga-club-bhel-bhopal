@@ -223,42 +223,38 @@ class ContentLoader {
         console.log('loadContentInternal called. Is local file:', this.isLocalFile);
         let result;
 
-        try {
-            result = await this.loadFromContentJs();
-            console.log('Loaded from content.js successfully');
-        } catch (contentJsError) {
-            console.warn('Failed to load from content.js, falling back to content.json', contentJsError);
-        }
-
-        if (result) {
-            result = this.processContentPaths(result);
-            this.cache = result;
-            console.log('Content loading and processing completed');
-            return result;
-        }
-
-        // For file protocol (opening HTML directly), try to load from content.json
         if (this.isLocalFile) {
-            console.log('Loading from JSON in local file mode');
+            console.log('Loading from content.js in local file mode');
             try {
-                result = await this.loadFromJson();
-                console.log('Loaded from JSON successfully in local file mode');
-            } catch (error) {
-                console.warn('Failed to load from content.json in local file mode, falling back to directory scanning', error);
-                result = this.getDefaultDirectoryContent();
-                console.log('Using fallback content for local file mode');
+                result = await this.loadFromContentJs();
+                console.log('Loaded from content.js successfully in local file mode');
+            } catch (contentJsError) {
+                console.warn('Failed to load from content.js in local file mode, falling back to content.json', contentJsError);
+                try {
+                    result = await this.loadFromJson();
+                    console.log('Loaded from JSON successfully in local file mode');
+                } catch (error) {
+                    console.warn('Failed to load from content.json in local file mode, falling back to directory scanning', error);
+                    result = this.getDefaultDirectoryContent();
+                    console.log('Using fallback content for local file mode');
+                }
             }
         } else {
-            // For HTTP/HTTPS (server or GitHub), try to load from content.json first
-            console.log('Loading from JSON in HTTP/HTTPS mode');
+            // Netlify CMS edits content.json, so deployed sites must use it first.
+            console.log('Loading from content.json in HTTP/HTTPS mode');
             try {
                 result = await this.loadFromJson();
                 console.log('Loaded from JSON successfully in HTTP/HTTPS mode');
-            } catch (error) {
-                console.warn('Failed to load from content.json in HTTP/HTTPS mode, falling back to directory scanning', error);
-                // Fall back to bundled default content
-                result = this.getDefaultDirectoryContent();
-                console.log('Using fallback content for HTTP/HTTPS mode');
+            } catch (jsonError) {
+                console.warn('Failed to load from content.json in HTTP/HTTPS mode, falling back to content.js', jsonError);
+                try {
+                    result = await this.loadFromContentJs();
+                    console.log('Loaded from content.js successfully in HTTP/HTTPS mode');
+                } catch (contentJsError) {
+                    console.warn('Failed to load from content.js in HTTP/HTTPS mode, falling back to directory scanning', contentJsError);
+                    result = this.getDefaultDirectoryContent();
+                    console.log('Using fallback content for HTTP/HTTPS mode');
+                }
             }
         }
 
@@ -332,7 +328,8 @@ class ContentLoader {
 
     async loadFromJsonFetch() {
         console.log('Trying to load with fetch');
-        const response = await fetch(this.contentUrl);
+        const url = this.isLocalFile ? this.contentUrl : `${this.contentUrl}?v=${Date.now()}`;
+        const response = await fetch(url, { cache: 'no-store' });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -346,7 +343,11 @@ class ContentLoader {
         console.log('Trying to load with XMLHttpRequest');
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', this.contentUrl, true);
+            const url = this.isLocalFile ? this.contentUrl : `${this.contentUrl}?v=${Date.now()}`;
+            xhr.open('GET', url, true);
+            if (!this.isLocalFile) {
+                xhr.setRequestHeader('Cache-Control', 'no-cache');
+            }
             xhr.timeout = 10000; // 10 second timeout
             
             xhr.onreadystatechange = function() {
