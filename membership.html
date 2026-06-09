@@ -204,32 +204,24 @@
                 }
             });
 
-            // Load member list - prioritize local members.json first with better error handling
+            // Load member list from the same editable content source as the admin panel.
             function loadMemberData() {
                 const container = document.getElementById('memberListContainer');
                 if (!container) return;
                 
                 container.innerHTML = '<p>Loading member data...</p>';
                 
-                // Try to load from local members.json first
-                fetch('members.json')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
+                contentLoader.getMembershipData()
                     .then(members => {
-                        console.log('✅ Loaded members from local members.json:', members.length);
-                        if (members.length > 0) {
+                        console.log('Loaded members from editable content:', members.length);
+                        if (Array.isArray(members) && members.length > 0) {
                             renderMemberTable(members, container);
                         } else {
                             container.innerHTML = '<p>No member data available at the moment.</p>';
                         }
                     })
                     .catch(error => {
-                        console.warn('❌ Local members.json failed, using fallback data:', error);
-                        // Use fallback data when fetch fails (e.g., direct file opening)
+                        console.warn('Membership data failed, using fallback data:', error);
                         renderMemberTable(fallbackMembersData, container);
                     });
             }
