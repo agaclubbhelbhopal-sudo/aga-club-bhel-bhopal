@@ -1941,10 +1941,10 @@
     }
   ],
   "upcomingContent": {
-    "backgroundImage": "images/upcoming-bg.jpg",
+    "backgroundImage": "images/events-bg.jpg",
     "backgroundSlideshow": [
-      "images/committee-bg.jpg",
-      "images/events-bg.jpg"
+      "images/hero-bg1.jpg",
+      "images/1000388569.jpg"
     ]
   }
 }
