@@ -1,85 +1,108 @@
 {
-  "eventsContent": {
-    "backgroundImage": "images/events-bg.jpg",
-    "backgroundSlideshow": [
-      "images/events-bg.jpg",
-      "images/garba.jpg",
-      "images/diwali.jpg",
-      "images/basketball.jpg",
-      "images/hero-bg.jpg"
-    ],
-    "slideshowContainerSizeIncrease": "10%",
-    "eventDirectories": [
-      {
-        "dir": "images",
-        "name": "Letter from Grandson Competition",
-        "prefix": "letter from grandson competition"
-      },
-      {
-        "dir": "images",
-        "name": "Plantation Program",
-        "prefix": "plantation program"
-      },
-      {
-        "dir": "images",
-        "name": "Memento Distribution",
-        "prefix": "memento distribution"
-      },
-      {
-        "dir": "images",
-        "name": "Independence Day",
-        "prefix": "independence day"
-      },
-      {
-        "dir": "images",
-        "name": "Committee Member Retirement Program",
-        "prefix": "committee member retirement program"
-      },
-      {
-        "dir": "images",
-        "name": "Cycle-Riding",
-        "prefix": "cycle-riding"
-      },
-      {
-        "dir": "images",
-        "name": "Diwali Milan",
-        "prefix": "Diwali-milan"
-      },
-      {
-        "dir": "images",
-        "name": "Garba Mahotsav",
-        "prefix": "Garba mahotsav"
-      },
-      {
-        "dir": "images",
-        "name": "Holi",
-        "prefix": "Holi"
-      },
-      {
-        "dir": "images",
-        "name": "Kabaddi",
-        "prefix": "kabaddi"
-      },
-      {
-        "dir": "images",
-        "name": "Summer Camp for Basketball",
-        "prefix": "summer camp for basketball"
-      }
-    ]
-  },
   "registrationNumber": "01/01/01/40737/24",
-  "membershipContent": {
-    "backgroundImage": "images/membership-bg.jpg",
+  "logo": "images/aga_club_logo.jpg",
+  "logo2": "images/logo-english.png",
+  "homepage": {
+    "header": {
+      "title": "Welcome to AGA Club Bhel Bhopal",
+      "subtitle": "Celebrating Community, Culture, and Togetherness",
+      "backgroundImage": "images/hero-bg.jpg",
+      "backgroundSlideshow": [
+        "images/hero-bg.jpg",
+        "images/holi.jpg",
+        "images/garba.jpg",
+        "images/diwali.jpg",
+        "images/basketball.jpg"
+      ]
+    },
+    "leaders": [
+      {
+        "id": 1,
+        "name": "President",
+        "photo": "images/president.jpg",
+        "messageTitle": "President's Message",
+        "message": "आगा क्लब आनंद के साथ जीवन जीने का एक माध्यम है। इसके कार्यों के साथ जुड़कर मैं भी आनंदित महसूस कर रहा हूँ, आगा क्लब अपने सभी सदस्यों के साथ मिलकर तरक्की करे, ऐसी मेरी शुभकामनाएं हैं।",
+        "fullMessage": "आगा क्लब आनंद के साथ जीवन जीने का एक माध्यम है। इसके कार्यों के साथ जुड़कर मैं भी आनंदित महसूस कर रहा हूँ, आगा क्लब अपने सभी सदस्यों के साथ मिलकर तरक्की करे, ऐसी मेरी शुभकामनाएं हैं। - विपुल अग्रवाल"
+      },
+      {
+        "id": 2,
+        "name": "General Secretary",
+        "photo": "images/secretary.jpg",
+        "messageTitle": "General Secretary's Message",
+        "message": "यह क्लब केवल एक समूह नहीं, बल्कि प्रतिभा, रचनात्मकता और परंपराओं का एक जीवंत संगम है। हमारे क्लब का उद्देश्य अपने सदस्यों एवँ उनके परिजनों की कलात्मक प्रतिभाओं को पहचानना, उन्हें एक मंच प्रदान करना और विभिन्न खेलकूद गतिविधियों एवँ  सांस्कृतिक गतिविधियों जैसे प्रतियोगिताओं,उत्सव, प्रदर्शनियों और कार्यशालाओं के माध्यम से एकता और समझ को बढ़ावा देना है।",
+        "fullMessage": "यह क्लब केवल एक समूह नहीं, बल्कि प्रतिभा, रचनात्मकता और परंपराओं का एक जीवंत संगम है। हमारे क्लब का उद्देश्य अपने सदस्यों एवँ उनके परिजनों की कलात्मक प्रतिभाओं को पहचानना, उन्हें एक मंच प्रदान करना और विभिन्न खेलकूद गतिविधियों एवँ  सांस्कृतिक गतिविधियों जैसे प्रतियोगिताओं,उत्सव, प्रदर्शनियों और कार्यशालाओं के माध्यम से एकता और समझ को बढ़ावा देना है। मुझे विश्वास है कि आपके सहयोग से हम आने वाले वर्ष में कई नई ऊंचाइयों को छुएंगे। - वेद प्रकाश शर्मा"
+      }
+    ],
+    "gallery": [
+      {
+        "id": 1,
+        "image": "images/holi.jpg",
+        "alt": "Holi Milan Samaroh"
+      },
+      {
+        "id": 2,
+        "image": "images/garba.jpg",
+        "alt": "Garba Mahotsav"
+      },
+      {
+        "id": 3,
+        "image": "images/diwali.jpg",
+        "alt": "Diwali Milan Samaroh"
+      },
+      {
+        "id": 4,
+        "image": "images/basketball.jpg",
+        "alt": "Basketball Tournament"
+      },
+      {
+        "id": 5,
+        "image": "images/sports-day.jpg",
+        "alt": "Annual Sports Day"
+      },
+      {
+        "id": 6,
+        "image": "images/children-compitition.jpg",
+        "alt": "Children's Competition"
+      },
+      {
+        "id": 7,
+        "image": "images/mothers-day.jpg",
+        "alt": "Mother's Day Celebration"
+      }
+    ],
     "backgroundSlideshow": [
-      "images/membership-bg.jpg",
-      "images/committee-bg.jpg",
-      "images/events-bg.jpg",
-      "images/contact-bg.jpg",
-      "images/about-bg.jpg"
+      "images/WhatsApp Image 2025-12-30 at 9.25.18 AM.jpeg"
     ]
   },
-  "logo2": "images/logo-english.png",
-  "logo": "images/aga_club_logo.jpg",
+  "upcomingEvents": [
+    {
+      "id": 1,
+      "name": "Navankur",
+      "date": "December 22, 2025",
+      "venue": "Club Ground",
+      "description": "Traditional tree planting ceremony to celebrate new beginnings and environmental consciousness.",
+      "formLink": "",
+      "image": "images/navankur.jpg"
+    },
+    {
+      "id": 2,
+      "name": "New Year Celebration",
+      "date": "January 1, 2026",
+      "venue": "Club Ground",
+      "description": "Ring in the new year with music, dance, and cultural performances. Refreshments will be served.",
+      "formLink": "",
+      "image": "images/new-year.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Republic Day Celebration",
+      "date": "January 26, 2026",
+      "venue": "Main Hall",
+      "description": "Patriotic celebration featuring flag hoisting ceremony, cultural programs, and community lunch.",
+      "formLink": "",
+      "image": "images/republic-day.jpg"
+    }
+  ],
   "pastEvents": [
     {
       "id": 1,
@@ -289,6 +312,296 @@
       ]
     }
   ],
+  "committeeMembers": [
+    {
+      "id": 1,
+      "name": "Shri Vipul Agrawal",
+      "position": "President",
+      "image": "images/VIPUL AGRAWAL.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Shri Prashant Pathak",
+      "position": "Vice President",
+      "image": "images/Prashant-Pathak.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Shri Vedprakash Sharma",
+      "position": "General Secretary",
+      "image": "images/Shri Vedprakash Sharma.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Shri Rakesh Kumar Shakya",
+      "position": "Joint Secretary",
+      "image": "images/Shri Rakesh Kumar Shakya.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Yogesh Sarathe",
+      "position": "Cultural Secretary",
+      "image": "images/Yogesh Sarathe.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Abhay Kumar Saxena",
+      "position": "Treasurer",
+      "image": "images/Abhay Kumar Saxena.jpg"
+    },
+    {
+      "id": 7,
+      "name": "Shri Anand Jaiswal",
+      "position": "Member",
+      "image": "images/Shri Anand Jaiswal.jpg"
+    },
+    {
+      "id": 8,
+      "name": "Shri Arun Sahu",
+      "position": "Member",
+      "image": "images/Shri Arun Sahu.jpg"
+    },
+    {
+      "id": 9,
+      "name": "Shri Birendra Singh",
+      "position": "Member",
+      "image": "images/Shri Birendra Singh.jpg"
+    },
+    {
+      "id": 10,
+      "name": "Shri C.K. Sharma",
+      "position": "Member",
+      "image": "images/Shri C.K. Sharma.jpg"
+    },
+    {
+      "id": 11,
+      "name": "Shri Jay Parihar",
+      "position": "Member",
+      "image": "images/Shri Jay Parihar.jpg"
+    },
+    {
+      "id": 12,
+      "name": "Shri Mahendra Thakre",
+      "position": "Member",
+      "image": "images/Shri Mahendra Thakre.jpg"
+    },
+    {
+      "id": 13,
+      "name": "Shri Nirmal Kumar Bowade",
+      "position": "Member",
+      "image": "images/Shri Nirmal Kumar Bovade.jpg"
+    },
+    {
+      "id": 14,
+      "name": "Shri Rajesh Barman",
+      "position": "Member",
+      "image": "images/Shri Rajesh Barman.jpg"
+    },
+    {
+      "id": 15,
+      "name": "Shri Ravi Yadav",
+      "position": "Member",
+      "image": "images/Shri Ravi Yadav.jpg"
+    },
+    {
+      "id": 16,
+      "name": "Shri Sandeep Lokhande",
+      "position": "Member",
+      "image": "images/Shri Sandeep Lokhande.jpg"
+    },
+    {
+      "id": 17,
+      "name": "Shri Sonu Kushwaha",
+      "position": "Member",
+      "image": "images/Shri Sonu Kushwaha.jpg"
+    },
+    {
+      "id": 18,
+      "name": "Shri Sunderlal",
+      "position": "Member",
+      "image": "images/Shri Sunderlal.jpg"
+    },
+    {
+      "id": 19,
+      "name": "Shri Upendra Prasad",
+      "position": "Member",
+      "image": "images/Shri Upendra Prasad.jpg"
+    },
+    {
+      "id": 20,
+      "name": "Shri Vimal Kumar Sahu",
+      "position": "Member",
+      "image": "images/Shri Vimal Kumar Sahu.jpg"
+    },
+    {
+      "id": 21,
+      "name": "Shri Vinay Savita",
+      "position": "Member",
+      "image": "images/Shri Vinay Savita.jpg"
+    },
+    {
+      "id": 22,
+      "name": "Shri Vinod Sahu",
+      "position": "Member",
+      "image": "images/Shri Vinod Sahu.jpg"
+    },
+    {
+      "id": 1,
+      "name": "Shri Vipul Agrawal",
+      "position": "President",
+      "image": "images/VIPUL AGRAWAL.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Shri Prashant Pathak",
+      "position": "Vice President",
+      "image": "images/Prashant-Pathak.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Shri Vedprakash Sharma",
+      "position": "General Secretary",
+      "image": "images/Shri Vedprakash Sharma.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Shri Rakesh Kumar Shakya",
+      "position": "Joint Secretary",
+      "image": "images/Shri Rakesh Kumar Shakya.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Abhay Kumar Saxena",
+      "position": "Treasurer",
+      "image": "images/Abhay Kumar Saxena.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Yogesh Sarathe",
+      "position": "Cultural Secretary",
+      "image": "images/Yogesh Sarathe.jpg"
+    },
+    {
+      "id": 21,
+      "name": "Shri Vinay Kumar Savita",
+      "position": "Admin Secretary",
+      "image": "images/Shri Vinay Savita.jpg"
+    },
+    {
+      "id": 9,
+      "name": "Shri Birendra Singh",
+      "position": "Sports Secretary",
+      "image": "images/Shri Birendra Singh.jpg"
+    },
+    {
+      "id": 8,
+      "name": "Shri Arun Sahu",
+      "position": "Sub Sports Secretary",
+      "image": "images/Shri Arun Sahu.jpg"
+    },
+    {
+      "id": 1766121096254,
+      "name": "Shri Saurabh Kushwaha",
+      "position": "Publicity Secretary",
+      "image": "images/Shri Saurabh Kushwah.jpeg"
+    },
+    {
+      "id": 19,
+      "name": "Shri Upendra Prasad",
+      "position": "Office Secretary",
+      "image": "images/Shri Upendra Prasad.jpg"
+    },
+    {
+      "id": 11,
+      "name": "Shri Jay Parihar",
+      "position": "Media Secretary",
+      "image": "images/Shri Jay Parihar.jpg"
+    },
+    {
+      "id": 10,
+      "name": "Shri C.K. Sharma",
+      "position": "Executive Member",
+      "image": "images/Shri C.K. Sharma.jpg"
+    },
+    {
+      "id": 12,
+      "name": "Shri Mahendra Thakre",
+      "position": "Executive Member",
+      "image": "images/Shri Mahendra Thakre.jpg"
+    },
+    {
+      "id": 14,
+      "name": "Shri Rajesh Barman",
+      "position": "Executive Member",
+      "image": "images/Shri Rajesh Barman.jpg"
+    },
+    {
+      "id": 1766128522501,
+      "name": "Shri Deependra Agrawal",
+      "position": "Executive Member",
+      "image": "images/Shri Deependra Agrawal.jpeg"
+    },
+    {
+      "id": 1766125578088,
+      "name": "Shri Anup Kumar",
+      "position": "Executive Member",
+      "image": "images/Anup Kumar.jpeg"
+    },
+    {
+      "id": 1766124262652,
+      "name": "Shri Omprakash Titre",
+      "position": "Executive Member",
+      "image": "images/Shri Omprakash Titre.jpeg"
+    },
+    {
+      "id": 15,
+      "name": "Shri Ravi Yadav",
+      "position": "Executive Member",
+      "image": "images/Shri Ravi Yadav.jpg"
+    },
+    {
+      "id": 16,
+      "name": "Shri Sandeep Lokhande",
+      "position": "Executive Member",
+      "image": "images/Shri Sandeep Lokhande.jpg"
+    },
+    {
+      "id": 17,
+      "name": "Shri Sonu Kushwaha",
+      "position": "Executive Member",
+      "image": "images/Shri Sonu Kushwaha.jpg"
+    },
+    {
+      "id": 7,
+      "name": "Shri Anand Jaiswal",
+      "position": "Executive Member",
+      "image": "images/Shri Anand Jaiswal.jpg"
+    },
+    {
+      "id": 18,
+      "name": "Shri Sunderlal",
+      "position": "Executive Member",
+      "image": "images/Shri Sunderlal.jpg"
+    },
+    {
+      "id": 1766128950904,
+      "name": "Shri Sunil Kumar Bhatt",
+      "position": "Executive Member",
+      "image": "images/Shri Sunil Kumar Bhatt.jpeg"
+    },
+    {
+      "id": 1766128998445,
+      "name": "Shri Pravin Kushwaha",
+      "position": "Executive Member",
+      "image": "images/Shri Pravin Kushwaha.jpeg"
+    },
+    {
+      "id": 1766129250706,
+      "name": "Shri Prashant Salame",
+      "position": "Executive Member",
+      "image": "images/Shri Prashant Salame.jpeg"
+    }
+  ],
   "aboutContent": {
     "story": "Established in [year], AGA Club Bhel Bhopal has been a cornerstone of community life in the BHEL township. Named after the visionary leaders who founded our organization, we have grown from a small group of enthusiastic volunteers to a thriving community hub that brings together hundreds of families.",
     "mission": "Our mission is to foster a sense of community, celebrate our rich cultural heritage, and provide recreational and educational opportunities for all age groups. We believe in the power of togetherness and strive to create an environment where every member feels valued and connected.",
@@ -303,108 +616,6 @@
       "images/diwali.jpg"
     ]
   },
-  "homepage": {
-    "header": {
-      "title": "Welcome to AGA Club Bhel Bhopal",
-      "subtitle": "Celebrating Community, Culture, and Togetherness",
-      "backgroundImage": "",
-      "backgroundSlideshow": [
-        "images/hero-bg.jpg",
-        "images/holi.jpg",
-        "images/garba.jpg",
-        "images/diwali.jpg",
-        "images/basketball.jpg"
-      ]
-    },
-    "leaders": [
-      {
-        "id": 1,
-        "name": "President",
-        "photo": "images/president.jpg",
-        "messageTitle": "President's Message",
-        "message": "आगा क्लब आनंद के साथ जीवन जीने का एक माध्यम है। इसके कार्यों के साथ जुड़कर मैं भी आनंदित महसूस कर रहा हूँ, आगा क्लब अपने सभी सदस्यों के साथ मिलकर तरक्की करे, ऐसी मेरी शुभकामनाएं हैं।",
-        "fullMessage": "आगा क्लब आनंद के साथ जीवन जीने का एक माध्यम है। इसके कार्यों के साथ जुड़कर मैं भी आनंदित महसूस कर रहा हूँ, आगा क्लब अपने सभी सदस्यों के साथ मिलकर तरक्की करे, ऐसी मेरी शुभकामनाएं हैं। - विपुल अग्रवाल"
-      },
-      {
-        "id": 2,
-        "name": "General Secretary",
-        "photo": "images/secretary.jpg",
-        "messageTitle": "General Secretary's Message",
-        "message": "यह क्लब केवल एक समूह नहीं, बल्कि प्रतिभा, रचनात्मकता और परंपराओं का एक जीवंत संगम है। हमारे क्लब का उद्देश्य अपने सदस्यों एवँ उनके परिजनों की कलात्मक प्रतिभाओं को पहचानना, उन्हें एक मंच प्रदान करना और विभिन्न खेलकूद गतिविधियों एवँ  सांस्कृतिक गतिविधियों जैसे प्रतियोगिताओं,उत्सव, प्रदर्शनियों और कार्यशालाओं के माध्यम से एकता और समझ को बढ़ावा देना है।",
-        "fullMessage": "यह क्लब केवल एक समूह नहीं, बल्कि प्रतिभा, रचनात्मकता और परंपराओं का एक जीवंत संगम है। हमारे क्लब का उद्देश्य अपने सदस्यों एवँ उनके परिजनों की कलात्मक प्रतिभाओं को पहचानना, उन्हें एक मंच प्रदान करना और विभिन्न खेलकूद गतिविधियों एवँ  सांस्कृतिक गतिविधियों जैसे प्रतियोगिताओं,उत्सव, प्रदर्शनियों और कार्यशालाओं के माध्यम से एकता और समझ को बढ़ावा देना है। मुझे विश्वास है कि आपके सहयोग से हम आने वाले वर्ष में कई नई ऊंचाइयों को छुएंगे। - वेद प्रकाश शर्मा"
-      }
-    ],
-    "gallery": [
-      {
-        "id": 1,
-        "image": "images/holi.jpg",
-        "alt": "Holi Milan Samaroh"
-      },
-      {
-        "id": 2,
-        "image": "images/garba.jpg",
-        "alt": "Garba Mahotsav"
-      },
-      {
-        "id": 3,
-        "image": "images/diwali.jpg",
-        "alt": "Diwali Milan Samaroh"
-      },
-      {
-        "id": 4,
-        "image": "images/basketball.jpg",
-        "alt": "Basketball Tournament"
-      },
-      {
-        "id": 5,
-        "image": "images/sports-day.jpg",
-        "alt": "Annual Sports Day"
-      },
-      {
-        "id": 6,
-        "image": "images/children-compitition.jpg",
-        "alt": "Children's Competition"
-      },
-      {
-        "id": 7,
-        "image": "images/mothers-day.jpg",
-        "alt": "Mother's Day Celebration"
-      }
-    ],
-    "backgroundSlideshow": [
-      "images/WhatsApp Image 2025-12-30 at 9.25.18 AM.jpeg"
-    ]
-  },
-  "test": "data",
-  "upcomingEvents": [
-    {
-      "id": 1,
-      "name": "Navankur",
-      "date": "December 22, 2025",
-      "venue": "Club Ground",
-      "description": "Traditional tree planting ceremony to celebrate new beginnings and environmental consciousness.",
-      "formLink": "",
-      "image": "images/navankur.jpg"
-    },
-    {
-      "id": 2,
-      "name": "New Year Celebration",
-      "date": "January 1, 2026",
-      "venue": "Club Ground",
-      "description": "Ring in the new year with music, dance, and cultural performances. Refreshments will be served.",
-      "formLink": "",
-      "image": "images/new-year.jpg"
-    },
-    {
-      "id": 3,
-      "name": "Republic Day Celebration",
-      "date": "January 26, 2026",
-      "venue": "Main Hall",
-      "description": "Patriotic celebration featuring flag hoisting ceremony, cultural programs, and community lunch.",
-      "formLink": "",
-      "image": "images/republic-day.jpg"
-    }
-  ],
   "contactContent": {
     "address": "716 D2 A SECTOR PIPLANI\nBEHIND GANDHI MARKET, PIPLANI, BHOPAL 462021",
     "phone": "0755 2503343",
@@ -419,6 +630,102 @@
       "images/garba.jpg"
     ]
   },
+  "committeeContent": {
+    "backgroundImage": "images/committee-bg.jpg",
+    "backgroundSlideshow": [
+      "images/committee-bg.jpg",
+      "images/diwali.jpg",
+      "images/contact-bg.jpg",
+      "images/hero-bg.jpg",
+      "images/holi.jpg"
+    ]
+  },
+  "eventsContent": {
+    "backgroundImage": "images/events-bg.jpg",
+    "backgroundSlideshow": [
+      "images/events-bg.jpg",
+      "images/garba.jpg",
+      "images/diwali.jpg",
+      "images/basketball.jpg",
+      "images/hero-bg.jpg"
+    ],
+    "slideshowContainerSizeIncrease": "10%",
+    "eventDirectories": [
+      {
+        "dir": "images",
+        "name": "Letter from Grandson Competition",
+        "prefix": "letter from grandson competition"
+      },
+      {
+        "dir": "images",
+        "name": "Plantation Program",
+        "prefix": "plantation program"
+      },
+      {
+        "dir": "images",
+        "name": "Memento Distribution",
+        "prefix": "memento distribution"
+      },
+      {
+        "dir": "images",
+        "name": "Independence Day",
+        "prefix": "independence day"
+      },
+      {
+        "dir": "images",
+        "name": "Committee Member Retirement Program",
+        "prefix": "committee member retirement program"
+      },
+      {
+        "dir": "images",
+        "name": "Cycle-Riding",
+        "prefix": "cycle-riding"
+      },
+      {
+        "dir": "images",
+        "name": "Diwali Milan",
+        "prefix": "Diwali-milan"
+      },
+      {
+        "dir": "images",
+        "name": "Garba Mahotsav",
+        "prefix": "Garba mahotsav"
+      },
+      {
+        "dir": "images",
+        "name": "Holi",
+        "prefix": "Holi"
+      },
+      {
+        "dir": "images",
+        "name": "Kabaddi",
+        "prefix": "kabaddi"
+      },
+      {
+        "dir": "images",
+        "name": "Summer Camp for Basketball",
+        "prefix": "summer camp for basketball"
+      }
+    ]
+  },
+  "upcomingContent": {
+    "backgroundImage": "images/upcoming-bg.jpg",
+    "backgroundSlideshow": [
+      "images/committee-bg.jpg",
+      "images/events-bg.jpg"
+    ]
+  },
+  "membershipContent": {
+    "backgroundImage": "images/membership-bg.jpg",
+    "backgroundSlideshow": [
+      "images/membership-bg.jpg",
+      "images/committee-bg.jpg",
+      "images/events-bg.jpg",
+      "images/contact-bg.jpg",
+      "images/about-bg.jpg"
+    ]
+  },
+  "test": "data",
   "members": [
     {
       "Sl. No.": 2,
@@ -1764,187 +2071,6 @@
       "Contact No.": "9893037527",
       "Department": "FYM",
       "": ""
-    },
-    {
-      "Sl. No.": 225,
-      "Staff No.": "6061052",
-      "Name": "YOGESH BOKHARE",
-      "Department": "TAM"
     }
-  ],
-  "committeeContent": {
-    "backgroundImage": "images/committee-bg.jpg",
-    "backgroundSlideshow": [
-      "images/committee-bg.jpg",
-      "images/diwali.jpg",
-      "images/contact-bg.jpg",
-      "images/hero-bg.jpg",
-      "images/holi.jpg"
-    ]
-  },
-  "committeeMembers": [
-    {
-      "id": 1,
-      "name": "Shri Vipul Agrawal",
-      "position": "President",
-      "image": "images/VIPUL AGRAWAL.jpg"
-    },
-    {
-      "id": 2,
-      "name": "Shri Prashant Pathak",
-      "position": "Vice President",
-      "image": "images/Prashant-Pathak.jpg"
-    },
-    {
-      "id": 3,
-      "name": "Shri Vedprakash Sharma",
-      "position": "General Secretary",
-      "image": "images/Shri Vedprakash Sharma.jpg"
-    },
-    {
-      "id": 4,
-      "name": "Shri Rakesh Kumar Shakya",
-      "position": "Joint Secretary",
-      "image": "images/Shri Rakesh Kumar Shakya.jpg"
-    },
-    {
-      "id": 5,
-      "name": "Yogesh Sarathe",
-      "position": "Cultural Secretary",
-      "image": "images/Yogesh Sarathe.jpg"
-    },
-    {
-      "id": 6,
-      "name": "Abhay Kumar Saxena",
-      "position": "Treasurer",
-      "image": "images/Abhay Kumar Saxena.jpg"
-    },
-    {
-      "id": 21,
-      "name": "Shri Vinay Kumar Savita",
-      "position": "Admin Secretary",
-      "image": "images/Shri Vinay Savita.jpg"
-    },
-    {
-      "id": 9,
-      "name": "Shri Birendra Singh",
-      "position": "Sports Secretary",
-      "image": "images/Shri Birendra Singh.jpg"
-    },
-    {
-      "id": 8,
-      "name": "Shri Arun Sahu",
-      "position": "Sub Sports Secretary",
-      "image": "images/Shri Arun Sahu.jpg"
-    },
-    {
-      "id": 1766121096254,
-      "name": "Shri Saurabh Kushwaha",
-      "position": "Publicity Secretary",
-      "image": "images/Shri Saurabh Kushwah.jpeg"
-    },
-    {
-      "id": 19,
-      "name": "Shri Upendra Prasad",
-      "position": "Office Secretary",
-      "image": "images/Shri Upendra Prasad.jpg"
-    },
-    {
-      "id": 11,
-      "name": "Shri Jay Parihar",
-      "position": "Media Secretary",
-      "image": "images/Shri Jay Parihar.jpg"
-    },
-    {
-      "id": 10,
-      "name": "Shri C.K. Sharma",
-      "position": "Executive Member",
-      "image": "images/Shri C.K. Sharma.jpg"
-    },
-    {
-      "id": 12,
-      "name": "Shri Mahendra Thakre",
-      "position": "Executive Member",
-      "image": "images/Shri Mahendra Thakre.jpg"
-    },
-    {
-      "id": 14,
-      "name": "Shri Rajesh Barman",
-      "position": "Executive Member",
-      "image": "images/Shri Rajesh Barman.jpg"
-    },
-    {
-      "id": 1766128522501,
-      "name": "Shri Deependra Agrawal",
-      "position": "Executive Member",
-      "image": "images/Shri Deependra Agrawal.jpeg"
-    },
-    {
-      "id": 1766125578088,
-      "name": "Shri Anup Kumar",
-      "position": "Executive Member",
-      "image": "images/Anup Kumar.jpeg"
-    },
-    {
-      "id": 1766124262652,
-      "name": "Shri Omprakash Titre",
-      "position": "Executive Member",
-      "image": "images/Shri Omprakash Titre.jpeg"
-    },
-    {
-      "id": 15,
-      "name": "Shri Ravi Yadav",
-      "position": "Executive Member",
-      "image": "images/Shri Ravi Yadav.jpg"
-    },
-    {
-      "id": 16,
-      "name": "Shri Sandeep Lokhande",
-      "position": "Executive Member",
-      "image": "images/Shri Sandeep Lokhande.jpg"
-    },
-    {
-      "id": 17,
-      "name": "Shri Sonu Kushwaha",
-      "position": "Executive Member",
-      "image": "images/Shri Sonu Kushwaha.jpg"
-    },
-    {
-      "id": 7,
-      "name": "Shri Anand Jaiswal",
-      "position": "Executive Member",
-      "image": "images/Shri Anand Jaiswal.jpg"
-    },
-    {
-      "id": 18,
-      "name": "Shri Sunderlal",
-      "position": "Executive Member",
-      "image": "images/Shri Sunderlal.jpg"
-    },
-    {
-      "id": 1766128950904,
-      "name": "Shri Sunil Kumar Bhatt",
-      "position": "Executive Member",
-      "image": "images/Shri Sunil Kumar Bhatt.jpeg"
-    },
-    {
-      "id": 1766128998445,
-      "name": "Shri Pravin Kushwaha",
-      "position": "Executive Member",
-      "image": "images/Shri Pravin Kushwaha.jpeg"
-    },
-    {
-      "id": 1766129250706,
-      "name": "Shri Prashant Salame",
-      "position": "Executive Member",
-      "image": "images/Shri Prashant Salame.jpeg"
-    }
-  ],
-  "upcomingContent": {
-    "backgroundImage": "images/upcoming-bg.jpg",
-    "backgroundSlideshow": [
-      "images/committee-bg.jpg",
-      "images/events-bg.jpg"
-    ]
-  }
+  ]
 }
