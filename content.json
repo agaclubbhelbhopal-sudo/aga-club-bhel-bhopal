@@ -1937,6 +1937,25 @@
       "name": "Shri Prashant Salame",
       "position": "Executive Member",
       "image": "images/Shri Prashant Salame.jpeg"
+    },
+    {
+      "name": "Shri Susheel Kant Gohola",
+      "position": "Executive member",
+      "image": "images/shri-susheelkant-gohola.jpeg"
+    },
+    {
+      "serialNo": "",
+      "position": "Executive member",
+      "name": "Shri Sanjeev Singhane",
+      "image": "images/sanjeev-singhane.jpeg",
+      "id": 25
+    },
+    {
+      "position": "Executive member",
+      "name": "Shri R K Mukati",
+      "serialNo": "",
+      "image": "images/rk-mukati.jpeg",
+      "id": 25
     }
   ],
   "upcomingContent": {
