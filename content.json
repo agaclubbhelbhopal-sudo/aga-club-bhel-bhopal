@@ -289,12 +289,13 @@
       ]
     },
     {
-      "id": 1416346,
       "name": "HOLI",
       "date": "15",
-      "image": "images/Diwali-milan1.jpg",
+      "venue": "AGA",
+      "image": "images/Diwali-milan10.jpg",
       "slideshowImages": [
-        "images/Diwali-milan11.jpg"
+        "images/Diwali-milan11.jpg",
+        "images/Diwali-milan10.jpg"
       ]
     }
   ],
@@ -1934,7 +1935,9 @@
     {
       "name": "Shri Susheel Kant Gohola",
       "position": "Executive member",
-      "image": "images/shri-susheelkant-gohola.jpeg"
+      "image": "images/shri-susheelkant-gohola.jpeg",
+      "id": 15,
+      "serialNo": 15
     },
     {
       "serialNo": "",
