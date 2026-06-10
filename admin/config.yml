@@ -60,19 +60,6 @@ collections:
                   - { label: "ID", name: "id", widget: "number", value_type: "int", required: false }
                   - { label: "Image", name: "image", widget: "file" }
                   - { label: "Alt Text", name: "alt", widget: "string", required: false }
-          - label: "Upcoming Events"
-            name: "upcomingEvents"
-            widget: "list"
-            summary: "{{fields.name}} - {{fields.date}}"
-            fields:
-              - { label: "ID", name: "id", widget: "number", value_type: "int", required: false }
-              - { label: "Display Order (admin only)", name: "serialNo", widget: "number", value_type: "int", required: false }
-              - { label: "Event Name", name: "name", widget: "string" }
-              - { label: "Date", name: "date", widget: "string", required: false }
-              - { label: "Venue", name: "venue", widget: "string", required: false }
-              - { label: "Description", name: "description", widget: "text", required: false }
-              - { label: "Registration/Form Link", name: "formLink", widget: "string", required: false }
-              - { label: "Main Image", name: "image", widget: "file", required: false }
           - label: "Past Events"
             name: "pastEvents"
             widget: "list"
@@ -181,6 +168,24 @@ collections:
                 required: false
                 hint: "Add, delete, or reorder hero slideshow media for the Upcoming Events page."
                 field: { label: "Image", name: "image", widget: "file" }
+          - label: "Upcoming Events List - Add/Edit/Delete"
+            name: "upcomingEvents"
+            widget: "list"
+            label_singular: "Upcoming Event"
+            summary: "{{fields.name}} - {{fields.date}}"
+            required: false
+            allow_add: true
+            collapsed: false
+            hint: "Yahan se Upcoming Events page ke event cards add, edit, delete karen."
+            fields:
+              - { label: "ID", name: "id", widget: "number", value_type: "int", required: false, hint: "Blank chhod sakte hain." }
+              - { label: "Display Order (admin only)", name: "serialNo", widget: "number", value_type: "int", required: false }
+              - { label: "Event Name", name: "name", widget: "string" }
+              - { label: "Date", name: "date", widget: "string", required: false }
+              - { label: "Venue", name: "venue", widget: "string", required: false }
+              - { label: "Description", name: "description", widget: "text", required: false }
+              - { label: "Registration/Form Link", name: "formLink", widget: "string", required: false }
+              - { label: "Main Image / GIF / Video", name: "image", widget: "file", required: false }
           - label: "Membership Page Hero"
             name: "membershipContent"
             widget: "object"
