@@ -129,11 +129,34 @@
                         return `<img src="${mediaPath}" alt="${alt}" class="event-image" onerror="this.src='images/new-year.jpg'">`;
                     }
 
+                    async function loadUpcomingEventsForPage() {
+                        if (window.location.protocol !== 'file:') {
+                            try {
+                                const response = await fetch(`content.json?v=${Date.now()}`, { cache: 'no-store' });
+                                if (response.ok) {
+                                    const content = await response.json();
+                                    const events = content.upcomingEvents ? Object.values(content.upcomingEvents) : [];
+                                    return events;
+                                }
+                            } catch (error) {
+                                console.warn('Direct content.json upcoming events load failed, falling back to contentLoader:', error);
+                            }
+                        }
+
+                        return contentLoader.getUpcomingEvents();
+                    }
+
+                    function orderValue(item, fallback) {
+                        const value = Number(item.serialNo || item.order || item.sequence || item.id || fallback);
+                        return Number.isFinite(value) ? value : fallback;
+                    }
+
                     // Load upcoming events from content.json
                     document.addEventListener('DOMContentLoaded', function() {
                         const eventsContainer = document.getElementById('upcomingEventsContainer');
                         
-                        contentLoader.getUpcomingEvents().then(events => {
+                        loadUpcomingEventsForPage().then(events => {
+                            events = Object.values(events || {}).sort((a, b) => orderValue(a, 0) - orderValue(b, 0));
                             if (events.length > 0) {
                                 eventsContainer.innerHTML = '';
                                 events.forEach(event => {
@@ -142,9 +165,9 @@
                                     eventElement.innerHTML = `
                                         ${renderEventMedia(event.image, event.name)}
                                         <div class="event-content">
-                                            <h3>${event.name}</h3>
-                                            <p class="event-date">${event.date}</p>
-                                            <p>${event.description}</p>
+                                            <h3>${event.name || 'Upcoming Event'}</h3>
+                                            <p class="event-date">${event.date || ''}</p>
+                                            <p>${event.description || ''}</p>
                                             ${event.formLink ? `<p><a href="${event.formLink}" target="_blank">Register for this event</a></p>` : ''}
                                         </div>
                                     `;
@@ -152,7 +175,38 @@
                                 });
                             } else {
                                 // Show default events if none are in content.json
-                               
+                                eventsContainer.innerHTML = `
+                                    <div class="event-card">
+                                        <img src="images/new-year.jpg" alt="New Year Celebration" class="event-image">
+                                        <div class="event-content">
+                                            <h3>New Year Celebration</h3>
+                                            <p class="event-date">January 1, 2026</p>
+                                            <p>Ring in the new year with music, dance, and cultural performances. Refreshments will be served.</p>
+                                        </div>
+                                    </div>
+                                    <div class="event-card">
+                                        <img src="images/republic-day.jpg" alt="Republic Day" class="event-image">
+                                        <div class="event-content">
+                                            <h3>Republic Day Celebration</h3>
+                                            <p class="event-date">January 26, 2026</p>
+                                            <p>Patriotic celebration featuring flag hoisting ceremony, cultural programs, and community lunch.</p>
+                                        </div>
+                                    </div>
+                                    <div class="event-card">
+                                        <img src="images/independence-day.jpg" alt="Father's Day" class="event-image">
+                                        <div class="event-content">
+                                            <h3>Father's Day Special</h3>
+                                            <p class="event-date">June 21, 2026</p>
+                                            <p>Special tribute to fathers with cultural programs and family activities.</p>
+                                        </div>
+                                    </div>
+                                    <div class="event-card">
+                                        <img src="images/independence-day.jpg" alt="Independence Day" class="event-image">
+                                        <div class="event-content">
+                                            <h3>Independence Day Celebration</h3>
+                                            <p class="event-date">August 15, 2026</p>
+                                            <p>Grand celebration with flag hoisting, parade, cultural performances, and community feast.</p>
+                                        </div>
                                     </div>
                                 `;
                             }
