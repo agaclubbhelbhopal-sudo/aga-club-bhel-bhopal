@@ -287,6 +287,16 @@
         "images/WhatsApp Image 2025-12-30 at 9.25.05 AM_1767951667372.jpeg",
         "images/WhatsApp Image 2025-12-30 at 9.25.21 AM.jpeg"
       ]
+    },
+    {
+      "name": "HOLI",
+      "date": "15",
+      "venue": "AGA",
+      "image": "images/Diwali-milan10.jpg",
+      "slideshowImages": [
+        "images/Diwali-milan11.jpg",
+        "images/Diwali-milan10.jpg"
+      ]
     }
   ],
   "aboutContent": {
