@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership - AGA Club Bhel Bhopal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/jpeg" href="images/aga_club_site.jpg">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <a href="index.html">
+                        <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    </a>
+                    <a href="index.html" class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </a>
+                    <a href="index.html">
+                        <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                    </a>
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navigation Menu Bar -->
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="membership.html" class="nav-link">Membership</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="hero" id="heroSection">
+        <div class="hero-content">
+            <h1>Become a Member</h1>
+            <p>Join our community and be part of something special</p>
+        </div>
+    </header>
+    <script>
+        // Set active navigation link
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current page filename
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Add active class to the current page link
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Load membership page header content
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.loadContent().then(content => {
+                if (content.membershipContent && content.membershipContent.backgroundImage) {
+                    const heroSection = document.getElementById('heroSection');
+                    heroSection.style.background = `url('${content.membershipContent.backgroundImage}')`;
+                    heroSection.style.backgroundSize = 'cover';
+                    heroSection.style.backgroundPosition = 'center';
+                }
+            });
+        });
+    </script>
+
+    <!-- Main Content -->
+    <main>
+        <section class="membership-section">
+            <div class="container">
+                <div class="membership-content">
+                    <h2>Become a Member</h2>
+                    <p>Joining AGA Club Bhel Bhopal is a wonderful way to connect with our community and participate in our various activities and events. As a member, you'll have access to exclusive events, voting rights, and the opportunity to contribute to our club's growth and development.</p>
+                    
+                    <div class="membership-options">
+                        <div class="membership-option">
+                            <h3>Download Membership Form</h3>
+                            <p>Fill out our membership form to begin your journey with us.</p>
+                            <a href="images/AGA Club membership forms_new.pdf" class="btn btn-primary" download>Download Membership Form (PDF)</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Current Members Section - positioned below download form -->
+                    <div class="membership-members-section" style="margin-top: 40px;">
+                        <h3>Current Members</h3>
+                        <p>Below is a list of our current AGA Club members.</p>
+                        
+                        <!-- Search Box -->
+                        <div class="search-container">
+                            <input type="text" id="searchBox" placeholder="🔍 Search members by name, staff number, or department..." class="search-input">
+                            <button id="clearSearch" class="clear-btn">✕</button>
+                        </div>
+                        
+                        <div id="memberListContainer">Loading member data...</div>
+                    </div>
+                    
+                    <div class="membership-benefits">
+                        <h3>Benefits of Membership</h3>
+                        <ul>
+                            <li>Participation in all club events and activities</li>
+                            <li>Voting rights in club decisions</li>
+                            <li>Opportunity to volunteer and contribute to community service</li>
+                            <li>Access to exclusive member-only events</li>
+                            <li>Networking opportunities with fellow community members</li>
+                            <li>Discounts on select club merchandise and services</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="membership-requirements">
+                        <h3>Membership Requirements</h3>
+                        <p>To become a member of AGA Club Bhel Bhopal, you must:</p>
+                        <ul>
+                            <li>Be a resident of BHEL Township or have a connection to the community</li>
+                            <li>Agree to abide by the club's constitution and bylaws</li>
+                            <li>Pay the annual membership fee as determined by the committee</li>
+                            <li>Participate in at least one club activity or event per year</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AGA Club Bhel Bhopal. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+      // Fallback data for when members.json cannot be loaded (e.g., direct file opening)
+      const fallbackMembersData = [
+        {"Staff No.": "2520532", "Name": "Dinesh Kumar Sharma", "Contact No.": "9893037527", "Department": "FYM"},
+        {"Staff No.": "6116159", "Name": "Pravin Kushwaha", "Contact No.": "9977732466", "Department": "AME"},
+        {"Staff No.": "6117732", "Name": "Vinay Kumar Savita", "Contact No.": "9907545324", "Department": "AME"},
+        {"Staff No.": "6115977", "Name": "Upendra Prasad", "Contact No.": "7879102072", "Department": "AME"},
+        {"Staff No.": "6077552", "Name": "Yogesh Mahajan", "Contact No.": "8959049111", "Department": "AME"},
+        {"Staff No.": "6117422", "Name": "Iliazar Munda", "Contact No.": "9039660362", "Department": "ASC"},
+        {"Staff No.": "1281429", "Name": "Lal Chand", "Contact No.": "9407380950", "Department": "CIM"},
+        {"Staff No.": "1287753", "Name": "Mahendra Kumar Bisen", "Contact No.": "9993158456", "Department": "CIM"},
+        {"Staff No.": "1287818", "Name": "Shyam Sunder Sarathe", "Contact No.": "9826421542", "Department": "CIM"},
+        {"Staff No.": "6010458", "Name": "Ravindra", "Contact No.": "9425681624", "Department": "CIM"},
+        {"Staff No.": "6010849", "Name": "Narendra Kumar Mathan", "Contact No.": "9617234127", "Department": "CIM"},
+        {"Staff No.": "6011470", "Name": "Mukesh Kumar Meena", "Contact No.": "9039234182", "Department": "CIM"},
+        {"Staff No.": "6106226", "Name": "KIRAN BAWANE", "Contact No.": "7354234658", "Department": "CIM"},
+        {"Staff No.": "6093019", "Name": "Alkesh Kakde", "Contact No.": "9644676588", "Department": "CIM"},
+        {"Staff No.": "6093027", "Name": "Varsha Kanojiya", "Contact No.": "7805017947", "Department": "CIM"},
+        {"Staff No.": "6093256", "Name": "Vandana Patkar", "Contact No.": "9977407597", "Department": "CIM"},
+        {"Staff No.": "6059678", "Name": "Abhay Kumar Saxena", "Contact No.": "8889761778", "Department": "CIM"},
+        {"Staff No.": "6185509", "Name": "Gyanendra Pratap Singh", "Contact No.": "9425334044", "Department": "CIM"},
+        {"Staff No.": "6181619", "Name": "Pooja Chouhan", "Contact No.": "8085563364", "Department": "CIM"},
+        {"Staff No.": "6186386", "Name": "Radha Gour", "Contact No.": "7879182782", "Department": "CIM"},
+        {"Staff No.": "6075959", "Name": "Kuldeep Vishvkarama", "Contact No.": "8719805313", "Department": "CIM"},
+        {"Staff No.": "1287710", "Name": "Param Sivam", "Contact No.": "9755474555", "Department": "CMM"},
+        {"Staff No.": "1266837", "Name": "Shakil Khan", "Contact No.": "9827737591", "Department": "CMX"},
+        {"Staff No.": "6127053", "Name": "Arun Sahu", "Contact No.": "9981763232", "Department": "CMX"}
+      ];
+    </script>
+    <script src="js/contentLoader.js"></script>
+    <script src="js/backgroundSlideshow.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Initialize background slideshow
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.loadContent().then(content => {
+                if (content.membershipContent && content.membershipContent.backgroundSlideshow) {
+                    backgroundSlideshow.init(content.membershipContent.backgroundSlideshow);
+                }
+            });
+
+            // Load member list - prioritize local members.json first with better error handling
+            function loadMemberData() {
+                const container = document.getElementById('memberListContainer');
+                if (!container) return;
+                
+                container.innerHTML = '<p>Loading member data...</p>';
+                
+                // Try to load from local members.json first
+                fetch('members.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(members => {
+                        console.log('✅ Loaded members from local members.json:', members.length);
+                        if (members.length > 0) {
+                            renderMemberTable(members, container);
+                        } else {
+                            container.innerHTML = '<p>No member data available at the moment.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.warn('❌ Local members.json failed, using fallback data:', error);
+                        // Use fallback data when fetch fails (e.g., direct file opening)
+                        renderMemberTable(fallbackMembersData, container);
+                    });
+            }
+            
+            // Function to render members in a table with pagination
+            function renderMemberTable(members, container) {
+                // Pagination variables
+                let currentPage = 1;
+                const membersPerPage = 10;
+                let filteredMembers = [...members]; // Copy of members for search filtering
+                let totalPages = Math.ceil(filteredMembers.length / membersPerPage);
+                
+                // Search functionality (make it global)
+                window.filterMembers = function(searchQuery) {
+                    if (!searchQuery.trim()) {
+                        filteredMembers = [...members];
+                    } else {
+                        const query = searchQuery.toLowerCase();
+                        filteredMembers = members.filter(member => {
+                            const staffNo = (member['Staff No.'] || '').toString().toLowerCase();
+                            const name = (member['Name'] || '').toString().toLowerCase();
+                            const department = (member['Department'] || '').toString().toLowerCase();
+                            
+                            return staffNo.includes(query) || name.includes(query) || department.includes(query);
+                        });
+                    }
+                    totalPages = Math.ceil(filteredMembers.length / membersPerPage);
+                    currentPage = 1; // Reset to first page after search
+                    renderMembers(currentPage);
+                }
+                
+                // Function to render members for a specific page
+                function renderMembers(page) {
+                    const startIndex = (page - 1) * membersPerPage;
+                    const endIndex = startIndex + membersPerPage;
+                    const membersToShow = filteredMembers.slice(startIndex, endIndex);
+                    
+                    let tableHTML = '<table><thead><tr><th>SL. NO.</th><th>NAME</th><th>STAFF NO.</th><th>DEPARTMENT</th></tr></thead><tbody>';
+                    membersToShow.forEach((member, index) => {
+                        tableHTML += `<tr><td>${startIndex + index + 1}</td><td>${member['Name'] || 'N/A'}</td><td>${member['Staff No.'] || 'N/A'}</td><td>${member['Department'] || 'N/A'}</td></tr>`;
+                    });
+                    tableHTML += '</tbody></table>';
+                    
+                    // Add pagination controls
+                    tableHTML += '<div class="pagination">';
+                    tableHTML += `<button id="prevBtn" ${page === 1 ? 'disabled' : ''}>Previous</button>`;
+                    tableHTML += `<span class="page-info">Page ${page} of ${totalPages}</span>`;
+                    tableHTML += `<button id="nextBtn" ${page === totalPages ? 'disabled' : ''}>Next</button>`;
+                    tableHTML += '</div>';
+                    
+                    container.innerHTML = tableHTML;
+                
+                    // Add event listeners for pagination buttons
+                    const prevBtn = document.getElementById('prevBtn');
+                    const nextBtn = document.getElementById('nextBtn');
+                    
+                    if (prevBtn) {
+                        prevBtn.addEventListener('click', () => {
+                            if (currentPage > 1) {
+                                currentPage--;
+                                renderMembers(currentPage);
+                            }
+                        });
+                    }
+                    
+                    if (nextBtn) {
+                        nextBtn.addEventListener('click', () => {
+                            if (currentPage < totalPages) {
+                                currentPage++;
+                                renderMembers(currentPage);
+                            }
+                        });
+                    }
+                }
+                
+                // Initial render
+                renderMembers(currentPage);
+            }
+            
+            // Load the member data when DOM is ready
+            loadMemberData();
+        });
+
+        // Global search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBox = document.getElementById('searchBox');
+            const clearSearch = document.getElementById('clearSearch');
+            
+            if (searchBox) {
+                searchBox.addEventListener('input', (e) => {
+                    // The filterMembers function will be available from whichever data source loaded
+                    if (typeof window.filterMembers === 'function') {
+                        window.filterMembers(e.target.value);
+                    }
+                });
+            }
+            
+            if (clearSearch) {
+                clearSearch.addEventListener('click', () => {
+                    if (searchBox) searchBox.value = '';
+                    if (typeof window.filterMembers === 'function') {
+                        window.filterMembers('');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

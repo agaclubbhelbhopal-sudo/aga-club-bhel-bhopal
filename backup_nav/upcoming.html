@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Events - AGA Club Bhel Bhopal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/jpeg" href="images/aga_club_site.jpg">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <a href="index.html">
+                        <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    </a>
+                    <a href="index.html" class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </a>
+                    <a href="index.html">
+                        <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                    </a>
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navigation Menu Bar -->
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="membership.html" class="nav-link">Membership</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+
+
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="hero" id="heroSection">
+        <div class="hero-content">
+            <h1>Upcoming Events</h1>
+            <p>Stay tuned for our exciting upcoming events</p>
+        </div>
+    </header>
+    <script>
+        // Set active navigation link
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current page filename
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Add active class to the current page link
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Load upcoming events page header content
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.loadContent().then(content => {
+                if (content.upcomingContent && content.upcomingContent.backgroundImage) {
+                    const heroSection = document.getElementById('heroSection');
+                    heroSection.style.background = `url('${content.upcomingContent.backgroundImage}')`;
+                    heroSection.style.backgroundSize = 'cover';
+                    heroSection.style.backgroundPosition = 'center';
+                }
+            });
+        });
+    </script>
+
+    <!-- Main Content -->
+    <main>
+        <section class="events-section">
+            <div class="container">
+                <h2>Upcoming Events Calendar</h2>
+                <div class="events-grid" id="upcomingEventsContainer">
+                    <!-- Events will be loaded dynamically -->
+                </div>
+                <script>
+                    // Load upcoming events from content.json
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const eventsContainer = document.getElementById('upcomingEventsContainer');
+                        
+                        contentLoader.getUpcomingEvents().then(events => {
+                            if (events.length > 0) {
+                                eventsContainer.innerHTML = '';
+                                events.forEach(event => {
+                                    const eventElement = document.createElement('div');
+                                    eventElement.className = 'event-card';
+                                    eventElement.innerHTML = `
+                                        <img src="${event.image || 'images/new-year.jpg'}" alt="${event.name}" class="event-image">
+                                        <div class="event-content">
+                                            <h3>${event.name}</h3>
+                                            <p class="event-date">${event.date}</p>
+                                            <p>${event.description}</p>
+                                            ${event.formLink ? `<p><a href="${event.formLink}" target="_blank">Register for this event</a></p>` : ''}
+                                        </div>
+                                    `;
+                                    eventsContainer.appendChild(eventElement);
+                                });
+                            } else {
+                                // Show default events if none are in content.json
+                                eventsContainer.innerHTML = `
+                                    <div class="event-card">
+                                        <img src="images/new-year.jpg" alt="New Year Celebration" class="event-image">
+                                        <div class="event-content">
+                                            <h3>New Year Celebration</h3>
+                                            <p class="event-date">January 1, 2026</p>
+                                            <p>Ring in the new year with music, dance, and cultural performances. Refreshments will be served.</p>
+                                        </div>
+                                    </div>
+                                    <div class="event-card">
+                                        <img src="images/republic-day.jpg" alt="Republic Day" class="event-image">
+                                        <div class="event-content">
+                                            <h3>Republic Day Celebration</h3>
+                                            <p class="event-date">January 26, 2026</p>
+                                            <p>Patriotic celebration featuring flag hoisting ceremony, cultural programs, and community lunch.</p>
+                                        </div>
+                                    </div>
+                                    <div class="event-card">
+                                        <img src="images/independence-day.jpg" alt="Father's Day" class="event-image">
+                                        <div class="event-content">
+                                            <h3>Father's Day Special</h3>
+                                            <p class="event-date">June 21, 2026</p>
+                                            <p>Special tribute to fathers with cultural programs and family activities.</p>
+                                        </div>
+                                    </div>
+                                    <div class="event-card">
+                                        <img src="images/independence-day.jpg" alt="Independence Day" class="event-image">
+                                        <div class="event-content">
+                                            <h3>Independence Day Celebration</h3>
+                                            <p class="event-date">August 15, 2026</p>
+                                            <p>Grand celebration with flag hoisting, parade, cultural performances, and community feast.</p>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        });
+                    });
+                </script>
+                
+                <div class="registration-section">
+                    <h2>Event Registration</h2>
+                    <p>To register for any of our upcoming events, please contact our Event Coordinator:</p>
+                    <p>Email: agaclubbhel@gmail.com</p>
+                    <p>Phone: 0755 2503343</p>
+                    <p>You can also reach out to us through our <a href="contact.html">Contact Us</a> page.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AGA Club Bhel Bhopal. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/contentLoader.js"></script>
+    <script src="js/backgroundSlideshow.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Initialize background slideshow
+        document.addEventListener('DOMContentLoaded', function() {
+            contentLoader.loadContent().then(content => {
+                if (content.upcomingContent && content.upcomingContent.backgroundSlideshow) {
+                    backgroundSlideshow.init(content.upcomingContent.backgroundSlideshow);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

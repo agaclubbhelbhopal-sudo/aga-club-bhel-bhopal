@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Committee - AGA Club Bhel Bhopal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/jpeg" href="images/aga_club_site.jpg">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo-container">
+                <div class="logo-text-group">
+                    <a href="index.html">
+                        <img src="images/aga_club_logo.jpg" alt="AGA Club Logo" class="nav-logo-img left-logo">
+                    </a>
+                    <a href="index.html" class="nav-logo">
+                        <h2>AGA CLUB BHEL BHOPAL</h2>
+                        <p class="hindi-text">आगा क्लब बीएचईएल भोपाल</p>
+                    </a>
+                    <a href="index.html">
+                        <img src="images/logo-english.png" alt="AGA Club English Logo" class="nav-logo-img right-logo">
+                    </a>
+                </div>
+                <p class="registration-number">Reg. No.: 01/01/01/40737/24</p>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navigation Menu Bar -->
+    <nav class="navbar-menu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="committee.html" class="nav-link">Committee</a>
+                </li>
+                <li class="nav-item">
+                    <a href="events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="upcoming.html" class="nav-link">Upcoming Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="membership.html" class="nav-link">Membership</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </li>
+
+
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="hero" id="heroSection">
+        <div class="hero-content">
+            <h1>Our Committee</h1>
+            <p>Meet the dedicated team behind AGA Club Bhel Bhopal</p>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main>
+        <section class="committee-section">
+            <div class="container">
+                <h2>Committee Members</h2>
+                <div class="committee-grid" id="committeeContainer">
+                    <!-- Committee members will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AGA Club Bhel Bhopal. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/contentLoader.js"></script>
+    <script src="js/backgroundSlideshow.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Set active navigation link
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current page filename
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            // Find all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Add active class to the current page link
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // No refresh button functionality needed
+        });
+        
+        // Load committee page content
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, attempting to load content');
+            contentLoader.loadContent().then(content => {
+                console.log('Content loaded:', content);
+                
+                // Set background image for header
+                if (content.committeeContent && content.committeeContent.backgroundImage) {
+                    const heroSection = document.getElementById('heroSection');
+                    heroSection.style.background = `url('${content.committeeContent.backgroundImage}')`;
+                    heroSection.style.backgroundSize = 'cover';
+                    heroSection.style.backgroundPosition = 'center';
+                }
+                
+                // Initialize background slideshow
+                if (content.committeeContent && content.committeeContent.backgroundSlideshow) {
+                    backgroundSlideshow.init(content.committeeContent.backgroundSlideshow);
+                }
+                
+                // Load committee members
+                loadCommitteeMembers(content);
+            }).catch(error => {
+                console.error('Error loading content for header:', error);
+            });
+        });
+        
+        // Load all committee members
+        function loadCommitteeMembers(content) {
+            const committeeContainer = document.getElementById('committeeContainer');
+            
+            // Check if content has committee members
+            const committeeMembersArray = content.committeeMembers ? Object.values(content.committeeMembers) : [];
+            if (committeeMembersArray.length > 0) {
+                console.log('Committee members found:', committeeMembersArray);
+                // Clear container
+                committeeContainer.innerHTML = '';
+                
+                // Create member cards for each committee member
+                committeeMembersArray.forEach(member => {
+                    console.log('Creating member element for:', member.name);
+                    // Create member element
+                    const memberElement = document.createElement('div');
+                    memberElement.className = 'committee-member';
+                    memberElement.innerHTML = `
+                        <img src="${member.image}" alt="${member.name}" class="member-photo" onerror="this.src='images/placeholder-member.jpg'; this.onerror=null;">
+                        <h3>${member.name}</h3>
+                        <p>${member.position}</p>
+                    `;
+                    committeeContainer.appendChild(memberElement);
+                });
+            } else {
+                console.log('No committee members found in content');
+                committeeContainer.innerHTML = '<p>No committee members data available.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
